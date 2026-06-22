@@ -96,21 +96,27 @@ const AddUser = () => {
         messages: [],
       });
 
+      const pendingEntry = {
+        chatId: newChatRef.id,
+        lastMessage: "",
+        receiverId: "",
+        updatedAt: Date.now(),
+        isSeen: false,
+        status: "pending",
+        requestedBy: currentUser.id,
+      };
+
       await updateDoc(doc(userchatsRef, user.id), {
         chats: arrayUnion({
-          chatId: newChatRef.id,
-          lastMessage: "",
+          ...pendingEntry,
           receiverId: currentUser.id,
-          updatedAt: Date.now(),
         }),
       });
 
       await updateDoc(doc(userchatsRef, currentUser.id), {
         chats: arrayUnion({
-          chatId: newChatRef.id,
-          lastMessage: "",
+          ...pendingEntry,
           receiverId: user.id,
-          updatedAt: Date.now(),
         }),
       });
 

@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import "./ChatList.css";
 import AddUser from "./AddUser";
 import { useUserStore } from "../../lib/userStore";
-import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useChatStore } from "../../lib/chatStore";
 import { getAvatar } from "../../lib/avatar";
@@ -19,7 +25,7 @@ const ChatList = () => {
     const unsub = onSnapshot(
       doc(db, "userchats", currentUser.id),
       async (res) => {
-        const items = res.data().chats;
+        const items = res.data().chats || [];
 
         const promises = items.map(async (item) => {
           const userDocRef = doc(db, "users", item.receiverId);
@@ -41,7 +47,10 @@ const ChatList = () => {
   const handleSelect = async (chat) => {
     const userChats = chats.map((item) => {
       const { chatId, lastMessage, isSeen, updatedAt, receiverId } = item;
-      return { chatId, lastMessage, isSeen, updatedAt, receiverId };
+      const entry = { chatId, lastMessage, isSeen, updatedAt, receiverId };
+      if (item.status) entry.status = item.status;
+      if (item.requestedBy) entry.requestedBy = item.requestedBy;
+      return entry;
     });
 
     const chatIndex = userChats.findIndex(
@@ -56,14 +65,69 @@ const ChatList = () => {
       await updateDoc(userChatsRef, {
         chats: userChats,
       });
-      changeChat(chat.chatId, chat.user);
+      const status = chat.status === "pending" ? "pending" : "active";
+      changeChat(chat.chatId, chat.user, status);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const filteredChats = chats.filter((c) =>
+  const handleAccept = async (chat) => {
+    const userIds = [currentUser.id, chat.user.id];
+    try {
+      for (const id of userIds) {
+        const ref = doc(db, "userchats", id);
+        const snap = await getDoc(ref);
+        const data = snap.data();
+        const updated = data.chats.map((c) => {
+          if (c.chatId === chat.chatId) {
+            const updated = { ...c, status: "active" };
+            delete updated.requestedBy;
+            return updated;
+          }
+          return c;
+        });
+        await updateDoc(ref, { chats: updated });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDecline = async (chat) => {
+    const userIds = [currentUser.id, chat.user.id];
+    try {
+      for (const id of userIds) {
+        const ref = doc(db, "userchats", id);
+        const snap = await getDoc(ref);
+        const data = snap.data();
+        const updated = data.chats.filter((c) => c.chatId !== chat.chatId);
+        await updateDoc(ref, { chats: updated });
+      }
+      await deleteDoc(doc(db, "chats", chat.chatId));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const activeChats = chats.filter(
+    (c) => !c.status || c.status === "active"
+  ).filter((c) =>
     c.user.username.toLowerCase().includes(input.toLowerCase())
+  );
+
+  const incomingRequests = chats.filter(
+    (c) =>
+      c.status === "pending" &&
+      c.requestedBy !== currentUser.id &&
+      c.user.username.toLowerCase().includes(input.toLowerCase())
+  );
+
+  const outgoingPending = chats.filter(
+    (c) =>
+      c.status === "pending" &&
+      c.requestedBy === currentUser.id &&
+      c.user.username.toLowerCase().includes(input.toLowerCase())
   );
 
   return (
@@ -85,7 +149,62 @@ const ChatList = () => {
         />
       </div>
       <div className="items">
-        {filteredChats.map((chat) => {
+        {incomingRequests.length > 0 && (
+          <div className="section-label">Request Masuk</div>
+        )}
+        {incomingRequests.map((chat) => {
+          const { letter, color } = getAvatar(chat.user.username);
+          return (
+            <div className="item request-item" key={chat.chatId}>
+              <div className="avatar-letter" style={{ background: color }}>
+                {letter}
+              </div>
+              <div className="texts">
+                <div className="row">
+                  <span>{chat.user.username}</span>
+                </div>
+                <p className="empty-msg">Menunggu responmu</p>
+              </div>
+              <div className="request-actions">
+                <button
+                  className="accept-btn"
+                  onClick={() => handleAccept(chat)}
+                >
+                  Terima
+                </button>
+                <button
+                  className="decline-btn"
+                  onClick={() => handleDecline(chat)}
+                >
+                  Tolak
+                </button>
+              </div>
+            </div>
+          );
+        })}
+
+        {outgoingPending.map((chat) => {
+          const { letter, color } = getAvatar(chat.user.username);
+          return (
+            <div
+              className="item pending-item"
+              key={chat.chatId}
+              onClick={() => handleSelect(chat)}
+            >
+              <div className="avatar-letter" style={{ background: color }}>
+                {letter}
+              </div>
+              <div className="texts">
+                <div className="row">
+                  <span>{chat.user.username}</span>
+                </div>
+                <p className="empty-msg">Menunggu diterima...</p>
+              </div>
+            </div>
+          );
+        })}
+
+        {activeChats.map((chat) => {
           const { letter, color } = getAvatar(chat.user.username);
           return (
             <div
