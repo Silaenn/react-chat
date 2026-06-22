@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import Chat from "./components/chat/Chat";
-import Detail from "./components/detail/Detail";
-import List from "./components/list/List";
-import Login from "./components/login/Login";
-import Notification from "./components/notification/Notification";
+import Chat from "./features/chat/Chat";
+import Detail from "./features/detail/Detail";
+import List from "./features/list/List";
+import Login from "./features/auth/Login";
+import Notification from "./features/notification/Notification";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./lib/firebase";
 import { useUserStore } from "./lib/userStore";
@@ -35,8 +35,10 @@ const App = () => {
   return (
     <div className="container">
       <List />
-      {chatId && <Chat />}
-      {chatId && <Detail />}
+      <div className="main">
+        {chatId && <Chat />}
+        {chatId && <Detail />}
+      </div>
       <Notification />
     </div>
   );

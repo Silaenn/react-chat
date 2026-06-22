@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { useUserStore } from "../../../lib/userStore";
-import "./userinfo.css";
-import { auth } from "../../../lib/firebase";
+import { useUserStore } from "../../lib/userStore";
+import "./UserInfo.css";
+import { auth } from "../../lib/firebase";
 
 const UserInfo = () => {
   const { currentUser } = useUserStore();
-
   const [openMenu, setOpenMenu] = useState(false);
 
   return (
@@ -26,8 +25,6 @@ const UserInfo = () => {
             </div>
           </div>
         )}
-        <img src="./video.png" alt="" />
-        <img src="./edit.png" alt="" />
       </div>
     </div>
   );

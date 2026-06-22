@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./login.css";
+import "./Login.css";
 import { toast } from "react-toastify";
 import {
   createUserWithEmailAndPassword,
@@ -8,7 +8,6 @@ import {
 import { auth, db } from "../../lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import upload from "../../lib/upload";
-import { Forum, Close } from "@mui/icons-material";
 
 const Login = () => {
   const [mode, setMode] = useState("login");
@@ -54,6 +53,7 @@ const Login = () => {
 
       await setDoc(doc(db, "users", res.user.uid), {
         username,
+        username_lower: username.toLowerCase(),
         avatar: imgUrl || "./avatar.png",
         email,
         id: res.user.uid,
@@ -82,9 +82,6 @@ const Login = () => {
     <div className="login">
       <div className="card">
         <div className="header">
-          <div className="brand-icon">
-            <Forum />
-          </div>
           <h1>Chat App</h1>
           <p className="subtitle">
             {mode === "login"

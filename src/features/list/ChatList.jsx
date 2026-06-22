@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import "./chatlist.css";
-import AddUser from "./adduser/AddUser";
-import { useUserStore } from "../../../lib/userStore";
+import "./ChatList.css";
+import AddUser from "./AddUser";
+import { useUserStore } from "../../lib/userStore";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
-import { db } from "../../../lib/firebase";
-import { useChatStore } from "../../../lib/chatStore";
-import { Image, Mic } from "@mui/icons-material";
+import { db } from "../../lib/firebase";
+import { useChatStore } from "../../lib/chatStore";
 
 const ChatList = () => {
   const [chats, setChats] = useState([]);
@@ -21,18 +20,15 @@ const ChatList = () => {
       async (res) => {
         const items = res.data().chats;
 
-        const promisses = items.map(async (item) => {
+        const promises = items.map(async (item) => {
           const userDocRef = doc(db, "users", item.receiverId);
           const userDocSnap = await getDoc(userDocRef);
-
           const user = userDocSnap.data();
-
           return { ...item, user };
         });
 
-        const chatData = await Promise.all(promisses);
-
-        setChats(chatData.sort((a, b) => (b.updatedAt = a.updatedAt)));
+        const chatData = await Promise.all(promises);
+        setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
       }
     );
 
@@ -111,19 +107,11 @@ const ChatList = () => {
                   : chat.user.username}
               </span>
             </div>
-            {chat.lastMessage === "[Image]" ? (
-              <div className="lastMessage-icon">
-                <Image />
-                <p>Image</p>
-              </div>
-            ) : chat.lastMessage === "[audio]" ? (
-              <div className="lastMessage-icon">
-                <Mic />
-                <p>Voice Chat</p>
-              </div>
-            ) : chat.lastMessage ? (
+            {chat.lastMessage ? (
               <p>{chat.lastMessage}</p>
-            ) : <p className="empty-msg">No messages yet</p>}
+            ) : (
+              <p className="empty-msg">No messages yet</p>
+            )}
           </div>
         </div>
       ))}
