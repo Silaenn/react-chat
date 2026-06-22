@@ -9,6 +9,7 @@ import { useChatStore } from "../../lib/chatStore";
 import { auth, db } from "../../lib/firebase";
 import "./Detail.css";
 import { useUserStore } from "../../lib/userStore";
+import { getAvatar } from "../../lib/avatar";
 
 const Detail = () => {
   const { changeBlock, user, isCurrentUserBlocked, isReceiverBlocked, chatId, showDetail, toggleDetail } =
@@ -29,6 +30,8 @@ const Detail = () => {
     }
   };
 
+  const avatar = user ? getAvatar(user.username) : null;
+
   return (
     <div className={`detail ${showDetail ? "open" : ""}`}>
       <div className="detail-scrim" onClick={toggleDetail} />
@@ -37,7 +40,11 @@ const Detail = () => {
           <button className="close-btn" onClick={toggleDetail}>×</button>
         </div>
         <div className="user">
-          <img src={user?.avatar || "./avatar.png"} alt="" />
+          {avatar && (
+            <div className="avatar-letter" style={{ background: avatar.color }}>
+              {avatar.letter}
+            </div>
+          )}
           <h2>{user?.username}</h2>
           <p>Online</p>
         </div>

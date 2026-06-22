@@ -5,6 +5,7 @@ import { useUserStore } from "../../lib/userStore";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useChatStore } from "../../lib/chatStore";
+import { getAvatar } from "../../lib/avatar";
 
 const ChatList = () => {
   const [chats, setChats] = useState([]);
@@ -83,38 +84,36 @@ const ChatList = () => {
           onClick={() => setAddMode((prev) => !prev)}
         />
       </div>
-      {filteredChats.map((chat) => (
-        <div
-          className={`item ${!chat?.isSeen ? "unread" : ""}`}
-          key={chat.chatId}
-          onClick={() => handleSelect(chat)}
-        >
-          <div className="avatar-wrap">
-            <img
-              src={
-                chat.user.blocked.includes(currentUser.id)
-                  ? "./avatar.png"
-                  : chat.user.avatar || "./avatar.png"
-              }
-              alt=""
-            />
-          </div>
-          <div className="texts">
-            <div className="row">
-              <span>
-                {chat.user.blocked.includes(currentUser.id)
-                  ? "User"
-                  : chat.user.username}
-              </span>
+      <div className="items">
+        {filteredChats.map((chat) => {
+          const { letter, color } = getAvatar(chat.user.username);
+          return (
+            <div
+              className={`item ${!chat?.isSeen ? "unread" : ""}`}
+              key={chat.chatId}
+              onClick={() => handleSelect(chat)}
+            >
+              <div className="avatar-letter" style={{ background: color }}>
+                {letter}
+              </div>
+              <div className="texts">
+                <div className="row">
+                  <span>
+                    {chat.user.blocked.includes(currentUser.id)
+                      ? "User"
+                      : chat.user.username}
+                  </span>
+                </div>
+                {chat.lastMessage ? (
+                  <p>{chat.lastMessage}</p>
+                ) : (
+                  <p className="empty-msg">No messages yet</p>
+                )}
+              </div>
             </div>
-            {chat.lastMessage ? (
-              <p>{chat.lastMessage}</p>
-            ) : (
-              <p className="empty-msg">No messages yet</p>
-            )}
-          </div>
-        </div>
-      ))}
+          );
+        })}
+      </div>
 
       {addMode && <AddUser />}
     </div>

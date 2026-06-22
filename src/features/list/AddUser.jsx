@@ -14,20 +14,19 @@ import "./AddUser.css";
 import { db } from "../../lib/firebase";
 import { useState } from "react";
 import { useUserStore } from "../../lib/userStore";
+import { getAvatar } from "../../lib/avatar";
 
 const AddUser = () => {
   const [user, setUser] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [searching, setSearching] = useState(false);
   const [added, setAdded] = useState(false);
+  const [username, setUsername] = useState("");
   const { currentUser } = useUserStore();
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const username = formData.get("username").trim();
-
-    if (!username) return;
+  const handleSearch = async () => {
+    const name = username.trim();
+    if (!name) return;
 
     setUser(null);
     setNotFound(false);
@@ -36,9 +35,9 @@ const AddUser = () => {
 
     try {
       const userRef = collection(db, "users");
-      const usernameLower = username.toLowerCase();
+      const usernameLower = name.toLowerCase();
 
-      const q = query(userRef, where("username", "==", username));
+      const q = query(userRef, where("username", "==", name));
       let snap = await getDocs(q);
 
       if (snap.empty) {
@@ -64,7 +63,19 @@ const AddUser = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (user) {
+        handleAdd();
+      } else {
+        handleSearch();
+      }
+    }
+  };
+
   const handleAdd = async () => {
+    if (!user) return;
     const chatRef = collection(db, "chats");
     const userchatsRef = collection(db, "userchats");
     try {
@@ -105,27 +116,37 @@ const AddUser = () => {
 
       setAdded(true);
       setUser(null);
+      setUsername("");
     } catch (error) {
       console.log(error);
     }
   };
 
+  const result = user ? getAvatar(user.username) : null;
+
   return (
     <div className="addUser">
-      <form onSubmit={handleSearch}>
-        <input type="text" placeholder="Username" name="username" />
-        <button>Search</button>
-      </form>
+      <div className="addUser-form">
+        <input
+          type="text"
+          placeholder="Add by username..."
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        <button onClick={user ? handleAdd : handleSearch}>
+          {user ? "Add" : "Search"}
+        </button>
+      </div>
       {searching && <p className="status">Searching...</p>}
       {notFound && <p className="status not-found">User not found</p>}
       {added && <p className="status success">User added!</p>}
-      {user && (
-        <div className="user">
-          <div className="detail">
-            <img src={user.avatar || "./avatar.png"} alt="" />
-            <span>{user.username}</span>
+      {user && result && (
+        <div className="addUser-result">
+          <div className="avatar-letter" style={{ background: result.color }}>
+            {result.letter}
           </div>
-          <button onClick={handleAdd}>Add User</button>
+          <span>{user.username}</span>
         </div>
       )}
     </div>

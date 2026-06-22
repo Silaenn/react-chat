@@ -7,21 +7,10 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../../lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
-import upload from "../../lib/upload";
 
 const Login = () => {
   const [mode, setMode] = useState("login");
-  const [avatar, setAvatar] = useState({ file: null, url: "" });
   const [loading, setLoading] = useState(false);
-
-  const handleAvatar = (e) => {
-    if (e.target.files[0]) {
-      setAvatar({
-        file: e.target.files[0],
-        url: URL.createObjectURL(e.target.files[0]),
-      });
-    }
-  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -49,12 +38,10 @@ const Login = () => {
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
 
-      const imgUrl = avatar.file ? await upload(avatar.file) : null;
-
       await setDoc(doc(db, "users", res.user.uid), {
         username,
         username_lower: username.toLowerCase(),
-        avatar: imgUrl || "./avatar.png",
+        avatar: null,
         email,
         id: res.user.uid,
         blocked: [],
@@ -75,7 +62,6 @@ const Login = () => {
 
   const switchMode = () => {
     setMode((m) => (m === "login" ? "register" : "login"));
-    setAvatar({ file: null, url: "" });
   };
 
   return (
@@ -133,18 +119,6 @@ const Login = () => {
           </form>
         ) : (
           <form onSubmit={handleRegister} className="form">
-            <div className="field avatar-field">
-              <label htmlFor="file" className="avatar-label">
-                <img src={avatar.url || "./avatar.png"} alt="avatar" />
-                <span>{avatar.url ? "Change photo" : "Add photo"}</span>
-              </label>
-              <input
-                type="file"
-                id="file"
-                accept="image/*"
-                onChange={handleAvatar}
-              />
-            </div>
             <div className="field">
               <label htmlFor="reg-username">Username</label>
               <input

@@ -11,6 +11,7 @@ import {
 import { db } from "../../lib/firebase";
 import { useChatStore } from "../../lib/chatStore";
 import { useUserStore } from "../../lib/userStore";
+import { getAvatar } from "../../lib/avatar";
 
 const Chat = () => {
   const [chat, setChat] = useState();
@@ -92,13 +93,17 @@ const Chat = () => {
     }
   };
 
+  const avatar = user ? getAvatar(user.username) : null;
+
   return (
     <div className="chat">
       <div className="top">
         <div className="user">
-          <div className="avatar-wrap">
-            <img src={user?.avatar || "./avatar.png"} alt="" />
-          </div>
+          {avatar && (
+            <div className="avatar-letter" style={{ background: avatar.color }}>
+              {avatar.letter}
+            </div>
+          )}
           <div className="texts">
             <span>{user?.username}</span>
             <p>Online</p>

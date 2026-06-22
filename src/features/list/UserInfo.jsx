@@ -2,16 +2,18 @@ import { useState } from "react";
 import { useUserStore } from "../../lib/userStore";
 import "./UserInfo.css";
 import { auth } from "../../lib/firebase";
+import { getAvatar } from "../../lib/avatar";
 
 const UserInfo = () => {
   const { currentUser } = useUserStore();
   const [openMenu, setOpenMenu] = useState(false);
+  const { letter, color } = getAvatar(currentUser.username);
 
   return (
     <div className="userInfo">
       <div className="user">
-        <div className="avatar-wrap">
-          <img src={currentUser.avatar || "./avatar.png"} alt="" />
+        <div className="avatar-letter" style={{ background: color }}>
+          {letter}
         </div>
         <h2>{currentUser.username}</h2>
       </div>
