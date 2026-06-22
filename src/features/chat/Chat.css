@@ -176,6 +176,37 @@
           font-style: italic;
           letter-spacing: 0.02em;
         }
+
+        .msg-meta {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          justify-content: flex-end;
+          margin-top: 2px;
+
+          .msg-time {
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+            opacity: 0.7;
+          }
+
+          .msg-status {
+            font-size: 10px;
+            line-height: 1;
+            letter-spacing: -1px;
+
+            &.sent {
+              color: var(--text-muted);
+              opacity: 0.5;
+            }
+
+            &.read {
+              color: var(--accent);
+              opacity: 0.85;
+            }
+          }
+        }
       }
 
       .message-menu {
@@ -211,8 +242,8 @@
         .menu-dropdown {
           position: absolute;
           right: 0;
-          bottom: 100%;
-          margin-bottom: 4px;
+          top: 100%;
+          margin-top: 4px;
           background: var(--bg-raised);
           border-radius: var(--radius-md);
           overflow: hidden;

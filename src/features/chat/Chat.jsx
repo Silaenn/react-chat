@@ -24,17 +24,52 @@ const Chat = () => {
     useChatStore();
   const { currentUser } = useUserStore();
 
-  const handleEmoji = (e) => {
-    setText((prev) => prev + e.emoji);
-    setOpenEmoji(false);
-  };
-
   const getMsgTime = (ts) =>
     ts?.toMillis ? ts.toMillis() : new Date(ts).getTime();
+
+  const formatTime = (ts) => {
+    const d = ts?.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   const canModify = (createdAt) => {
     const elapsed = Date.now() - getMsgTime(createdAt);
     return elapsed < 24 * 60 * 60 * 1000;
+  };
+
+  useEffect(() => {
+    if (!chat?.messages || !chatId) return;
+
+    const unreadOthers = chat.messages.filter(
+      (m) => m.senderId !== currentUser.id && !m.readAt
+    );
+    if (unreadOthers.length === 0) return;
+
+    const markAsRead = async () => {
+      try {
+        const chatRef = doc(db, "chats", chatId);
+        const chatSnap = await getDoc(chatRef);
+        const messages = chatSnap.data().messages.map((m) => {
+          if (m.senderId !== currentUser.id && !m.readAt) {
+            return { ...m, readAt: new Date() };
+          }
+          return m;
+        });
+        await updateDoc(chatRef, { messages });
+      } catch (error) {
+        console.error("Error marking as read:", error);
+      }
+    };
+
+    markAsRead();
+  }, [chat?.messages, chatId, currentUser.id]);
+
+  const handleEmoji = (e) => {
+    setText((prev) => prev + e.emoji);
+    setOpenEmoji(false);
   };
 
   const handleSend = async () => {
@@ -51,6 +86,7 @@ const Chat = () => {
         senderId: currentUser.id,
         text: text,
         createdAt: new Date(),
+        readAt: null,
       };
 
       await updateDoc(doc(db, "chats", chatId), {
@@ -210,6 +246,18 @@ const Chat = () => {
                         <span className="edited-label"> (diedit)</span>
                       )}
                     </p>
+                    <div className="msg-meta">
+                      <span className="msg-time">
+                        {formatTime(message.createdAt)}
+                      </span>
+                      {isOwn && (
+                        <span
+                          className={`msg-status ${message.readAt ? "read" : "sent"}`}
+                        >
+                          {message.readAt ? "✓✓" : "✓"}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   {isOwn && message.id && canModify(message.createdAt) && (
                     <div

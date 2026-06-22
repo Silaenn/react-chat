@@ -66,11 +66,7 @@ const AddUser = () => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (user) {
-        handleAdd();
-      } else {
-        handleSearch();
-      }
+      handleSearch();
     }
   };
 
@@ -140,9 +136,7 @@ const AddUser = () => {
           onChange={(e) => setUsername(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <button onClick={user ? handleAdd : handleSearch}>
-          {user ? "Add" : "Search"}
-        </button>
+        <button onClick={handleSearch}>Search</button>
       </div>
       {searching && <p className="status">Searching...</p>}
       {notFound && <p className="status not-found">User not found</p>}
@@ -152,7 +146,8 @@ const AddUser = () => {
           <div className="avatar-letter" style={{ background: result.color }}>
             {result.letter}
           </div>
-          <span>{user.username}</span>
+          <span className="result-name">{user.username}</span>
+          <button className="add-btn" onClick={handleAdd}>Add</button>
         </div>
       )}
     </div>
