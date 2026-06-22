@@ -11,7 +11,9 @@ const UserInfo = () => {
   return (
     <div className="userInfo">
       <div className="user">
-        <img src={currentUser.avatar || "./avatar.png"} alt="" />
+        <div className="avatar-wrap">
+          <img src={currentUser.avatar || "./avatar.png"} alt="" />
+        </div>
         <h2>{currentUser.username}</h2>
       </div>
       <div className="icons">

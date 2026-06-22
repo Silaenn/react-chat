@@ -23,20 +23,20 @@ const App = () => {
       unSub();
     };
   }, [fetchUserInfo, resetChat]);
-  console.log(chatId);
 
   if (isLoading) return <div className="loading">Loading...</div>;
+  if (!currentUser)
+    return (
+      <>
+        <Login />
+        <Notification />
+      </>
+    );
   return (
     <div className="container">
-      {currentUser ? (
-        <>
-          <List />
-          {chatId && <Chat />}
-          {chatId && <Detail />}
-        </>
-      ) : (
-        <Login />
-      )}
+      <List />
+      {chatId && <Chat />}
+      {chatId && <Detail />}
       <Notification />
     </div>
   );

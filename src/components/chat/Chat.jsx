@@ -253,13 +253,13 @@ const Chat = () => {
     }
   };
 
-  console.log(audioBlob);
-
   return (
     <div className="chat">
       <div className="top">
         <div className="user">
-          <img src={user?.avatar || "./avatar.png"} alt="" />
+          <div className="avatar-wrap">
+            <img src={user?.avatar || "./avatar.png"} alt="" />
+          </div>
           <div className="texts">
             <span>{user?.username}</span>
             <p>Lorem, ipsum dolor sit amet</p>
@@ -318,14 +318,13 @@ const Chat = () => {
             }}
           />
           <img src="./camera.png" alt="" onClick={() => setOpenCamera(true)} />
-          {isRecording ? (
-            <Stop
-              onClick={handleMicClick}
-              style={{ color: "red", cursor: "pointer" }}
-            />
-          ) : (
-            <Mic onClick={handleMicClick} style={{ cursor: "pointer" }} />
-          )}
+          <div className={isRecording ? "mic-recording" : ""}>
+            {isRecording ? (
+              <Stop onClick={handleMicClick} />
+            ) : (
+              <Mic onClick={handleMicClick} />
+            )}
+          </div>
         </div>
         <input
           type="text"
@@ -362,22 +361,12 @@ const Chat = () => {
         <div className="camera-modal">
           <div className="option">
             <h4>Take a photo</h4>
-            <Close
-              style={{
-                cursor: "pointer",
-              }}
-              onClick={() => setOpenCamera(!openCamera)}
-            />
+            <Close onClick={() => setOpenCamera(!openCamera)} />
           </div>
           <video ref={videoRef}></video>
-          <CameraAlt
-            style={{
-              width: "150px",
-              height: "30px",
-              cursor: "pointer",
-            }}
-            onClick={takePhoto}
-          />
+          <div className="capture-btn" onClick={takePhoto}>
+            <CameraAlt />
+          </div>
         </div>
       )}
       <canvas ref={photoRef} style={{ display: "none" }}></canvas>

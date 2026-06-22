@@ -30,7 +30,6 @@ const Detail = () => {
     }
   };
 
-  console.log(user);
   return (
     <div className="detail">
       <div className="user">

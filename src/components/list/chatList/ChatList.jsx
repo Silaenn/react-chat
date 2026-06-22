@@ -89,54 +89,41 @@ const ChatList = () => {
       </div>
       {filteredChats.map((chat) => (
         <div
-          className="item"
+          className={`item ${!chat?.isSeen ? "unread" : ""}`}
           key={chat.chatId}
           onClick={() => handleSelect(chat)}
-          style={{
-            backgroundColor: chat?.isSeen ? "transparent" : "#5183fe",
-          }}
         >
-          <img
-            src={
-              chat.user.blocked.includes(currentUser.id)
-                ? "./avatar.png"
-                : chat.user.avatar || "./avatar.png"
-            }
-            alt=""
-          />
+          <div className="avatar-wrap">
+            <img
+              src={
+                chat.user.blocked.includes(currentUser.id)
+                  ? "./avatar.png"
+                  : chat.user.avatar || "./avatar.png"
+              }
+              alt=""
+            />
+          </div>
           <div className="texts">
-            <span>
-              {chat.user.blocked.includes(currentUser.id)
-                ? "User"
-                : chat.user.username}
-            </span>
+            <div className="row">
+              <span>
+                {chat.user.blocked.includes(currentUser.id)
+                  ? "User"
+                  : chat.user.username}
+              </span>
+            </div>
             {chat.lastMessage === "[Image]" ? (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "flex-end",
-                  justifyContent: "center",
-                }}
-              >
-                <Image style={{ marginRight: "6px" }} />
+              <div className="lastMessage-icon">
+                <Image />
                 <p>Image</p>
               </div>
             ) : chat.lastMessage === "[audio]" ? (
-              <>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-end",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Mic style={{ marginRight: "6px" }} />
-                  <p>Voice Chat</p>
-                </div>
-              </>
-            ) : (
-              chat.lastMessage
-            )}
+              <div className="lastMessage-icon">
+                <Mic />
+                <p>Voice Chat</p>
+              </div>
+            ) : chat.lastMessage ? (
+              <p>{chat.lastMessage}</p>
+            ) : <p className="empty-msg">No messages yet</p>}
           </div>
         </div>
       ))}
