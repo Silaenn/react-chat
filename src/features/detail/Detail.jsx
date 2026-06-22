@@ -2,7 +2,6 @@ import {
   arrayRemove,
   arrayUnion,
   doc,
-  getDoc,
   updateDoc,
 } from "firebase/firestore";
 import { useChatStore } from "../../lib/chatStore";
@@ -12,7 +11,7 @@ import { useUserStore } from "../../lib/userStore";
 import { getAvatar } from "../../lib/avatar";
 
 const Detail = () => {
-  const { changeBlock, user, isCurrentUserBlocked, isReceiverBlocked, chatId, showDetail, toggleDetail } =
+  const { changeBlock, user, isCurrentUserBlocked, isReceiverBlocked, showDetail, toggleDetail } =
     useChatStore();
   const { currentUser } = useUserStore();
 

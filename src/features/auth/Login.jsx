@@ -60,10 +60,6 @@ const Login = () => {
     }
   };
 
-  const switchMode = () => {
-    setMode((m) => (m === "login" ? "register" : "login"));
-  };
-
   return (
     <div className="login">
       <div className="card">

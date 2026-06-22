@@ -40,15 +40,15 @@ const ChatList = () => {
 
   const handleSelect = async (chat) => {
     const userChats = chats.map((item) => {
-      const { user, ...rest } = item;
-      return rest;
+      const { chatId, lastMessage, isSeen, updatedAt, receiverId } = item;
+      return { chatId, lastMessage, isSeen, updatedAt, receiverId };
     });
 
     const chatIndex = userChats.findIndex(
       (item) => item.chatId === chat.chatId
     );
 
-    userChats[chatIndex].isSeen = true;
+    if (chatIndex !== -1) userChats[chatIndex].isSeen = true;
 
     const userChatsRef = doc(db, "userchats", currentUser.id);
 
