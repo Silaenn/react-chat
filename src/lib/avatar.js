@@ -1,6 +1,12 @@
 const colors = [
-  '#c8784a', '#5a8a5a', '#4a7a9a', '#9a7a4a',
-  '#7a5a8a', '#8a6a4a', '#4a8a7a', '#9a6a5a',
+  'linear-gradient(135deg, #f59e0b, rgba(180, 83, 9, 0.85))',
+  'linear-gradient(135deg, #d97706, rgba(120, 53, 15, 0.80))',
+  'linear-gradient(135deg, #b45309, rgba(245, 158, 11, 0.70))',
+  'linear-gradient(135deg, #92400e, rgba(251, 191, 36, 0.70))',
+  'linear-gradient(135deg, #f59e0b, rgba(180, 83, 9, 0.65))',
+  'linear-gradient(135deg, #d97706, rgba(245, 158, 11, 0.75))',
+  'linear-gradient(135deg, #b45309, rgba(120, 53, 15, 0.80))',
+  'linear-gradient(135deg, #fbbf24, rgba(180, 83, 9, 0.70))',
 ];
 
 export const getAvatar = (name) => {
