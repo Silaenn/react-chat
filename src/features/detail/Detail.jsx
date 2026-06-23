@@ -9,6 +9,7 @@ import { db } from "../../lib/firebase";
 import "./Detail.css";
 import { useUserStore } from "../../lib/userStore";
 import { getAvatar } from "../../lib/avatar";
+import ExpandLess from "@mui/icons-material/ExpandLess";
 
 const Detail = () => {
   const { changeBlock, user, isCurrentUserBlocked, isReceiverBlocked, showDetail, toggleDetail } =
@@ -51,13 +52,13 @@ const Detail = () => {
           <div className="option">
             <div className="title">
               <span>Chat Settings</span>
-              <img src="./arrowUp.png" alt="" />
+              <ExpandLess />
             </div>
           </div>
           <div className="option">
             <div className="title">
               <span>Privacy & help</span>
-              <img src="./arrowUp.png" alt="" />
+              <ExpandLess />
             </div>
           </div>
 

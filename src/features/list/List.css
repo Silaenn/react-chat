@@ -36,13 +36,10 @@
   flex-shrink: 0;
   transition: background-color var(--ease-release);
 
-  img {
+  .logout-icon {
     width: 18px;
     height: 18px;
     opacity: 0.45;
-    filter:
-      drop-shadow(0 1px 0 rgba(0, 0, 0, 0.12))
-      drop-shadow(0 -1px 0 var(--highlight));
     transition: opacity var(--ease-release);
   }
 
@@ -57,7 +54,7 @@
   &:hover {
     background-color: rgba(255, 255, 255, 0.025);
 
-    img {
+    .logout-icon {
       opacity: 0.75;
     }
 

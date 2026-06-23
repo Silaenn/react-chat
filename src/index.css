@@ -64,24 +64,8 @@
 
 body {
   background-color: var(--bg-body);
-  background-image:
-    radial-gradient(ellipse at 50% 35%, rgba(55, 50, 45, 0.6) 0%, transparent 65%),
-    repeating-linear-gradient(
-      90deg,
-      transparent 0px,
-      rgba(200, 180, 160, 0.012) 1px,
-      transparent 1px,
-      transparent 6px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent 0px,
-      rgba(200, 180, 160, 0.008) 1px,
-      transparent 1px,
-      transparent 6px
-    );
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   height: 100vh;
   color: var(--text-primary);
@@ -93,40 +77,11 @@ body {
 }
 
 .container {
-  width: 88vw;
-  height: 90vh;
+  width: 100vw;
+  height: 100dvh;
   background-color: var(--bg-surface);
-  background-image:
-    linear-gradient(
-      135deg,
-      var(--highlight) 0%,
-      transparent 40%,
-      rgba(0, 0, 0, 0.03) 70%,
-      transparent 100%
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent 0px,
-      rgba(200, 180, 160, 0.015) 1px,
-      transparent 1px,
-      transparent 5px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent 0px,
-      rgba(200, 180, 160, 0.01) 1px,
-      transparent 1px,
-      transparent 5px
-    );
-  border-radius: var(--radius-xl);
   display: flex;
   position: relative;
-  box-shadow:
-    inset 0 1px 0 var(--highlight),
-    0 -1px 0 rgba(0, 0, 0, 0.15),
-    0 1px 0 rgba(0, 0, 0, 0.35),
-    0 4px 16px var(--shadow),
-    0 16px 48px var(--shadow-strong);
   overflow: hidden;
   isolation: isolate;
 
@@ -216,26 +171,9 @@ body {
   }
 }
 
-@media (max-width: 1024px) {
-  .container {
-    width: 94vw;
-  }
-}
-
 @media (max-width: 768px) {
   :root {
     --space: 6px;
-  }
-
-  body {
-    align-items: flex-start;
-  }
-
-  .container {
-    width: 100vw;
-    height: 100dvh;
-    border-radius: 0;
-    box-shadow: none;
   }
 
   .container .list {

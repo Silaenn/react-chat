@@ -12,6 +12,8 @@ import { db } from "../../lib/firebase";
 import { useChatStore } from "../../lib/chatStore";
 import { useUserStore } from "../../lib/userStore";
 import { getAvatar } from "../../lib/avatar";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import EmojiEmotionsOutlined from "@mui/icons-material/EmojiEmotionsOutlined";
 
 const Chat = () => {
   const [chat, setChat] = useState();
@@ -225,7 +227,7 @@ const Chat = () => {
           </div>
         </div>
         <div className="icons">
-          <img src="./info.png" alt="Info" onClick={toggleDetail} />
+          <InfoOutlined className="chat-icon" onClick={toggleDetail} />
         </div>
       </div>
       {isPending ? (
@@ -308,9 +310,8 @@ const Chat = () => {
           </div>
           <div className={`bottom ${isEditing ? "editing" : ""}`}>
             <div className="emoji">
-              <img
-                src="./emoji.png"
-                alt=""
+              <EmojiEmotionsOutlined
+                className="emoji-icon"
                 onClick={() => setOpenEmoji((prev) => !prev)}
               />
               <div className="picker">

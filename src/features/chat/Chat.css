@@ -102,15 +102,12 @@
       display: flex;
       gap: calc(var(--space) * 2);
 
-      img {
+      .chat-icon {
         width: 20px;
         height: 20px;
         cursor: pointer;
         opacity: 0.45;
         transition: opacity var(--ease-release);
-        filter:
-          drop-shadow(0 1px 0 rgba(0, 0, 0, 0.15))
-          drop-shadow(0 -1px 0 var(--highlight));
 
         &:hover {
           opacity: 0.8;
@@ -442,15 +439,12 @@
     .emoji {
       position: relative;
 
-      > img {
+      > .emoji-icon {
         width: 24px;
         height: 24px;
         cursor: pointer;
         opacity: 0.5;
         transition: opacity var(--ease-release);
-        filter:
-          drop-shadow(0 1px 0 rgba(0, 0, 0, 0.12))
-          drop-shadow(0 -1px 0 var(--highlight));
 
         &:hover {
           opacity: 0.85;
