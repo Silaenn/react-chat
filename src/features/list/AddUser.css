@@ -164,3 +164,15 @@
     }
   }
 }
+
+@media (max-width: 768px) {
+  .addUser .addUser-form input {
+    font-size: 13px;
+    padding: calc(var(--space) * 1.25) calc(var(--space) * 1.25);
+  }
+
+  .addUser .addUser-form button {
+    padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
+    font-size: 11px;
+  }
+}

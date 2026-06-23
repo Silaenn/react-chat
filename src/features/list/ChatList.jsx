@@ -19,7 +19,7 @@ const ChatList = () => {
   const [input, setInput] = useState("");
 
   const { currentUser } = useUserStore();
-  const { changeChat } = useChatStore();
+  const { changeChat, setShowList } = useChatStore();
 
   useEffect(() => {
     const unsub = onSnapshot(
@@ -67,6 +67,7 @@ const ChatList = () => {
       });
       const status = chat.status === "pending" ? "pending" : "active";
       changeChat(chat.chatId, chat.user, status);
+      setShowList(false);
     } catch (error) {
       console.log(error);
     }

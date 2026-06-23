@@ -57,4 +57,7 @@ export const useChatStore = create((set) => ({
     set({ chatId: null, showDetail: false, chatStatus: null }),
   showDetail: false,
   toggleDetail: () => set((state) => ({ showDetail: !state.showDetail })),
+  showList: true,
+  toggleList: () => set((state) => ({ showList: !state.showList })),
+  setShowList: (val) => set({ showList: val }),
 }));

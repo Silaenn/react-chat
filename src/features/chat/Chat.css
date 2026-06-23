@@ -43,6 +43,39 @@
       align-items: center;
       gap: calc(var(--space) * 2);
 
+      .back-btn {
+        display: none;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: var(--bg-recessed);
+        color: var(--text-secondary);
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow:
+          inset 0 1px 0 var(--highlight),
+          0 -1px 0 rgba(0, 0, 0, 0.12),
+          0 1px 0 rgba(0, 0, 0, 0.15);
+        transition:
+          background var(--ease-release),
+          box-shadow var(--ease-press);
+
+        &:hover {
+          background: var(--bg-raised);
+          color: var(--text-primary);
+        }
+
+        &:active {
+          box-shadow:
+            inset 0 1px 2px rgba(0, 0, 0, 0.2),
+            0 1px 0 var(--highlight);
+        }
+      }
+
       .texts {
         display: flex;
         flex-direction: column;
@@ -518,4 +551,53 @@
     0 2px 0 rgba(0, 0, 0, 0.25),
     0 3px 6px rgba(0, 0, 0, 0.12);
   flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .chat .top .user .back-btn {
+    display: flex;
+  }
+
+  .chat .center {
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 1.5);
+  }
+
+  .chat .center .message {
+    max-width: 88%;
+  }
+
+  .chat .bottom {
+    padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
+    gap: 6px;
+  }
+
+  .chat .bottom .emoji .picker {
+    left: auto;
+    right: 0;
+  }
+
+  .chat .bottom input {
+    font-size: 13px;
+    padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
+  }
+
+  .chat .bottom .sendButton {
+    padding: calc(var(--space) * 1.25) calc(var(--space) * 1.75);
+    font-size: 11px;
+  }
+
+  .chat .top {
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 1.5);
+  }
+}
+
+@media (max-width: 480px) {
+  .chat .center .message {
+    max-width: 92%;
+  }
+
+  .chat .center .message .texts p {
+    font-size: 13px;
+    padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
+  }
 }

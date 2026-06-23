@@ -288,3 +288,44 @@
     0 3px 6px rgba(0, 0, 0, 0.12);
   flex-shrink: 0;
 }
+
+@media (max-width: 768px) {
+  .chatList .item {
+    padding: var(--space) calc(var(--space) * 1.5);
+  }
+
+  .chatList .search {
+    padding: var(--space) calc(var(--space) * 1.5) var(--space);
+  }
+
+  .section-label {
+    padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5) calc(var(--space) * 0.5);
+  }
+
+  .userInfo {
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 1.5) calc(var(--space) * 1.25);
+  }
+
+  .userInfo .user h2 {
+    font-size: 13px;
+  }
+
+  .addUser {
+    padding: calc(var(--space) * 1.5);
+  }
+}
+
+@media (max-width: 480px) {
+  .chatList .item {
+    gap: var(--space);
+  }
+
+  .chatList .item .texts .row span {
+    font-size: 13px;
+  }
+
+  .chatList .item .texts > p,
+  .chatList .item .texts .empty-msg {
+    font-size: 11px;
+  }
+}

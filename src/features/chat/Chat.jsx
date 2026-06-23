@@ -20,7 +20,7 @@ const Chat = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [editingMessage, setEditingMessage] = useState(null);
 
-  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, chatStatus, toggleDetail } =
+  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, chatStatus, toggleDetail, setShowList } =
     useChatStore();
   const { currentUser } = useUserStore();
 
@@ -211,6 +211,9 @@ const Chat = () => {
     <div className="chat">
       <div className="top">
         <div className="user">
+          <button className="back-btn" onClick={() => setShowList(true)}>
+            ←
+          </button>
           {avatar && (
             <div className="avatar-letter" style={{ background: avatar.color }}>
               {avatar.letter}

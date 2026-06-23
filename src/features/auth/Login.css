@@ -251,3 +251,47 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 480px) {
+  .card {
+    width: calc(100vw - 32px);
+    padding: calc(var(--space) * 4) calc(var(--space) * 3);
+    border-radius: var(--radius-lg);
+  }
+
+  .header h1 {
+    font-size: 22px;
+  }
+
+  .header .subtitle {
+    font-size: 13px;
+  }
+
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="password"] {
+    font-size: 13px;
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 1.75);
+  }
+
+  .submit-btn {
+    font-size: 13px;
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 2);
+    min-height: 44px;
+  }
+
+  .tabs .tab {
+    font-size: 13px;
+    padding: var(--space) calc(var(--space) * 1.5);
+  }
+
+  .form {
+    gap: calc(var(--space) * 2);
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .card {
+    width: 380px;
+  }
+}

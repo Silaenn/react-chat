@@ -248,3 +248,14 @@
     0 4px 12px rgba(0, 0, 0, 0.15);
   flex-shrink: 0;
 }
+
+@media (max-width: 768px) {
+  .detail .detail-panel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .detail .detail-scrim {
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
