@@ -2,7 +2,7 @@
   flex: 0 0 260px;
   display: flex;
   flex-direction: column;
-  background: rgba(255, 243, 220, 0.04);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-right: 1px solid var(--glass-border);
@@ -37,7 +37,7 @@
   }
 
   &:hover {
-    background-color: rgba(255, 243, 220, 0.05);
+    background-color: rgba(0, 0, 0, 0.04);
 
     .logout-icon {
       opacity: 0.85;
@@ -50,7 +50,7 @@
   }
 
   &:active {
-    background-color: rgba(255, 243, 220, 0.07);
+    background-color: rgba(0, 0, 0, 0.06);
   }
 }
 

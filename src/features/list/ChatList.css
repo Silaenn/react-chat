@@ -13,7 +13,7 @@
 
     .searchBar {
       flex: 1;
-      background: rgba(0, 0, 0, 0.20);
+      background: rgba(0, 0, 0, 0.04);
       border: 1px solid var(--glass-border);
       display: flex;
       align-items: center;
@@ -58,7 +58,7 @@
       width: 38px;
       height: 38px;
       padding: 9px;
-      background: rgba(255, 243, 220, 0.05);
+      background: rgba(0, 0, 0, 0.04);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius-md);
       cursor: pointer;
@@ -73,10 +73,10 @@
         transform var(--transition-fast);
 
       &:hover {
-        background: rgba(255, 243, 220, 0.08);
+        background: rgba(0, 0, 0, 0.06);
         border-color: var(--glass-border-strong);
         color: var(--text-secondary);
-        box-shadow: 0 0 12px rgba(245, 158, 11, 0.08);
+        box-shadow: 0 0 12px rgba(37, 99, 235, 0.06);
       }
 
       &:active {
@@ -100,19 +100,19 @@
       cursor: pointer;
       position: relative;
       transition: background-color var(--transition-base);
-      border-bottom: 1px solid rgba(255, 220, 150, 0.06);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
       &:hover {
-        background-color: rgba(255, 243, 220, 0.05);
+        background-color: rgba(0, 0, 0, 0.03);
       }
 
       &:active {
-        background-color: rgba(255, 243, 220, 0.07);
+        background-color: rgba(0, 0, 0, 0.05);
       }
 
       &.unread {
-        background: rgba(245, 158, 11, 0.07);
-        box-shadow: inset 0 0 20px rgba(245, 158, 11, 0.05);
+        background: rgba(37, 99, 235, 0.06);
+        box-shadow: inset 0 0 20px rgba(37, 99, 235, 0.04);
 
         &::before {
           content: '';
@@ -140,7 +140,7 @@
           font-size: 14px;
           letter-spacing: 0.01em;
           color: var(--text-primary);
-          text-shadow: 0 1px 0 rgba(0, 0, 0, 0.20);
+          text-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -175,10 +175,10 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-muted);
-  border-bottom: 1px solid rgba(255, 220, 150, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
-  background: rgba(15, 20, 35, 0.85);
+  background: rgba(255, 255, 255, 0.90);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   z-index: 1;
@@ -186,7 +186,7 @@
 
 .request-item {
   cursor: default;
-  background: rgba(245, 158, 11, 0.07);
+  background: rgba(37, 99, 235, 0.05);
   border-left: 2px solid var(--accent);
 
   .request-actions {
@@ -217,36 +217,36 @@
     }
 
     .accept-btn {
-      background: rgba(245, 158, 11, 0.15);
+      background: rgba(37, 99, 235, 0.12);
       color: var(--accent);
-      border: 1px solid rgba(245, 158, 11, 0.25);
+      border: 1px solid rgba(37, 99, 235, 0.25);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
 
       &:hover {
-        background: rgba(245, 158, 11, 0.25);
-        box-shadow: 0 0 8px rgba(245, 158, 11, 0.12);
+        background: rgba(37, 99, 235, 0.20);
+        box-shadow: 0 0 8px rgba(37, 99, 235, 0.10);
       }
 
       &:active {
-        background: rgba(245, 158, 11, 0.35);
+        background: rgba(37, 99, 235, 0.30);
       }
     }
 
     .decline-btn {
-      background: rgba(248, 113, 113, 0.10);
+      background: rgba(220, 38, 38, 0.08);
       color: var(--danger);
-      border: 1px solid rgba(248, 113, 113, 0.20);
+      border: 1px solid rgba(220, 38, 38, 0.18);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
 
       &:hover {
-        background: rgba(248, 113, 113, 0.20);
-        box-shadow: 0 0 8px rgba(248, 113, 113, 0.10);
+        background: rgba(220, 38, 38, 0.15);
+        box-shadow: 0 0 8px rgba(220, 38, 38, 0.08);
       }
 
       &:active {
-        background: rgba(248, 113, 113, 0.30);
+        background: rgba(220, 38, 38, 0.22);
       }
     }
   }
@@ -271,12 +271,12 @@
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 400;
   font-size: 16px;
-  color: #fef3c7;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
-  background: linear-gradient(135deg, #f59e0b, rgba(180, 83, 9, 0.85));
+  color: #FFFFFF;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.20);
+  background: #2563EB;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    0 2px 8px rgba(0, 0, 0, 0.20);
+    0 2px 8px rgba(0, 0, 0, 0.10);
   flex-shrink: 0;
 }
 
