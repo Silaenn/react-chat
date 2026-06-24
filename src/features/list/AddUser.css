@@ -65,6 +65,28 @@
   }
 }
 
+.modal-header {
+  text-align: left;
+  margin-bottom: calc(var(--space) * 0.5);
+}
+
+.modal-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: 20px;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+
+.modal-subtitle {
+  margin: calc(var(--space) * 0.75) 0 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
 .addUser-form {
   display: flex;
   gap: var(--space);
@@ -124,7 +146,7 @@
 }
 
 .status {
-  margin-top: var(--space);
+  margin-top: calc(var(--space) * 2);
   text-align: center;
   font-size: 12px;
   color: var(--text-muted);
