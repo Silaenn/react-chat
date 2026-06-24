@@ -22,6 +22,7 @@ const Chat = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [editingMessage, setEditingMessage] = useState(null);
   const [isOnline, setIsOnline] = useState(false);
+  const [lastSeen, setLastSeen] = useState(null);
 
   const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, chatStatus, toggleDetail, setShowList } =
     useChatStore();
@@ -41,6 +42,22 @@ const Chat = () => {
   const canModify = (createdAt) => {
     const elapsed = Date.now() - getMsgTime(createdAt);
     return elapsed < 15 * 60 * 1000;
+  };
+
+  const formatLastSeen = (ts) => {
+    if (!ts) return;
+    const diff = Date.now() - getMsgTime(ts);
+    const minutes = Math.floor(diff / 60000);
+
+    if (minutes < 1) return "baru saja";
+    if (minutes < 60) return `${minutes} menit lalu`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} jam lalu`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days} hari lalu`;
+    return ts?.toDate
+      ? ts.toDate().toLocaleDateString("id-ID")
+      : new Date(ts).toLocaleDateString("id-ID");
   };
 
   useEffect(() => {
@@ -201,7 +218,9 @@ const Chat = () => {
   useEffect(() => {
     if (!user?.id) return;
     const unSub = onSnapshot(doc(db, "users", user.id), (res) => {
-      setIsOnline(res.data()?.online ?? false);
+      const data = res.data();
+      setIsOnline(data?.online ?? false);
+      setLastSeen(data?.lastSeen ?? null);
     });
     return () => unSub();
   }, [user?.id]);
@@ -239,7 +258,13 @@ const Chat = () => {
             <span>{user?.username}</span>
             <p className={`status-text ${isOnline ? "online" : "offline"}`}>
               <span className={`status-dot ${isOnline ? "online" : "offline"}`} />
-              {isPending ? "Menunggu respon..." : isOnline ? "Online" : "Offline"}
+              {isPending
+                ? "Menunggu respon..."
+                : isOnline
+                  ? "Online"
+                  : lastSeen
+                    ? `Terakhir dilihat ${formatLastSeen(lastSeen)}`
+                    : "Offline"}
             </p>
           </div>
         </div>
