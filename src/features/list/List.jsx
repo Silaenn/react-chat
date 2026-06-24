@@ -26,7 +26,9 @@ const List = () => {
       <UserInfo />
       <ChatList />
       <div className="logout-bar" onClick={handleLogout}>
-        <LogoutIcon className="logout-icon" />
+        <div className="logout-icon-wrap">
+          <LogoutIcon className="logout-icon" />
+        </div>
         <span>Log Out</span>
       </div>
     </div>
