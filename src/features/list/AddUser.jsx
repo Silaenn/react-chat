@@ -13,10 +13,11 @@ import {
 import "./AddUser.css";
 import { db } from "../../lib/firebase";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { useUserStore } from "../../lib/userStore";
 import { getAvatar } from "../../lib/avatar";
 
-const AddUser = () => {
+const AddUser = ({ onClose }) => {
   const [user, setUser] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [searching, setSearching] = useState(false);
@@ -126,31 +127,35 @@ const AddUser = () => {
 
   const result = user ? getAvatar(user.username) : null;
 
-  return (
-    <div className="addUser">
-      <div className="addUser-form">
-        <input
-          type="text"
-          placeholder="Add by username..."
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-        <button onClick={handleSearch}>Search</button>
-      </div>
-      {searching && <p className="status">Searching...</p>}
-      {notFound && <p className="status not-found">User not found</p>}
-      {added && <p className="status success">User added!</p>}
-      {user && result && (
-        <div className="addUser-result">
-          <div className="avatar-letter" style={{ background: result.color }}>
-            {result.letter}
-          </div>
-          <span className="result-name">{user.username}</span>
-          <button className="add-btn" onClick={handleAdd}>Add</button>
+  return createPortal(
+    <div className="addUser-overlay" onClick={onClose}>
+      <div className="addUser-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose}>✕</button>
+        <div className="addUser-form">
+          <input
+            type="text"
+            placeholder="Add by username..."
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={handleSearch}>Search</button>
         </div>
-      )}
-    </div>
+        {searching && <p className="status">Searching...</p>}
+        {notFound && <p className="status not-found">User not found</p>}
+        {added && <p className="status success">User added!</p>}
+        {user && result && (
+          <div className="addUser-result">
+            <div className="avatar-letter" style={{ background: result.color }}>
+              {result.letter}
+            </div>
+            <span className="result-name">{user.username}</span>
+            <button className="add-btn" onClick={handleAdd}>Add</button>
+          </div>
+        )}
+      </div>
+    </div>,
+    document.body
   );
 };
 

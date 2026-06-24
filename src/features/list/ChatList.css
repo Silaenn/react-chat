@@ -43,6 +43,10 @@
           opacity: 0.5;
           font-style: italic;
         }
+
+        &:focus-visible {
+          box-shadow: none;
+        }
       }
 
       .search-icon {
