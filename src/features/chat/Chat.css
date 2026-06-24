@@ -139,6 +139,7 @@
       max-width: 72%;
       display: flex;
       gap: var(--space);
+      position: relative;
       animation: drop-in 0.2s cubic-bezier(0.2, 0, 0, 1) both;
 
       @keyframes drop-in {
@@ -154,6 +155,10 @@
 
       &.own {
         align-self: flex-end;
+
+        .texts {
+          padding-right: 32px;
+        }
 
         .texts p {
           background: var(--glass-sent);
@@ -237,9 +242,9 @@
       }
 
       .message-menu {
-        position: relative;
-        flex-shrink: 0;
-        align-self: flex-end;
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
         opacity: 0;
         transition: opacity var(--transition-base);
 
@@ -317,17 +322,6 @@
 
       &:hover .message-menu {
         opacity: 1;
-      }
-
-      &.own {
-        .message-menu {
-          align-self: flex-end;
-
-          .menu-dropdown {
-            right: 0;
-            left: auto;
-          }
-        }
       }
     }
   }

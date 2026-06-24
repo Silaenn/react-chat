@@ -82,11 +82,14 @@ const Chat = () => {
       return;
     }
 
+    const msgText = text;
+    setText("");
+
     try {
       const message = {
         id: crypto.randomUUID(),
         senderId: currentUser.id,
-        text: text,
+        text: msgText,
         createdAt: new Date(),
         readAt: null,
       };
@@ -108,7 +111,7 @@ const Chat = () => {
           );
 
           if (chatIndex !== -1) {
-            userChatsData.chats[chatIndex].lastMessage = text;
+            userChatsData.chats[chatIndex].lastMessage = msgText;
             userChatsData.chats[chatIndex].isSeen =
               id === currentUser.id ? true : false;
             userChatsData.chats[chatIndex].updatedAt = Date.now();
@@ -122,8 +125,6 @@ const Chat = () => {
     } catch (error) {
       console.error("Error sending message:", error);
     }
-
-    setText("");
   };
 
   const handleEdit = async () => {
