@@ -7,7 +7,7 @@
   .detail-scrim {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.35);
+    background: var(--scrim);
     opacity: 0;
     transition: opacity var(--transition-slide);
     pointer-events: none;
@@ -20,7 +20,7 @@
     bottom: 0;
     width: 300px;
     max-width: 85vw;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--glass-bg-active);
     backdrop-filter: blur(32px);
     -webkit-backdrop-filter: blur(32px);
     border-left: 1px solid var(--glass-border);
@@ -156,9 +156,9 @@
     > button {
       width: 100%;
       padding: calc(var(--space) * 1.25) calc(var(--space) * 2);
-      background: rgba(248, 113, 113, 0.10);
+      background: var(--danger-glow);
       color: var(--danger);
-      border: 1px solid rgba(248, 113, 113, 0.20);
+      border: 1px solid var(--danger-glow);
       border-radius: var(--radius-md);
       cursor: pointer;
       font-size: 13px;
@@ -216,7 +216,7 @@
   font-size: 30px;
   color: #FFFFFF;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.20);
-  background: #2563EB;
+  background: var(--accent);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
     0 2px 8px rgba(0, 0, 0, 0.10),
@@ -231,6 +231,6 @@
   }
 
   .detail .detail-scrim {
-    background: rgba(0, 0, 0, 0.30);
+    background: var(--scrim);
   }
 }

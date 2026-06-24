@@ -9,6 +9,9 @@
   --glass-blur: blur(20px);
   --glass-blur-heavy: blur(32px);
   --glass-blur-light: blur(12px);
+  --glass-bg-strong: rgba(255, 255, 255, 0.85);
+
+  --scrim: rgba(0, 0, 0, 0.35);
 
   --glass-sent: rgba(37, 99, 235, 0.10);
   --glass-sent-border: rgba(37, 99, 235, 0.25);
@@ -22,7 +25,7 @@
 
   --text-primary: #0F172A;
   --text-secondary: #475569;
-  --text-muted: #94A3B8;
+  --text-muted: #64748B;
   --text-accent: #2563EB;
 
   --success: #059669;
@@ -112,7 +115,7 @@ body {
   height: 500px;
   top: 40%;
   right: -100px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.10) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.10) 0%, transparent 70%);
   filter: blur(100px);
 }
 
@@ -173,7 +176,7 @@ body {
 
     p {
       font-size: var(--text-base);
-      color: var(--text-muted);
+      color: var(--text-secondary);
       margin: 0;
       letter-spacing: 0.02em;
       line-height: var(--text-body-line-height);

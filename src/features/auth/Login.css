@@ -13,7 +13,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--glass-bg-strong);
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -75,7 +75,7 @@
 
     &.active {
       color: var(--accent);
-      background: #FFFFFF;
+      background: var(--glass-bg-active);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid var(--glass-border-strong);
