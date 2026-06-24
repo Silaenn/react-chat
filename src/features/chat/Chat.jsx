@@ -21,6 +21,7 @@ const Chat = () => {
   const [text, setText] = useState("");
   const [openMenuId, setOpenMenuId] = useState(null);
   const [editingMessage, setEditingMessage] = useState(null);
+  const [isOnline, setIsOnline] = useState(false);
 
   const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, chatStatus, toggleDetail, setShowList } =
     useChatStore();
@@ -39,7 +40,7 @@ const Chat = () => {
 
   const canModify = (createdAt) => {
     const elapsed = Date.now() - getMsgTime(createdAt);
-    return elapsed < 24 * 60 * 60 * 1000;
+    return elapsed < 15 * 60 * 1000;
   };
 
   useEffect(() => {
@@ -128,16 +129,21 @@ const Chat = () => {
   };
 
   const handleEdit = async () => {
+    const msgText = text;
+    const msgId = editingMessage?.id;
+    setText("");
+    setEditingMessage(null);
+
     try {
       const chatRef = doc(db, "chats", chatId);
       const chatSnap = await getDoc(chatRef);
       const messages = [...chatSnap.data().messages];
-      const idx = messages.findIndex((m) => m.id === editingMessage.id);
+      const idx = messages.findIndex((m) => m.id === msgId);
 
-      if (idx !== -1) {
+      if (idx !== -1 && canModify(messages[idx].createdAt)) {
         messages[idx] = {
           ...messages[idx],
-          text,
+          text: msgText,
           edited: true,
           editedAt: new Date(),
         };
@@ -146,9 +152,6 @@ const Chat = () => {
     } catch (error) {
       console.error("Error editing message:", error);
     }
-
-    setEditingMessage(null);
-    setText("");
   };
 
   const handleDelete = async (messageId) => {
@@ -195,6 +198,14 @@ const Chat = () => {
     };
   }, [chatId]);
 
+  useEffect(() => {
+    if (!user?.id) return;
+    const unSub = onSnapshot(doc(db, "users", user.id), (res) => {
+      setIsOnline(res.data()?.online ?? false);
+    });
+    return () => unSub();
+  }, [user?.id]);
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -226,7 +237,10 @@ const Chat = () => {
           )}
           <div className="texts">
             <span>{user?.username}</span>
-            <p>{isPending ? "Menunggu respon..." : "Online"}</p>
+            <p className={`status-text ${isOnline ? "online" : "offline"}`}>
+              <span className={`status-dot ${isOnline ? "online" : "offline"}`} />
+              {isPending ? "Menunggu respon..." : isOnline ? "Online" : "Offline"}
+            </p>
           </div>
         </div>
         <div className="top-right">

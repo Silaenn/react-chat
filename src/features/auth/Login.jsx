@@ -45,6 +45,8 @@ const Login = () => {
         email,
         id: res.user.uid,
         blocked: [],
+        online: false,
+        lastSeen: null,
       });
 
       await setDoc(doc(db, "userchats", res.user.uid), {

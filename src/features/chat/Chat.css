@@ -75,10 +75,36 @@
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
         }
 
-        p {
+        .status-text {
           font-size: 12px;
           font-weight: 400;
-          color: var(--text-secondary);
+          display: flex;
+          align-items: center;
+          gap: 5px;
+
+          .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+
+            &.online {
+              background: #22C55E;
+              box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+            }
+
+            &.offline {
+              background: #94A3B8;
+            }
+          }
+
+          &.online {
+            color: #22C55E;
+          }
+
+          &.offline {
+            color: var(--text-muted);
+          }
         }
       }
     }
