@@ -11,7 +11,7 @@
     gap: calc(var(--space) * 1.5);
 
     h2 {
-      font-family: 'Playfair Display', Georgia, serif;
+      font-family: var(--font-heading);
       font-weight: 400;
       font-size: 15px;
       letter-spacing: 0.02em;

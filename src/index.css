@@ -38,6 +38,14 @@
   --radius-xl: 28px;
   --radius-full: 9999px;
 
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 14px;
+  --text-body-line-height: 1.6;
+
   --transition-fast: 0.12s cubic-bezier(0.4, 0, 1, 1);
   --transition-base: 0.225s cubic-bezier(0, 0, 0.2, 1);
   --transition-slide: 0.25s cubic-bezier(0.2, 0, 0, 1);
@@ -68,7 +76,8 @@ body {
   height: 100vh;
   color: var(--text-primary);
   overflow: hidden;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-body);
+  line-height: var(--text-body-line-height);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   cursor: default;
@@ -153,7 +162,7 @@ body {
     }
 
     h2 {
-      font-family: 'Playfair Display', Georgia, serif;
+      font-family: var(--font-heading);
       font-weight: 400;
       font-size: 20px;
       color: var(--text-primary);
@@ -163,10 +172,11 @@ body {
     }
 
     p {
-      font-size: 13px;
+      font-size: var(--text-base);
       color: var(--text-muted);
       margin: 0;
       letter-spacing: 0.02em;
+      line-height: var(--text-body-line-height);
     }
   }
 }
@@ -191,7 +201,7 @@ body {
 }
 
 .loading span {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-body);
   font-size: 18px;
   letter-spacing: 0.03em;
   color: var(--text-secondary);

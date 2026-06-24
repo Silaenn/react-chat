@@ -92,7 +92,7 @@
     border-bottom: 1px solid var(--glass-border);
 
     h2 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-heading);
   font-weight: 400;
   font-size: 17px;
       letter-spacing: 0.02em;
@@ -128,7 +128,7 @@
         }
 
         span {
-          font-family: 'DM Sans', sans-serif;
+          font-family: var(--font-body);
           font-weight: 500;
           font-size: 13px;
           letter-spacing: 0.02em;
@@ -163,7 +163,7 @@
       cursor: pointer;
       font-size: 13px;
       font-weight: 600;
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-body);
       letter-spacing: 0.03em;
       position: relative;
       transition:
@@ -211,7 +211,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-heading);
   font-weight: 400;
   font-size: 30px;
   color: #FFFFFF;
