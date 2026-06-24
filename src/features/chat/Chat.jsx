@@ -200,6 +200,7 @@ const Chat = () => {
   };
 
   const endRef = useRef(null);
+  const emojiRef = useRef(null);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -224,6 +225,16 @@ const Chat = () => {
     });
     return () => unSub();
   }, [user?.id]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (openEmoji && emojiRef.current && !emojiRef.current.contains(e.target)) {
+        setOpenEmoji(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [openEmoji]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -351,14 +362,19 @@ const Chat = () => {
             <div ref={endRef}></div>
           </div>
           <div className={`bottom ${isEditing ? "editing" : ""}`}>
-            <div className="emoji">
+            <div className="emoji" ref={emojiRef}>
               <EmojiEmotionsOutlined
-                className="emoji-icon"
-                onClick={() => setOpenEmoji((prev) => !prev)}
+                className={`emoji-icon ${isCurrentUserBlocked || isReceiverBlocked ? "disabled" : ""}`}
+                onClick={() => {
+                  if (isCurrentUserBlocked || isReceiverBlocked) return;
+                  setOpenEmoji((prev) => !prev);
+                }}
               />
-              <div className="picker">
-                <EmojiPicker open={openEmoji} onEmojiClick={handleEmoji} />
-              </div>
+              {!(isCurrentUserBlocked || isReceiverBlocked) && (
+                <div className="picker">
+                  <EmojiPicker open={openEmoji} onEmojiClick={handleEmoji} />
+                </div>
+              )}
             </div>
             {isEditing && (
               <button className="cancel-btn" onClick={cancelEdit}>

@@ -450,6 +450,11 @@
         &:hover {
           opacity: 0.85;
         }
+
+        &.disabled {
+          opacity: 0.15;
+          pointer-events: none;
+        }
       }
 
       .picker {

@@ -14,7 +14,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 const Detail = () => {
   const { changeBlock, user, isCurrentUserBlocked, isReceiverBlocked, showDetail, toggleDetail } =
     useChatStore();
-  const { currentUser } = useUserStore();
+  const { currentUser, fetchUserInfo } = useUserStore();
 
   const handleBlock = async () => {
     if (!user) return;
@@ -25,6 +25,7 @@ const Detail = () => {
         blocked: isReceiverBlocked ? arrayRemove(user.id) : arrayUnion(user.id),
       });
       changeBlock();
+      fetchUserInfo(currentUser.id);
     } catch (error) {
       console.log(error);
     }
