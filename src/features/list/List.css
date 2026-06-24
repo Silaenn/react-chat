@@ -15,6 +15,7 @@
   align-items: center;
   gap: calc(var(--space) * 1.25);
   padding: calc(var(--space) * 1.5) calc(var(--space) * 2.5);
+  min-height: calc(45px + var(--space) * 3);
   border-top: 1px solid var(--glass-border);
   cursor: pointer;
   flex-shrink: 0;
