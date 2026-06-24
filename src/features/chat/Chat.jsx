@@ -212,10 +212,12 @@ const Chat = () => {
   return (
     <div className="chat">
       <div className="top">
-        <div className="user">
+        <div className="top-left">
           <button className="back-btn" onClick={() => setShowList(true)}>
             ←
           </button>
+        </div>
+        <div className="top-center">
           {avatar && (
             <div className="avatar-letter" style={{ background: avatar.color }}>
               {avatar.letter}
@@ -226,7 +228,7 @@ const Chat = () => {
             <p>{isPending ? "Menunggu respon..." : "Online"}</p>
           </div>
         </div>
-        <div className="icons">
+        <div className="top-right">
           <InfoOutlined className="chat-icon" onClick={toggleDetail} />
         </div>
       </div>

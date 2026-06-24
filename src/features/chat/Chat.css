@@ -10,17 +10,15 @@
     padding: calc(var(--space) * 2) calc(var(--space) * 3);
     display: flex;
     align-items: center;
-    justify-content: space-between;
     background: var(--glass-bg);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border-bottom: 1px solid var(--glass-border);
     position: relative;
 
-    .user {
+    .top-left {
       display: flex;
       align-items: center;
-      gap: calc(var(--space) * 2);
 
       .back-btn {
         display: none;
@@ -53,6 +51,15 @@
           background: rgba(0, 0, 0, 0.12);
         }
       }
+    }
+
+    .top-center {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: calc(var(--space) * 1.5);
+      min-width: 0;
 
       .texts {
         display: flex;
@@ -76,9 +83,11 @@
       }
     }
 
-    .icons {
+    .top-right {
       display: flex;
-      gap: calc(var(--space) * 2);
+      align-items: center;
+      justify-content: flex-end;
+      width: 44px;
 
       .chat-icon {
         width: 20px;
@@ -506,8 +515,16 @@
 }
 
 @media (max-width: 768px) {
-  .chat .top .user .back-btn {
+  .chat .top .top-left {
+    width: 44px;
+  }
+
+  .chat .top .top-left .back-btn {
     display: flex;
+  }
+
+  .chat .top .top-center {
+    justify-content: center;
   }
 
   .chat .center {
