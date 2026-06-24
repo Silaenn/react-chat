@@ -64,7 +64,13 @@ const App = () => {
     };
   }, [currentUser?.id]);
 
-  if (isLoading) return <div className="loading">Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="loading">
+        <div className="loading-spinner" />
+        <span>Loading...</span>
+      </div>
+    );
   if (!currentUser)
     return (
       <>
