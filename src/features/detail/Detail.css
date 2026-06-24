@@ -1,5 +1,5 @@
 .detail {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 20;
   pointer-events: none;

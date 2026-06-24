@@ -76,8 +76,18 @@ const App = () => {
     <div className="container">
       <List />
       <div className="main">
-        {chatId && <Chat />}
-        {chatId && <Detail />}
+        {chatId ? (
+          <>
+            <Chat />
+            <Detail />
+          </>
+        ) : (
+          <div className="welcome">
+            <div className="welcome-icon">💬</div>
+            <h2>Selamat Datang</h2>
+            <p>Pilih percakapan dari sidebar untuk mulai chatting</p>
+          </div>
+        )}
       </div>
       <Notification />
     </div>
