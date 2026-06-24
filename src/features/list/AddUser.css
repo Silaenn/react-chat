@@ -237,8 +237,6 @@
 
 @media (max-width: 768px) {
   .addUser-modal {
-    width: calc(100% - 24px);
-    max-width: calc(100% - 24px);
     border-radius: var(--radius-lg);
   }
 
