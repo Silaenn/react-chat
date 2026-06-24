@@ -22,14 +22,14 @@
 
       .back-btn {
         display: none;
-        width: 32px;
-        height: 32px;
+        width: 44px;
+        height: 44px;
         border: none;
         background: rgba(0, 0, 0, 0.04);
         color: var(--text-secondary);
         border-radius: 50%;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 18px;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
@@ -73,6 +73,10 @@
           letter-spacing: 0.02em;
           color: var(--text-primary);
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 200px;
         }
 
         .status-text {
@@ -360,8 +364,8 @@
   }
 
   .cancel-btn {
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     border: 1px solid var(--glass-border);
     background: rgba(0, 0, 0, 0.04);
     color: var(--text-muted);
@@ -483,6 +487,7 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       white-space: nowrap;
+      min-height: 44px;
       position: relative;
       transition:
         background-color var(--transition-base),
@@ -566,6 +571,11 @@
   .chat .bottom .emoji .picker {
     left: auto;
     right: 0;
+    max-width: calc(100vw - 16px);
+  }
+
+  .chat .bottom .emoji .picker > * {
+    width: 100% !important;
   }
 
   .chat .bottom input {

@@ -180,6 +180,8 @@ body {
       margin: 0;
       letter-spacing: 0.02em;
       line-height: var(--text-body-line-height);
+      overflow-wrap: break-word;
+      word-wrap: break-word;
     }
   }
 }

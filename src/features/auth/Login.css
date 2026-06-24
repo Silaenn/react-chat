@@ -59,6 +59,7 @@
   .tab {
     flex: 1;
     padding: var(--space) calc(var(--space) * 2);
+    min-height: 44px;
     border: none;
     background: transparent;
     color: var(--text-secondary);

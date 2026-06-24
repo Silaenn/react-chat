@@ -59,9 +59,9 @@
     }
 
     .add {
-      width: 38px;
-      height: 38px;
-      padding: 9px;
+      width: 44px;
+      height: 44px;
+      padding: 10px;
       background: rgba(0, 0, 0, 0.04);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius-md);
@@ -200,7 +200,8 @@
 
     .accept-btn,
     .decline-btn {
-      padding: calc(var(--space) * 1) calc(var(--space) * 1.5);
+      padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
+      min-height: 44px;
       border: none;
       border-radius: var(--radius-sm);
       font-size: 11px;
@@ -285,7 +286,8 @@
 
 @media (max-width: 768px) {
   .chatList .item {
-    padding: var(--space) calc(var(--space) * 1.5);
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 1.5);
+    min-height: 44px;
   }
 
   .chatList .search {

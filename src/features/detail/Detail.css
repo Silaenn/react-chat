@@ -52,14 +52,14 @@
     padding: calc(var(--space) * 1.5) calc(var(--space) * 2) 0;
 
     .close-btn {
-      width: 32px;
-      height: 32px;
+      width: 44px;
+      height: 44px;
       border: 1px solid var(--glass-border);
       background: rgba(0, 0, 0, 0.04);
       color: var(--text-secondary);
       border-radius: 50%;
       cursor: pointer;
-      font-size: 18px;
+      font-size: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -155,6 +155,7 @@
 
     > button {
       width: 100%;
+      min-height: 44px;
       padding: calc(var(--space) * 1.25) calc(var(--space) * 2);
       background: var(--danger-glow);
       color: var(--danger);
@@ -232,5 +233,13 @@
 
   .detail .detail-scrim {
     background: var(--scrim);
+  }
+}
+
+@media (max-width: 480px) {
+  .detail .avatar-letter {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
   }
 }
