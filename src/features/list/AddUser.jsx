@@ -22,8 +22,10 @@ const AddUser = ({ onClose }) => {
   const [notFound, setNotFound] = useState(false);
   const [searching, setSearching] = useState(false);
   const [added, setAdded] = useState(false);
+  const [alreadyAdded, setAlreadyAdded] = useState(false);
   const [username, setUsername] = useState("");
   const { currentUser } = useUserStore();
+  const userchatsRef = collection(db, "userchats");
 
   const handleSearch = async () => {
     const name = username.trim();
@@ -32,6 +34,7 @@ const AddUser = ({ onClose }) => {
     setUser(null);
     setNotFound(false);
     setAdded(false);
+    setAlreadyAdded(false);
     setSearching(true);
 
     try {
@@ -53,6 +56,10 @@ const AddUser = ({ onClose }) => {
         if (found.id === currentUser.id) {
           setNotFound(true);
         } else {
+          const currentUserChats = await getDoc(doc(userchatsRef, currentUser.id));
+          const existingChats = currentUserChats.data()?.chats || [];
+          const exists = existingChats.some((c) => c.receiverId === found.id);
+          setAlreadyAdded(exists);
           setUser(found);
         }
       }
@@ -72,17 +79,15 @@ const AddUser = ({ onClose }) => {
   };
 
   const handleAdd = async () => {
-    if (!user) return;
+    if (!user || alreadyAdded) return;
     const chatRef = collection(db, "chats");
-    const userchatsRef = collection(db, "userchats");
     try {
       const currentUserChats = await getDoc(doc(userchatsRef, currentUser.id));
       const existingChats = currentUserChats.data()?.chats || [];
-      const alreadyExists = existingChats.some((c) => c.receiverId === user.id);
+      const exists = existingChats.some((c) => c.receiverId === user.id);
 
-      if (alreadyExists) {
-        setNotFound(true);
-        setUser(null);
+      if (exists) {
+        setAlreadyAdded(true);
         return;
       }
 
@@ -131,16 +136,23 @@ const AddUser = ({ onClose }) => {
     <div className="addUser-overlay" onClick={onClose}>
       <div className="addUser-modal" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>✕</button>
+        <div className="modal-header">
+          <h2 className="modal-title">Add User</h2>
+          <p className="modal-subtitle">Search by username to start a new conversation</p>
+        </div>
         <div className="addUser-form">
           <input
             type="text"
-            placeholder="Add by username..."
+            placeholder="Enter username..."
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             onKeyDown={handleKeyDown}
           />
           <button onClick={handleSearch}>Search</button>
         </div>
+        {!username && !searching && !notFound && !added && !user && (
+          <p className="status empty-hint">Type a username above to find users</p>
+        )}
         {searching && <p className="status">Searching...</p>}
         {notFound && <p className="status not-found">User not found</p>}
         {added && <p className="status success">User added!</p>}
@@ -150,7 +162,13 @@ const AddUser = ({ onClose }) => {
               {result.letter}
             </div>
             <span className="result-name">{user.username}</span>
-            <button className="add-btn" onClick={handleAdd}>Add</button>
+            <button
+              className={`add-btn ${alreadyAdded ? "added" : ""}`}
+              onClick={handleAdd}
+              disabled={alreadyAdded}
+            >
+              {alreadyAdded ? "Added" : "Add"}
+            </button>
           </div>
         )}
       </div>

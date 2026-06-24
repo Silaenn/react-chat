@@ -17,6 +17,8 @@
 .addUser-modal {
   width: 420px;
   max-width: 90vw;
+  max-height: 85dvh;
+  overflow-y: auto;
   background: #FFFFFF;
   border-radius: var(--radius-xl);
   box-shadow:
@@ -129,6 +131,13 @@
   font-style: italic;
   letter-spacing: 0.02em;
 
+  &.empty-hint {
+    font-style: normal;
+    opacity: 0.5;
+    margin-top: calc(var(--space) * 2);
+    padding: calc(var(--space) * 1.5);
+  }
+
   &.not-found {
     opacity: 0.7;
   }
@@ -153,11 +162,12 @@
     font-weight: 400;
     font-size: 14px;
     color: var(--text-primary);
+    letter-spacing: 0.01em;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   }
 
   .add-btn {
     padding: calc(var(--space) * 0.75) calc(var(--space) * 1.5);
-    border: none;
     border-radius: var(--radius-sm);
     background: rgba(37, 99, 235, 0.12);
     color: var(--accent);
@@ -183,6 +193,23 @@
       background: rgba(37, 99, 235, 0.30);
       transform: translateY(1px);
     }
+
+    &:disabled,
+    &.added {
+      background: rgba(0, 0, 0, 0.04);
+      color: var(--text-muted);
+      border-color: rgba(0, 0, 0, 0.08);
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+
+      &:hover,
+      &:active {
+        background: rgba(0, 0, 0, 0.04);
+        box-shadow: none;
+        transform: none;
+      }
+    }
   }
 }
 
@@ -190,13 +217,39 @@
   .addUser-modal {
     width: calc(100% - 24px);
     max-width: calc(100% - 24px);
-    max-height: 85dvh;
     border-radius: var(--radius-lg);
-    overflow-y: auto;
-    padding-top: calc(var(--space) * 6);
+  }
+
+  .modal-header {
+    margin-bottom: calc(var(--space) * 1.5);
+  }
+}
+
+@media (max-width: 480px) {
+  .addUser-modal {
+    width: calc(100% - 16px);
+    max-width: calc(100% - 16px);
+    padding: calc(var(--space) * 2);
+    border-radius: var(--radius-md);
   }
 
   .addUser-form {
-    margin-top: 0;
+    flex-direction: column;
+    gap: calc(var(--space) * 0.75);
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .addUser-result {
+    flex-wrap: wrap;
+    gap: var(--space);
+    justify-content: center;
+    text-align: center;
+
+    .result-name {
+      flex: 0 0 100%;
+    }
   }
 }
