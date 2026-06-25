@@ -477,7 +477,7 @@
     position: relative;
     box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.04);
 
-    input {
+    textarea {
       flex: 1;
       background: var(--bg-subtle);
       backdrop-filter: var(--blur-subtle);
@@ -491,6 +491,11 @@
       font-family: var(--font-body);
       font-weight: 400;
       letter-spacing: var(--ls-body);
+      resize: none;
+      overflow-y: hidden;
+      min-height: 44px;
+      max-height: 140px;
+      line-height: var(--lh-relaxed);
       transition: border-color var(--transition-base), box-shadow var(--transition-base);
 
       &::placeholder {

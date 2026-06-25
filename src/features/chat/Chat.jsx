@@ -26,6 +26,7 @@ const Chat = () => {
   const [isOnline, setIsOnline] = useState(false);
   const [lastSeen, setLastSeen] = useState(null);
   const centerRef = useRef(null);
+  const inputRef = useRef(null);
 
   const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, chatStatus, toggleDetail, setShowList } =
     useChatStore();
@@ -97,6 +98,9 @@ const Chat = () => {
 
   const handleSend = async () => {
     if (text === "") return;
+    if (inputRef.current) {
+      inputRef.current.style.height = "auto";
+    }
 
     if (editingMessage) {
       await handleEdit();
@@ -258,6 +262,13 @@ const Chat = () => {
     const elBottom = el.getBoundingClientRect().bottom;
     // Jika jarak dari bottom element ke bottom container < 120px, drop up
     return (containerBottom - elBottom) < 80;
+  };
+
+  const handleTextChange = (e) => {
+    setText(e.target.value);
+    const el = e.target;
+    el.style.height = "auto";
+    el.style.height = el.scrollHeight + "px";
   };
 
   const avatar = user ? getAvatar(user.username) : null;
@@ -431,8 +442,8 @@ const Chat = () => {
                 ✕
               </button>
             )}
-            <input
-              type="text"
+            <textarea
+              ref={inputRef}
               placeholder={
                 isCurrentUserBlocked || isReceiverBlocked
                 ? "You cannot send a message"
@@ -442,6 +453,7 @@ const Chat = () => {
               onChange={(e) => setText(e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={isCurrentUserBlocked || isReceiverBlocked}
+              rows={1}
             />
             <button
               className="sendButton"
