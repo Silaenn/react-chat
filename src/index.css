@@ -35,6 +35,14 @@
 
   --space: 8px;
 
+  --bg-subtle: rgba(0, 0, 0, 0.04);
+  --bg-hover: rgba(0, 0, 0, 0.08);
+  --bg-active: rgba(0, 0, 0, 0.12);
+  --bg-accent-subtle: rgba(37, 99, 235, 0.06);
+  --bg-accent-hover: rgba(37, 99, 235, 0.12);
+  --bg-danger-subtle: rgba(220, 38, 38, 0.08);
+  --bg-danger-hover: rgba(220, 38, 38, 0.15);
+
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;
@@ -46,8 +54,37 @@
 
   --text-xs: 11px;
   --text-sm: 12px;
+  --text-body: 13px;
   --text-base: 14px;
+  --text-heading-sm: 15px;
+  --text-heading-md: 17px;
+  --text-heading-lg: 20px;
+  --text-display: 28px;
   --text-body-line-height: 1.6;
+  --lh-tight: 1;
+  --lh-snug: 1.5;
+  --lh-relaxed: 1.55;
+  --lh-body: 1.6;
+
+  --ls-body: 0.01em;
+  --ls-heading: 0.02em;
+  --ls-label: 0.06em;
+  --ls-uppercase: 0.08em;
+  --ls-wide: 0.12em;
+
+  --blur-micro: blur(4px);
+  --blur-subtle: blur(8px);
+  --blur-medium: blur(16px);
+  --blur-strong: blur(24px);
+
+  --z-blob: 0;
+  --z-base: 1;
+  --z-sticky: 1;
+  --z-dropdown: 10;
+  --z-mobile-list: 10;
+  --z-detail: 20;
+  --z-modal: 100;
+  --z-notification: 110;
 
   --transition-fast: 0.12s cubic-bezier(0, 0, 0.2, 1);
   --transition-base: 0.225s cubic-bezier(0, 0, 0.2, 1);

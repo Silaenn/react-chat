@@ -1,7 +1,7 @@
 .detail {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: var(--z-detail);
   pointer-events: none;
 
   .detail-scrim {
@@ -55,7 +55,7 @@
       width: 44px;
       height: 44px;
       border: 1px solid var(--glass-border);
-      background: rgba(0, 0, 0, 0.04);
+      background: var(--bg-subtle);
       color: var(--text-secondary);
       border-radius: 50%;
       cursor: pointer;
@@ -63,22 +63,22 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: var(--blur-subtle);
+      -webkit-backdrop-filter: var(--blur-subtle);
       transition:
         background var(--transition-base),
         border-color var(--transition-base),
         color var(--transition-base);
 
       &:hover {
-        background: rgba(0, 0, 0, 0.08);
+        background: var(--bg-hover);
         border-color: var(--accent);
         color: var(--accent);
         box-shadow: 0 0 12px var(--accent-glow);
       }
 
       &:active {
-        background: rgba(0, 0, 0, 0.12);
+        background: var(--bg-active);
       }
     }
   }
@@ -95,14 +95,14 @@
     h2 {
   font-family: var(--font-heading);
   font-weight: 400;
-  font-size: 17px;
-      letter-spacing: 0.02em;
+  font-size: var(--text-heading-md);
+      letter-spacing: var(--ls-heading);
       color: var(--text-primary);
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
     }
 
     p {
-      font-size: 12px;
+      font-size: var(--text-sm);
       color: var(--text-secondary);
     }
   }
@@ -125,14 +125,14 @@
         transition: background-color var(--transition-base);
 
         &:hover {
-          background-color: rgba(0, 0, 0, 0.04);
+          background-color: var(--bg-subtle);
         }
 
         span {
           font-family: var(--font-body);
           font-weight: 500;
-          font-size: 13px;
-          letter-spacing: 0.02em;
+          font-size: var(--text-body);
+          letter-spacing: var(--ls-heading);
           color: var(--text-secondary);
           text-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
         }
@@ -141,7 +141,7 @@
           width: 24px;
           height: 24px;
           padding: 3px;
-          background: rgba(0, 0, 0, 0.04);
+          background: var(--bg-subtle);
           border-radius: 50%;
           cursor: pointer;
           color: var(--text-muted);
@@ -152,13 +152,13 @@
             border-color var(--transition-base);
 
           &:hover {
-            background: rgba(0, 0, 0, 0.08);
+            background: var(--bg-hover);
             color: var(--text-secondary);
             border-color: var(--glass-border-strong);
           }
 
           &:active {
-            background: rgba(0, 0, 0, 0.12);
+            background: var(--bg-active);
           }
         }
       }
@@ -173,10 +173,11 @@
       border: 1px solid var(--danger-glow);
       border-radius: var(--radius-md);
       cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: var(--text-body);
+      font-weight: 700;
       font-family: var(--font-body);
-      letter-spacing: 0.03em;
+      letter-spacing: var(--ls-uppercase);
+      text-transform: uppercase;
       position: relative;
       transition:
         background-color var(--transition-base),
@@ -187,8 +188,8 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
       &:hover {
-        background: rgba(220, 38, 38, 0.15);
-        box-shadow: 0 0 12px rgba(220, 38, 38, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+        background: var(--bg-danger-hover);
+        box-shadow: 0 0 12px var(--danger-glow), 0 2px 8px rgba(0, 0, 0, 0.06);
       }
 
       &:active {

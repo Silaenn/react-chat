@@ -12,8 +12,8 @@ import { db } from "../../lib/firebase";
 import { useChatStore } from "../../lib/chatStore";
 import { useUserStore } from "../../lib/userStore";
 import { getAvatar } from "../../lib/avatar";
-import InfoOutlined from "@mui/icons-material/InfoOutlined";
-import EmojiEmotionsOutlined from "@mui/icons-material/EmojiEmotionsOutlined";
+import Info from "@mui/icons-material/Info";
+import EmojiEmotions from "@mui/icons-material/EmojiEmotions";
 
 const Chat = () => {
   const [chat, setChat] = useState();
@@ -280,7 +280,7 @@ const Chat = () => {
           </div>
         </div>
         <div className="top-right">
-          <InfoOutlined className="chat-icon" onClick={toggleDetail} />
+          <Info className="chat-icon" onClick={toggleDetail} />
         </div>
       </div>
       {isPending ? (
@@ -292,9 +292,10 @@ const Chat = () => {
           <div className="center" onClick={() => setOpenMenuId(null)}>
             {chat?.messages?.map((message, index) => {
               const isOwn = message.senderId === currentUser?.id;
+              const isLast = index === chat.messages.length - 1;
               return (
                 <div
-                  className={`message ${isOwn ? "own" : ""}`}
+                  className={`message ${isOwn ? "own" : ""} ${openMenuId === message.id ? "menu-open" : ""} ${isLast ? "menu-up" : ""}`}
                   key={message.id || message.createdAt}
                   style={{ '--i': index }}
                 >
@@ -364,7 +365,7 @@ const Chat = () => {
           </div>
           <div className={`bottom ${isEditing ? "editing" : ""}`}>
             <div className="emoji" ref={emojiRef}>
-              <EmojiEmotionsOutlined
+              <EmojiEmotions
                 className={`emoji-icon ${isCurrentUserBlocked || isReceiverBlocked ? "disabled" : ""}`}
                 onClick={() => {
                   if (isCurrentUserBlocked || isReceiverBlocked) return;
@@ -377,13 +378,11 @@ const Chat = () => {
                 </div>
               )}
             </div>
-            <button
-              className={`cancel-btn ${isEditing ? "" : "hidden"}`}
-              onClick={cancelEdit}
-              tabIndex={isEditing ? 0 : -1}
-            >
-              ✕
-            </button>
+            {isEditing && (
+              <button className="cancel-btn" onClick={cancelEdit}>
+                ✕
+              </button>
+            )}
             <input
               type="text"
               placeholder={
