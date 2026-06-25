@@ -14,6 +14,7 @@ import { useUserStore } from "../../lib/userStore";
 import { getAvatar } from "../../lib/avatar";
 import Info from "@mui/icons-material/Info";
 import EmojiEmotions from "@mui/icons-material/EmojiEmotions";
+import { toast } from "react-toastify";
 
 const Chat = () => {
   const [chat, setChat] = useState();
@@ -80,7 +81,7 @@ const Chat = () => {
         });
         await updateDoc(chatRef, { messages });
       } catch (error) {
-        console.error("Error marking as read:", error);
+        toast.error("Gagal menandai pesan sebagai dibaca");
       }
     };
 
@@ -141,7 +142,7 @@ const Chat = () => {
         }
       }
     } catch (error) {
-      console.error("Error sending message:", error);
+      toast.error("Gagal mengirim pesan. Coba lagi.");
     }
   };
 
@@ -167,7 +168,7 @@ const Chat = () => {
         await updateDoc(chatRef, { messages });
       }
     } catch (error) {
-      console.error("Error editing message:", error);
+      toast.error("Gagal mengedit pesan");
     }
   };
 
@@ -182,7 +183,7 @@ const Chat = () => {
       );
       await updateDoc(chatRef, { messages });
     } catch (error) {
-      console.error("Error deleting message:", error);
+      toast.error("Gagal menghapus pesan");
     }
 
     setOpenMenuId(null);
@@ -251,6 +252,29 @@ const Chat = () => {
   const isPending = chatStatus === "pending";
   const isEditing = !!editingMessage;
 
+  if (!chat) {
+    return (
+      <div className="chat">
+        <div className="top">
+          <div className="top-left" />
+          <div className="top-center">
+            <div className="skeleton-avatar" />
+            <div className="texts">
+              <div className="skeleton-text skeleton-name" />
+              <div className="skeleton-text skeleton-status" />
+            </div>
+          </div>
+        </div>
+        <div className="center">
+          <div className="loading-chat">
+            <div className="loading-spinner" />
+            <span>Memuat pesan...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="chat">
       <div className="top">
@@ -290,77 +314,87 @@ const Chat = () => {
       ) : (
         <>
           <div className="center" onClick={() => setOpenMenuId(null)}>
-            {chat?.messages?.map((message, index) => {
-              const isOwn = message.senderId === currentUser?.id;
-              const isLast = index === chat.messages.length - 1;
-              return (
-                <div
-                  className={`message ${isOwn ? "own" : ""} ${openMenuId === message.id ? "menu-open" : ""} ${isLast ? "menu-up" : ""}`}
-                  key={message.id || message.createdAt}
-                  style={{ '--i': index }}
-                >
-                  <div className="texts">
-                    <p className="message-text">
-                      {message.text}
-                      {message.edited && (
-                        <span className="edited-label"> (diedit)</span>
-                      )}
-                    </p>
-                    <div className="msg-meta">
-                      <span className="msg-time">
-                        {formatTime(message.createdAt)}
-                      </span>
-                      {isOwn && (
-                        <span
-                          className={`msg-status ${message.readAt ? "read" : "sent"}`}
-                        >
-                          {message.readAt ? "✓✓" : "✓"}
+            {chat?.messages?.length > 0 ? (
+              chat.messages.map((message, index) => {
+                const isOwn = message.senderId === currentUser?.id;
+                const isLast = index === chat.messages.length - 1;
+                return (
+                  <div
+                    className={`message ${isOwn ? "own" : ""} ${openMenuId === message.id ? "menu-open" : ""} ${isLast ? "menu-up" : ""}`}
+                    key={message.id || message.createdAt}
+                    style={{ '--i': index }}
+                  >
+                    <div className="texts">
+                      <p className="message-text">
+                        {message.text}
+                        {message.edited && (
+                          <span className="edited-label"> (diedit)</span>
+                        )}
+                      </p>
+                      <div className="msg-meta">
+                        <span className="msg-time">
+                          {formatTime(message.createdAt)}
                         </span>
-                      )}
+                        {isOwn && (
+                          <span
+                            className={`msg-status ${message.readAt ? "read" : "sent"}`}
+                          >
+                            {message.readAt ? "✓✓" : "✓"}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  {isOwn && message.id && canModify(message.createdAt) && (
-                    <div
-                      className="message-menu"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        className="menu-trigger"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenMenuId(
-                            openMenuId === message.id ? null : message.id
-                          );
-                        }}
+                    {isOwn && message.id && canModify(message.createdAt) && (
+                      <div
+                        className="message-menu"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        ⋯
-                      </button>
-                      {openMenuId === message.id && (
-                        <div className="menu-dropdown">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              startEdit(message);
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDelete(message.id);
-                            }}
-                          >
-                            Hapus
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                        <button
+                          className="menu-trigger"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenMenuId(
+                              openMenuId === message.id ? null : message.id
+                            );
+                          }}
+                        >
+                          ⋯
+                        </button>
+                        {openMenuId === message.id && (
+                          <div className="menu-dropdown">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                startEdit(message);
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(message.id);
+                              }}
+                            >
+                              Hapus
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            ) : (
+              <div className="empty-center">
+                <div className="empty-icon">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
                 </div>
-              );
-            })}
-
+                <p className="empty-msg">Belum ada pesan. Kirim pesan pertama!</p>
+              </div>
+            )}
             <div ref={endRef}></div>
           </div>
           <div className={`bottom ${isEditing ? "editing" : ""}`}>
@@ -387,8 +421,8 @@ const Chat = () => {
               type="text"
               placeholder={
                 isCurrentUserBlocked || isReceiverBlocked
-                  ? "You cannot send a message"
-                  : "Type a message..."
+                  ? "Kamu tidak dapat mengirim pesan"
+                  : "Ketik pesan..."
               }
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -400,7 +434,7 @@ const Chat = () => {
               onClick={handleSend}
               disabled={isCurrentUserBlocked || isReceiverBlocked || text === ""}
             >
-              {isEditing ? "Simpan" : "Send"}
+              {isEditing ? "Simpan" : "Kirim"}
             </button>
           </div>
         </>

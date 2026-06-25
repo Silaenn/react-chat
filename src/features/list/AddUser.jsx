@@ -16,6 +16,7 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useUserStore } from "../../lib/userStore";
 import { getAvatar } from "../../lib/avatar";
+import { toast } from "react-toastify";
 
 const AddUser = ({ onClose }) => {
   const [user, setUser] = useState(null);
@@ -64,7 +65,7 @@ const AddUser = ({ onClose }) => {
         }
       }
     } catch (error) {
-      console.log(error);
+      toast.error("Gagal mencari pengguna");
       setNotFound(true);
     } finally {
       setSearching(false);
@@ -126,7 +127,7 @@ const AddUser = ({ onClose }) => {
       setUser(null);
       setUsername("");
     } catch (error) {
-      console.log(error);
+      toast.error("Gagal menambahkan pengguna");
     }
   };
 
@@ -137,25 +138,25 @@ const AddUser = ({ onClose }) => {
       <div className="addUser-modal" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>✕</button>
         <div className="modal-header">
-          <h2 className="modal-title">Add User</h2>
-          <p className="modal-subtitle">Search by username to start a new conversation</p>
+          <h2 className="modal-title">Tambah Pengguna</h2>
+          <p className="modal-subtitle">Cari berdasarkan username untuk memulai percakapan</p>
         </div>
         <div className="addUser-form">
           <input
             type="text"
-            placeholder="Enter username..."
+            placeholder="Masukkan username..."
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <button onClick={handleSearch}>Search</button>
+          <button onClick={handleSearch}>Cari</button>
         </div>
         {!username && !searching && !notFound && !added && !user && (
-          <p className="status empty-hint">Type a username above to find users</p>
+          <p className="status empty-hint">Ketik username di atas untuk mencari</p>
         )}
-        {searching && <p className="status">Searching...</p>}
-        {notFound && <p className="status not-found">User not found</p>}
-        {added && <p className="status success">User added!</p>}
+        {searching && <p className="status">Mencari...</p>}
+        {notFound && <p className="status not-found">Pengguna tidak ditemukan</p>}
+        {added && <p className="status success">Pengguna ditambahkan!</p>}
         {user && result && (
           <div className="addUser-result">
             <div className="avatar-letter" style={{ background: result.color }}>
@@ -167,7 +168,7 @@ const AddUser = ({ onClose }) => {
               onClick={handleAdd}
               disabled={alreadyAdded}
             >
-              {alreadyAdded ? "Added" : "Add"}
+              {alreadyAdded ? "Ditambahkan" : "Tambah"}
             </button>
           </div>
         )}

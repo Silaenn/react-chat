@@ -15,9 +15,11 @@ import { getAvatar } from "../../lib/avatar";
 import Search from "@mui/icons-material/Search";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Close from "@mui/icons-material/Close";
+import { toast } from "react-toastify";
 
 const ChatList = () => {
   const [chats, setChats] = useState([]);
+  const [chatsLoading, setChatsLoading] = useState(true);
   const [addMode, setAddMode] = useState(false);
   const [input, setInput] = useState("");
 
@@ -39,6 +41,7 @@ const ChatList = () => {
 
         const chatData = await Promise.all(promises);
         setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
+        setChatsLoading(false);
       }
     );
 
@@ -72,7 +75,7 @@ const ChatList = () => {
       changeChat(chat.chatId, chat.user, status);
       setShowList(false);
     } catch (error) {
-      console.log(error);
+      toast.error("Gagal memilih percakapan");
     }
   };
 
@@ -94,7 +97,7 @@ const ChatList = () => {
         await updateDoc(ref, { chats: updated });
       }
     } catch (error) {
-      console.log(error);
+      toast.error("Gagal menerima permintaan");
     }
   };
 
@@ -110,7 +113,7 @@ const ChatList = () => {
       }
       await deleteDoc(doc(db, "chats", chat.chatId));
     } catch (error) {
-      console.log(error);
+      toast.error("Gagal menolak permintaan");
     }
   };
 
@@ -134,6 +137,30 @@ const ChatList = () => {
       c.user.username.toLowerCase().includes(input.toLowerCase())
   );
 
+  if (chatsLoading) {
+    return (
+      <div className="chatList">
+        <div className="search">
+          <div className="searchBar">
+            <Search className="search-icon" />
+            <input type="text" placeholder="Cari" disabled />
+          </div>
+        </div>
+        <div className="items">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div className="item skeleton-item" key={i}>
+              <div className="skeleton-avatar-chatlist" />
+              <div className="texts">
+                <div className="skeleton-line skeleton-name-chatlist" />
+                <div className="skeleton-line skeleton-message-chatlist" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="chatList">
       <div className="search">
@@ -141,7 +168,7 @@ const ChatList = () => {
           <Search className="search-icon" />
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Cari"
             onChange={(e) => setInput(e.target.value)}
           />
         </div>
@@ -234,12 +261,18 @@ const ChatList = () => {
                 {chat.lastMessage ? (
                   <p>{chat.lastMessage}</p>
                 ) : (
-                  <p className="empty-msg">No messages yet</p>
+                  <p className="empty-msg">Belum ada pesan</p>
                 )}
               </div>
             </div>
           );
         })}
+
+        {chats.length === 0 && (
+          <div className="empty-state">
+            <p>Belum ada percakapan. Cari pengguna untuk memulai.</p>
+          </div>
+        )}
       </div>
 
       {addMode && <AddUser onClose={() => setAddMode(false)} />}

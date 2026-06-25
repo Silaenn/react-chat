@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import {
   arrayRemove,
   arrayUnion,
   doc,
+  onSnapshot,
   updateDoc,
 } from "firebase/firestore";
 import { useChatStore } from "../../lib/chatStore";
@@ -10,11 +12,25 @@ import "./Detail.css";
 import { useUserStore } from "../../lib/userStore";
 import { getAvatar } from "../../lib/avatar";
 import ExpandLess from "@mui/icons-material/ExpandLess";
+import { toast } from "react-toastify";
 
 const Detail = () => {
   const { changeBlock, user, isCurrentUserBlocked, isReceiverBlocked, showDetail, toggleDetail } =
     useChatStore();
   const { currentUser, fetchUserInfo } = useUserStore();
+
+  const [detailOnline, setDetailOnline] = useState(false);
+  const [detailLastSeen, setDetailLastSeen] = useState(null);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    const unSub = onSnapshot(doc(db, "users", user.id), (res) => {
+      const data = res.data();
+      setDetailOnline(data?.online ?? false);
+      setDetailLastSeen(data?.lastSeen ?? null);
+    });
+    return () => unSub();
+  }, [user?.id]);
 
   const handleBlock = async () => {
     if (!user) return;
@@ -27,7 +43,7 @@ const Detail = () => {
       changeBlock();
       fetchUserInfo(currentUser.id);
     } catch (error) {
-      console.log(error);
+      toast.error("Gagal memblokir pengguna");
     }
   };
 
@@ -47,28 +63,30 @@ const Detail = () => {
             </div>
           )}
           <h2>{user?.username}</h2>
-          <p>Online</p>
+          <p className={detailOnline ? "online" : "offline"}>
+            {detailOnline ? "Online" : "Offline"}
+          </p>
         </div>
         <div className="info">
           <div className="option">
             <div className="title">
-              <span>Chat Settings</span>
+              <span>Pengaturan Chat</span>
               <ExpandLess />
             </div>
           </div>
           <div className="option">
             <div className="title">
-              <span>Privacy & help</span>
+              <span>Privasi & Bantuan</span>
               <ExpandLess />
             </div>
           </div>
 
           <button onClick={handleBlock}>
             {isCurrentUserBlocked
-              ? "You are Blocked!"
+              ? "Kamu Diblokir!"
               : isReceiverBlocked
-              ? "User blocked"
-              : "Block User"}
+              ? "Pengguna diblokir"
+              : "Blokir Pengguna"}
           </button>
         </div>
       </div>

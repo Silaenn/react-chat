@@ -69,8 +69,8 @@ const Login = () => {
           <img src="/logo.png" alt="Chat App logo" className="logo" />
           <p className="subtitle">
             {mode === "login"
-              ? "Welcome back! Sign in to continue."
-              : "Create an account to get started."}
+              ? "Selamat datang! Masuk untuk melanjutkan."
+              : "Buat akun untuk memulai."}
           </p>
         </div>
 
@@ -79,13 +79,13 @@ const Login = () => {
             className={`tab ${mode === "login" ? "active" : ""}`}
             onClick={() => setMode("login")}
           >
-            Sign In
+            Masuk
           </button>
           <button
             className={`tab ${mode === "register" ? "active" : ""}`}
             onClick={() => setMode("register")}
           >
-            Sign Up
+            Daftar
           </button>
         </div>
 
@@ -96,23 +96,23 @@ const Login = () => {
               <input
                 id="login-email"
                 type="email"
-                placeholder="your@email.com"
+                placeholder="email@anda.com"
                 name="email"
                 required
               />
             </div>
             <div className="field">
-              <label htmlFor="login-password">Password</label>
+              <label htmlFor="login-password">Kata Sandi</label>
               <input
                 id="login-password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Masukkan kata sandi"
                 name="password"
                 required
               />
             </div>
             <button className="submit-btn" disabled={loading}>
-              {loading ? <span className="spinner" /> : "Sign In"}
+              {loading ? <span className="spinner" /> : "Masuk"}
             </button>
           </form>
         ) : (
@@ -122,7 +122,7 @@ const Login = () => {
               <input
                 id="reg-username"
                 type="text"
-                placeholder="Choose a username"
+                placeholder="Pilih username"
                 name="username"
                 required
               />
@@ -132,24 +132,24 @@ const Login = () => {
               <input
                 id="reg-email"
                 type="email"
-                placeholder="your@email.com"
+                placeholder="email@anda.com"
                 name="email"
                 required
               />
             </div>
             <div className="field">
-              <label htmlFor="reg-password">Password</label>
+              <label htmlFor="reg-password">Kata Sandi</label>
               <input
                 id="reg-password"
                 type="password"
-                placeholder="Create a password"
+                placeholder="Buat kata sandi"
                 name="password"
                 required
               />
             </div>
             
             <button className="submit-btn" disabled={loading}>
-              {loading ? <span className="spinner" /> : "Create Account"}
+              {loading ? <span className="spinner" /> : "Buat Akun"}
             </button>
           </form>
         )}

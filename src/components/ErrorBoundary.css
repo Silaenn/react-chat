@@ -1,0 +1,53 @@
+.error-boundary {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-boundary .card {
+  width: 400px;
+  max-width: 90vw;
+  padding: calc(var(--space, 8px) * 5);
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.60) 0%, transparent 60%),
+    linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,255,255,0.78));
+  backdrop-filter: blur(32px);
+  border: 1px solid var(--glass-border, rgba(0,0,0,0.08));
+  border-radius: var(--radius-xl, 28px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+.error-boundary .card h2 {
+  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-size: 20px;
+  color: var(--text-primary, #0F172A);
+  margin-bottom: 8px;
+}
+
+.error-boundary .card p {
+  font-size: 14px;
+  color: var(--text-secondary, #475569);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.error-boundary .card button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-md, 14px);
+  background: linear-gradient(135deg, var(--accent, #2563EB), #1d4ed8);
+  color: #FFF;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.12s;
+  box-shadow: 0 0 16px var(--accent-glow, rgba(37,99,235,0.20));
+}
+
+.error-boundary .card button:hover {
+  box-shadow: 0 0 28px var(--accent-glow, rgba(37,99,235,0.20));
+}
