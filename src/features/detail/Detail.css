@@ -20,11 +20,13 @@
     bottom: 0;
     width: 300px;
     max-width: 85vw;
-    background: var(--glass-bg-active);
+    background:
+      radial-gradient(ellipse at 30% 0%, rgba(255,255,255,0.50) 0%, transparent 60%),
+      linear-gradient(135deg, rgba(255,255,255,0.96), rgba(255,255,255,0.86));
     backdrop-filter: blur(32px);
     -webkit-backdrop-filter: blur(32px);
     border-left: 1px solid var(--glass-border);
-    box-shadow: -4px 0 32px rgba(0, 0, 0, 0.08);
+    box-shadow: -8px 0 40px rgba(0, 0, 0, 0.10), -2px 0 20px rgba(37, 99, 235, 0.04);
     transform: translateX(100%);
     transition: transform var(--transition-slide);
     overflow-y: auto;

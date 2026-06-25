@@ -120,10 +120,12 @@
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.03);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
       }
 
       &:active {
         background-color: rgba(0, 0, 0, 0.05);
+        box-shadow: none;
       }
 
       &.unread {
@@ -194,7 +196,9 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
-  background: var(--glass-bg-hover);
+  background:
+    radial-gradient(ellipse at 80% 0%, rgba(255,255,255,0.40) 0%, transparent 60%),
+    var(--glass-bg-hover);
   backdrop-filter: var(--blur-medium);
   -webkit-backdrop-filter: var(--blur-medium);
   z-index: var(--z-sticky);

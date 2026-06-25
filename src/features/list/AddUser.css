@@ -19,7 +19,9 @@
   max-width: 90vw;
   max-height: 85dvh;
   overflow-y: auto;
-  background: var(--glass-bg-active);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.55) 0%, transparent 60%),
+    linear-gradient(135deg, rgba(255,255,255,0.96), rgba(255,255,255,0.88));
   border-radius: var(--radius-xl);
   box-shadow:
     0 8px 48px rgba(0, 0, 0, 0.15),
@@ -142,15 +144,18 @@
     white-space: nowrap;
     transition:
       background-color var(--transition-base),
-      opacity var(--transition-base);
+      opacity var(--transition-base),
+      box-shadow var(--transition-fast);
 
     &:hover {
       background-color: var(--accent-hover);
+      box-shadow: 0 0 16px var(--accent-glow);
     }
 
     &:active {
       opacity: 0.85;
       transform: translateY(1px);
+      box-shadow: 0 0 8px var(--accent-glow);
     }
   }
 }

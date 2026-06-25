@@ -10,7 +10,9 @@
     padding: calc(var(--space) * 2) calc(var(--space) * 3);
     display: flex;
     align-items: center;
-    background: var(--glass-bg);
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.45) 0%, transparent 60%),
+      linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.72));
     backdrop-filter: var(--blur-strong);
     -webkit-backdrop-filter: var(--blur-strong);
     border-bottom: 1px solid var(--glass-border);
@@ -179,6 +181,11 @@
     display: flex;
     flex-direction: column;
     gap: var(--space);
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.40) 0%, transparent 65%),
+      rgba(255, 255, 255, 0.30);
+    backdrop-filter: var(--blur-micro);
+    -webkit-backdrop-filter: var(--blur-micro);
 
     .message {
       max-width: 72%;
@@ -437,11 +444,14 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space);
-    background: var(--glass-bg);
+    background:
+      radial-gradient(ellipse at 20% 100%, rgba(255,255,255,0.45) 0%, transparent 60%),
+      linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.72));
     backdrop-filter: var(--blur-strong);
     -webkit-backdrop-filter: var(--blur-strong);
     border-top: 1px solid var(--glass-border);
     position: relative;
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.04);
 
     input {
       flex: 1;
@@ -518,7 +528,7 @@
     }
 
     .sendButton {
-      background-color: var(--accent);
+      background: linear-gradient(135deg, var(--accent), #1d4ed8);
       color: #FFFFFF;
       padding: calc(var(--space) * 1.25) calc(var(--space) * 3);
       border: none;

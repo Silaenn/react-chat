@@ -13,7 +13,9 @@
   flex-direction: column;
   align-items: center;
   gap: 0;
-  background: var(--glass-bg-strong);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.60) 0%, transparent 60%),
+    linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,255,255,0.78));
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
   border: 1px solid var(--glass-border);
@@ -172,7 +174,7 @@
   width: 100%;
   padding: calc(var(--space) * 1.75) calc(var(--space) * 2.5);
   border: none;
-  background-color: var(--accent);
+  background: linear-gradient(135deg, var(--accent), #1d4ed8);
   color: #FFFFFF;
   border-radius: var(--radius-md);
   cursor: pointer;
