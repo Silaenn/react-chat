@@ -90,8 +90,8 @@ const App = () => {
         ) : (
           <div className="welcome">
             <div className="welcome-icon"><img src="/logo.png" alt="Chat App" /></div>
-            <h2>Selamat Datang</h2>
-            <p>Pilih percakapan dari sidebar untuk mulai chatting</p>
+            <h2>Welcome</h2>
+            <p>Select a conversation from the sidebar to start chatting</p>
           </div>
         )}
       </div>

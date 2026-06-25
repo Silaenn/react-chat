@@ -22,6 +22,19 @@ const Detail = () => {
   const [detailOnline, setDetailOnline] = useState(false);
   const [detailLastSeen, setDetailLastSeen] = useState(null);
 
+  const formatDetailLastSeen = (ts) => {
+    if (!ts) return "Offline";
+    const diff = Date.now() - (ts?.toMillis ? ts.toMillis() : new Date(ts).getTime());
+    const minutes = Math.floor(diff / 60000);
+    if (minutes < 1) return "last seen just now";
+    if (minutes < 60) return `last seen ${minutes} min ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `last seen ${hours} hour${hours > 1 ? "s" : ""} ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `last seen ${days} day${days > 1 ? "s" : ""} ago`;
+    return `last seen ${ts?.toDate ? ts.toDate().toLocaleDateString("en-US") : new Date(ts).toLocaleDateString("en-US")}`;
+  };
+
   useEffect(() => {
     if (!user?.id) return;
     const unSub = onSnapshot(doc(db, "users", user.id), (res) => {
@@ -43,7 +56,7 @@ const Detail = () => {
       changeBlock();
       fetchUserInfo(currentUser.id);
     } catch (error) {
-      toast.error("Gagal memblokir pengguna");
+      toast.error("Failed to block user");
     }
   };
 
@@ -64,29 +77,29 @@ const Detail = () => {
           )}
           <h2>{user?.username}</h2>
           <p className={detailOnline ? "online" : "offline"}>
-            {detailOnline ? "Online" : "Offline"}
+            {detailOnline ? "Online" : formatDetailLastSeen(detailLastSeen)}
           </p>
         </div>
         <div className="info">
           <div className="option">
             <div className="title">
-              <span>Pengaturan Chat</span>
+              <span>Chat Settings</span>
               <ExpandLess />
             </div>
           </div>
           <div className="option">
             <div className="title">
-              <span>Privasi & Bantuan</span>
+              <span>Privacy & help</span>
               <ExpandLess />
             </div>
           </div>
 
           <button onClick={handleBlock}>
             {isCurrentUserBlocked
-              ? "Kamu Diblokir!"
+              ? "You are Blocked!"
               : isReceiverBlocked
-              ? "Pengguna diblokir"
-              : "Blokir Pengguna"}
+              ? "User blocked"
+              : "Block User"}
           </button>
         </div>
       </div>

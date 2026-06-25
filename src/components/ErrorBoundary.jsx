@@ -16,9 +16,9 @@ class ErrorBoundary extends Component {
       return (
         <div className="error-boundary">
           <div className="card">
-            <h2>Terjadi Kesalahan</h2>
-            <p>Maaf, terjadi kesalahan yang tidak terduga. Silakan muat ulang halaman untuk melanjutkan.</p>
-            <button onClick={() => window.location.reload()}>Muat Ulang Halaman</button>
+            <h2>Something went wrong</h2>
+            <p>Sorry, an unexpected error occurred. Please reload the page to continue.</p>
+            <button onClick={() => window.location.reload()}>Reload Page</button>
           </div>
         </div>
       );

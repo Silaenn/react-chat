@@ -75,7 +75,7 @@ const ChatList = () => {
       changeChat(chat.chatId, chat.user, status);
       setShowList(false);
     } catch (error) {
-      toast.error("Gagal memilih percakapan");
+      toast.error("Failed to select conversation");
     }
   };
 
@@ -97,7 +97,7 @@ const ChatList = () => {
         await updateDoc(ref, { chats: updated });
       }
     } catch (error) {
-      toast.error("Gagal menerima permintaan");
+      toast.error("Failed to accept request");
     }
   };
 
@@ -113,7 +113,7 @@ const ChatList = () => {
       }
       await deleteDoc(doc(db, "chats", chat.chatId));
     } catch (error) {
-      toast.error("Gagal menolak permintaan");
+      toast.error("Failed to decline request");
     }
   };
 
@@ -137,30 +137,6 @@ const ChatList = () => {
       c.user.username.toLowerCase().includes(input.toLowerCase())
   );
 
-  if (chatsLoading) {
-    return (
-      <div className="chatList">
-        <div className="search">
-          <div className="searchBar">
-            <Search className="search-icon" />
-            <input type="text" placeholder="Cari" disabled />
-          </div>
-        </div>
-        <div className="items">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div className="item skeleton-item" key={i}>
-              <div className="skeleton-avatar-chatlist" />
-              <div className="texts">
-                <div className="skeleton-line skeleton-name-chatlist" />
-                <div className="skeleton-line skeleton-message-chatlist" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="chatList">
       <div className="search">
@@ -168,7 +144,8 @@ const ChatList = () => {
           <Search className="search-icon" />
           <input
             type="text"
-            placeholder="Cari"
+            placeholder="Search"
+            disabled={chatsLoading}
             onChange={(e) => setInput(e.target.value)}
           />
         </div>
@@ -182,96 +159,116 @@ const ChatList = () => {
         </div>
       </div>
       <div className="items">
-        {incomingRequests.length > 0 && (
-          <div className="section-label">Request Masuk</div>
-        )}
-        {incomingRequests.map((chat, index) => {
-          const { letter, color } = getAvatar(chat.user.username);
-          return (
-            <div className="item request-item" key={chat.chatId} style={{ '--i': index }}>
-              <div className="avatar-letter" style={{ background: color }}>
-                {letter}
-              </div>
+        {chatsLoading ? (
+          [1, 2, 3, 4, 5].map((i) => (
+            <div className="item skeleton-item" key={i}>
+              <div className="skeleton-avatar-chatlist" />
               <div className="texts">
-                <div className="row">
-                  <span>{chat.user.username}</span>
-                </div>
-                <p className="empty-msg">Menunggu responmu</p>
+                <div className="skeleton-line skeleton-name-chatlist" />
+                <div className="skeleton-line skeleton-message-chatlist" />
               </div>
-              <div className="request-actions">
-                <button
-                  className="accept-btn"
-                  onClick={() => handleAccept(chat)}
+            </div>
+          ))
+        ) : (
+          <>
+            {incomingRequests.length > 0 && (
+              <div className="section-label">Incoming Requests</div>
+            )}
+            {incomingRequests.map((chat, index) => {
+              const { letter, color } = getAvatar(chat.user.username);
+              return (
+                <div className="item request-item" key={chat.chatId} style={{ '--i': index }}>
+                  <div className="avatar-letter" style={{ background: color }}>
+                    {letter}
+                  </div>
+                  <div className="texts">
+                    <div className="row">
+                      <span>{chat.user.username}</span>
+                    </div>
+                    <p className="empty-msg">Waiting for your response</p>
+                  </div>
+                  <div className="request-actions">
+                    <button
+                      className="accept-btn"
+                      onClick={() => handleAccept(chat)}
+                    >
+                      Accept
+                    </button>
+                    <button
+                      className="decline-btn"
+                      onClick={() => handleDecline(chat)}
+                    >
+                      Decline
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+
+            {outgoingPending.map((chat, index) => {
+              const { letter, color } = getAvatar(chat.user.username);
+              return (
+                <div
+                  className="item pending-item"
+                  key={chat.chatId}
+                  onClick={() => handleSelect(chat)}
+                  style={{ '--i': index }}
                 >
-                  Terima
-                </button>
-                <button
-                  className="decline-btn"
-                  onClick={() => handleDecline(chat)}
+                  <div className="avatar-letter" style={{ background: color }}>
+                    {letter}
+                  </div>
+                  <div className="texts">
+                    <div className="row">
+                      <span>{chat.user.username}</span>
+                    </div>
+                    <p className="empty-msg">Waiting to be accepted...</p>
+                  </div>
+                </div>
+              );
+            })}
+
+            {activeChats.map((chat, index) => {
+              const { letter, color } = getAvatar(chat.user.username);
+              return (
+                <div
+                  className={`item ${!chat?.isSeen ? "unread" : ""}`}
+                  key={chat.chatId}
+                  onClick={() => handleSelect(chat)}
+                  style={{ '--i': index }}
                 >
-                  Tolak
-                </button>
-              </div>
-            </div>
-          );
-        })}
-
-        {outgoingPending.map((chat, index) => {
-          const { letter, color } = getAvatar(chat.user.username);
-          return (
-            <div
-              className="item pending-item"
-              key={chat.chatId}
-              onClick={() => handleSelect(chat)}
-              style={{ '--i': index }}
-            >
-              <div className="avatar-letter" style={{ background: color }}>
-                {letter}
-              </div>
-              <div className="texts">
-                <div className="row">
-                  <span>{chat.user.username}</span>
+                  <div className="avatar-letter" style={{ background: color }}>
+                    {letter}
+                  </div>
+                  <div className="texts">
+                    <div className="row">
+                      <span>
+                        {chat.user.blocked.includes(currentUser.id)
+                          ? "User"
+                          : chat.user.username}
+                      </span>
+                    </div>
+                    {chat.lastMessage ? (
+                      <p>{chat.lastMessage}</p>
+                    ) : (
+                      <p className="empty-msg">No messages yet</p>
+                    )}
+                  </div>
                 </div>
-                <p className="empty-msg">Menunggu diterima...</p>
-              </div>
-            </div>
-          );
-        })}
+              );
+            })}
 
-        {activeChats.map((chat, index) => {
-          const { letter, color } = getAvatar(chat.user.username);
-          return (
-            <div
-              className={`item ${!chat?.isSeen ? "unread" : ""}`}
-              key={chat.chatId}
-              onClick={() => handleSelect(chat)}
-              style={{ '--i': index }}
-            >
-              <div className="avatar-letter" style={{ background: color }}>
-                {letter}
+            {activeChats.length === 0 && incomingRequests.length === 0 && outgoingPending.length === 0 && input && (
+              <div className="empty-state">
+                <p>No users found matching your search.</p>
               </div>
-              <div className="texts">
-                <div className="row">
-                  <span>
-                    {chat.user.blocked.includes(currentUser.id)
-                      ? "User"
-                      : chat.user.username}
-                  </span>
-                </div>
-                {chat.lastMessage ? (
-                  <p>{chat.lastMessage}</p>
-                ) : (
-                  <p className="empty-msg">Belum ada pesan</p>
-                )}
-              </div>
-            </div>
-          );
-        })}
+            )}
 
-        {chats.length === 0 && (
-          <div className="empty-state">
-            <p>Belum ada percakapan. Cari pengguna untuk memulai.</p>
-          </div>
+            {activeChats.length === 0 && incomingRequests.length === 0 && outgoingPending.length === 0 && !input && (
+              <div className="empty-state">
+                <p>No conversations yet. Search for users to start.</p>
+              </div>
+            )}
+          </>
         )}
       </div>
 

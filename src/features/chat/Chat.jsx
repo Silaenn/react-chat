@@ -50,15 +50,15 @@ const Chat = () => {
     const diff = Date.now() - getMsgTime(ts);
     const minutes = Math.floor(diff / 60000);
 
-    if (minutes < 1) return "baru saja";
-    if (minutes < 60) return `${minutes} menit lalu`;
+    if (minutes < 1) return "just now";
+    if (minutes < 60) return `${minutes} min ago`;
     const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours} jam lalu`;
+    if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
     const days = Math.floor(hours / 24);
-    if (days < 7) return `${days} hari lalu`;
+    if (days < 7) return `${days} day${days > 1 ? "s" : ""} ago`;
     return ts?.toDate
-      ? ts.toDate().toLocaleDateString("id-ID")
-      : new Date(ts).toLocaleDateString("id-ID");
+      ? ts.toDate().toLocaleDateString("en-US")
+      : new Date(ts).toLocaleDateString("en-US");
   };
 
   useEffect(() => {
@@ -81,7 +81,7 @@ const Chat = () => {
         });
         await updateDoc(chatRef, { messages });
       } catch (error) {
-        toast.error("Gagal menandai pesan sebagai dibaca");
+        toast.error("Failed to mark message as read");
       }
     };
 
@@ -142,7 +142,7 @@ const Chat = () => {
         }
       }
     } catch (error) {
-      toast.error("Gagal mengirim pesan. Coba lagi.");
+      toast.error("Failed to send message. Please try again.");
     }
   };
 
@@ -168,12 +168,12 @@ const Chat = () => {
         await updateDoc(chatRef, { messages });
       }
     } catch (error) {
-      toast.error("Gagal mengedit pesan");
+      toast.error("Failed to edit message");
     }
   };
 
   const handleDelete = async (messageId) => {
-    if (!window.confirm("Hapus pesan?")) return;
+    if (!window.confirm("Delete message?")) return;
 
     try {
       const chatRef = doc(db, "chats", chatId);
@@ -183,7 +183,7 @@ const Chat = () => {
       );
       await updateDoc(chatRef, { messages });
     } catch (error) {
-      toast.error("Gagal menghapus pesan");
+      toast.error("Failed to delete message");
     }
 
     setOpenMenuId(null);
@@ -268,7 +268,7 @@ const Chat = () => {
         <div className="center">
           <div className="loading-chat">
             <div className="loading-spinner" />
-            <span>Memuat pesan...</span>
+            <span>Loading messages...</span>
           </div>
         </div>
       </div>
@@ -294,11 +294,11 @@ const Chat = () => {
             <p className={`status-text ${isOnline ? "online" : "offline"}`}>
               <span className={`status-dot ${isOnline ? "online" : "offline"}`} />
               {isPending
-                ? "Menunggu respon..."
+                ? "Waiting for response..."
                 : isOnline
                   ? "Online"
                   : lastSeen
-                    ? `Terakhir dilihat ${formatLastSeen(lastSeen)}`
+                    ? `Last seen ${formatLastSeen(lastSeen)}`
                     : "Offline"}
             </p>
           </div>
@@ -309,7 +309,7 @@ const Chat = () => {
       </div>
       {isPending ? (
         <div className="pending-banner">
-          <p>Permintaan chat telah dikirim. Menunggu pengguna menerima undanganmu.</p>
+          <p>Chat request sent. Waiting for the user to accept your invitation.</p>
         </div>
       ) : (
         <>
@@ -328,7 +328,7 @@ const Chat = () => {
                       <p className="message-text">
                         {message.text}
                         {message.edited && (
-                          <span className="edited-label"> (diedit)</span>
+                          <span className="edited-label"> (edited)</span>
                         )}
                       </p>
                       <div className="msg-meta">
@@ -376,7 +376,7 @@ const Chat = () => {
                                 handleDelete(message.id);
                               }}
                             >
-                              Hapus
+                              Delete
                             </button>
                           </div>
                         )}
@@ -392,7 +392,7 @@ const Chat = () => {
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                   </svg>
                 </div>
-                <p className="empty-msg">Belum ada pesan. Kirim pesan pertama!</p>
+                <p className="empty-msg">No messages yet. Send your first message!</p>
               </div>
             )}
             <div ref={endRef}></div>
@@ -421,8 +421,8 @@ const Chat = () => {
               type="text"
               placeholder={
                 isCurrentUserBlocked || isReceiverBlocked
-                  ? "Kamu tidak dapat mengirim pesan"
-                  : "Ketik pesan..."
+                ? "You cannot send a message"
+                : "Type a message..."
               }
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -434,7 +434,7 @@ const Chat = () => {
               onClick={handleSend}
               disabled={isCurrentUserBlocked || isReceiverBlocked || text === ""}
             >
-              {isEditing ? "Simpan" : "Kirim"}
+              {isEditing ? "Save" : "Send"}
             </button>
           </div>
         </>
