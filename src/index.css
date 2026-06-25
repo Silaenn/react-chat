@@ -147,7 +147,6 @@ body::after {
 .blob {
   position: absolute;
   border-radius: 50%;
-  will-change: transform;
 }
 
 .blob-1 {
@@ -355,6 +354,9 @@ body::after {
 @media (max-width: 768px) {
   :root {
     --space: 6px;
+    --blur-strong: blur(12px);
+    --glass-blur-heavy: blur(16px);
+    --glass-blur: blur(12px);
   }
 
   .container .list {

@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, lazy, Suspense } from "react";
 import "./Chat.css";
-import EmojiPicker from "emoji-picker-react";
+
+const EmojiPicker = lazy(() => import("emoji-picker-react"));
 import {
   arrayUnion,
   doc,
@@ -408,7 +409,9 @@ const Chat = () => {
               />
               {!(isCurrentUserBlocked || isReceiverBlocked) && (
                 <div className="picker">
-                  <EmojiPicker open={openEmoji} onEmojiClick={handleEmoji} />
+                  <Suspense fallback={null}>
+                    <EmojiPicker open={openEmoji} onEmojiClick={handleEmoji} />
+                  </Suspense>
                 </div>
               )}
             </div>
