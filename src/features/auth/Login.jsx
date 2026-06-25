@@ -66,7 +66,7 @@ const Login = () => {
     <div className="login">
       <div className="card">
         <div className="header">
-          <h1>Chat App</h1>
+          <img src="/logo.png" alt="Chat App logo" className="logo" />
           <p className="subtitle">
             {mode === "login"
               ? "Welcome back! Sign in to continue."

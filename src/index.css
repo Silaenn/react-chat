@@ -199,8 +199,14 @@ body {
     animation: fade-slide-up 0.4s ease-out;
 
     .welcome-icon {
-      font-size: 48px;
-      margin-bottom: var(--space);
+      line-height: 1;
+      margin-bottom: -30px;
+
+      img {
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
+      }
     }
 
     h2 {
@@ -208,7 +214,7 @@ body {
       font-weight: 400;
       font-size: 20px;
       color: var(--text-primary);
-      margin: 0;
+      margin: 0 0 2px 0;
       letter-spacing: 0.01em;
       text-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
     }
