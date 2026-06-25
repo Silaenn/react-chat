@@ -90,6 +90,7 @@
     align-items: center;
     gap: var(--space);
     border-bottom: 1px solid var(--glass-border);
+    animation: detail-fade-in 0.2s ease-out;
 
     h2 {
   font-family: var(--font-heading);
@@ -223,6 +224,11 @@
     0 2px 8px rgba(0, 0, 0, 0.10),
     0 0 20px rgba(37, 99, 235, 0.08);
   flex-shrink: 0;
+}
+
+@keyframes detail-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px) {

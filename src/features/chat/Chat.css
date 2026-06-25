@@ -255,6 +255,7 @@
             font-size: var(--text-xs);
             line-height: 1;
             letter-spacing: -1px;
+            transition: opacity var(--transition-base), color var(--transition-base);
 
             &.sent {
               color: var(--text-secondary);

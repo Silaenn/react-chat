@@ -90,7 +90,7 @@ const Login = () => {
         </div>
 
         {mode === "login" ? (
-          <form onSubmit={handleLogin} className="form">
+          <form key="login" onSubmit={handleLogin} className="form">
             <div className="field">
               <label htmlFor="login-email">Email</label>
               <input
@@ -116,7 +116,7 @@ const Login = () => {
             </button>
           </form>
         ) : (
-          <form onSubmit={handleRegister} className="form">
+          <form key="register" onSubmit={handleRegister} className="form">
             <div className="field">
               <label htmlFor="reg-username">Username</label>
               <input

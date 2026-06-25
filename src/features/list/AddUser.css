@@ -152,6 +152,7 @@
   color: var(--text-secondary);
   font-style: italic;
   letter-spacing: 0.02em;
+  animation: status-fade-in 0.2s ease-out;
 
   &.empty-hint {
     font-style: normal;
@@ -170,6 +171,11 @@
   }
 }
 
+@keyframes status-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .addUser-result {
   margin-top: calc(var(--space) * 2);
   display: flex;
@@ -177,6 +183,7 @@
   gap: calc(var(--space) * 1.5);
   padding: var(--space) var(--space);
   border-radius: var(--radius-sm);
+  animation: result-slide-in 0.2s ease-out;
 
   .result-name {
     flex: 1;
@@ -233,6 +240,11 @@
       }
     }
   }
+}
+
+@keyframes result-slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px) {

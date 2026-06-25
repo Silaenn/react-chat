@@ -4,6 +4,16 @@
   align-items: center;
   border-bottom: 1px solid var(--glass-border);
   margin: 0 calc(var(--space) * 0);
+  cursor: pointer;
+  transition: background-color var(--transition-base);
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
 
   .user {
     display: flex;
