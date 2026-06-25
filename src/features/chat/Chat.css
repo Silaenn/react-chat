@@ -129,6 +129,11 @@
         &:hover {
           opacity: 0.85;
         }
+
+        &:active {
+          opacity: 1;
+          transform: scale(0.90);
+        }
       }
     }
   }
@@ -153,8 +158,18 @@
   }
 
   @keyframes pending-pulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 0.8; }
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.75; }
+  }
+
+  @keyframes picker-pop-in {
+    from { opacity: 0; transform: scale(0.95) translateY(4px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  @keyframes fade-slide-in {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
   }
 
   .center {
@@ -171,6 +186,7 @@
       gap: var(--space);
       position: relative;
       animation: drop-in 0.2s cubic-bezier(0.2, 0, 0, 1) both;
+      animation-delay: calc(var(--i, 0) * 15ms);
 
       @keyframes drop-in {
         from {
@@ -298,6 +314,11 @@
             background: rgba(0, 0, 0, 0.05);
             color: var(--text-secondary);
           }
+
+          &:active {
+            background: rgba(0, 0, 0, 0.10);
+            transform: scale(0.90);
+          }
         }
 
         .menu-dropdown {
@@ -316,6 +337,8 @@
           box-shadow:
             0 4px 16px rgba(0, 0, 0, 0.10),
             0 0 32px rgba(0, 0, 0, 0.06);
+          animation: drop-in 0.12s ease-out both;
+          transform-origin: top right;
 
           button {
             display: block;
@@ -366,6 +389,7 @@
 
   .cancel-btn {
     width: 44px;
+    min-width: 44px;
     height: 44px;
     border: 1px solid var(--glass-border);
     background: rgba(0, 0, 0, 0.04);
@@ -382,7 +406,10 @@
     transition:
       background var(--transition-base),
       border-color var(--transition-base),
-      color var(--transition-base);
+      color var(--transition-base),
+      opacity var(--transition-base),
+      transform var(--transition-fast);
+    animation: fade-slide-in 0.15s ease-out;
 
     &:hover {
       background: rgba(0, 0, 0, 0.08);
@@ -393,6 +420,13 @@
     &:active {
       background: rgba(0, 0, 0, 0.12);
     }
+  }
+
+  .cancel-btn.hidden {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+    animation: none;
   }
 
   .bottom {
@@ -472,6 +506,8 @@
           0 0 0 1px var(--glass-border);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
+        animation: picker-pop-in 0.15s ease-out;
+        transform-origin: bottom left;
       }
     }
 

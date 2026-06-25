@@ -88,6 +88,16 @@
         border-color: var(--accent);
         color: var(--accent);
       }
+
+      .add-icon-wrap {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity var(--transition-base);
+        pointer-events: none;
+      }
     }
   }
 
@@ -105,6 +115,8 @@
       position: relative;
       transition: background-color var(--transition-base);
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      animation: item-fade-in 0.25s ease-out both;
+      animation-delay: calc(var(--i, 0) * 20ms);
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.03);
@@ -287,7 +299,12 @@
 
 @keyframes unread-pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes item-fade-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px) {

@@ -63,6 +63,11 @@
     background: rgba(0, 0, 0, 0.05);
     color: var(--text-primary);
   }
+
+  &:active {
+    background: rgba(0, 0, 0, 0.10);
+    transform: scale(0.92);
+  }
 }
 
 .modal-header {
@@ -210,7 +215,7 @@
     flex-shrink: 0;
     transition:
       background var(--transition-base),
-      box-shadow var(--transition-fast),
+      box-shadow var(--transition-base),
       transform var(--transition-fast);
 
     &:hover {

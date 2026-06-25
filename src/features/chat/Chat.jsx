@@ -204,7 +204,7 @@ const Chat = () => {
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chat?.messages]);
+  }, [chat?.messages?.length]);
 
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
@@ -290,12 +290,13 @@ const Chat = () => {
       ) : (
         <>
           <div className="center" onClick={() => setOpenMenuId(null)}>
-            {chat?.messages?.map((message) => {
+            {chat?.messages?.map((message, index) => {
               const isOwn = message.senderId === currentUser?.id;
               return (
                 <div
                   className={`message ${isOwn ? "own" : ""}`}
                   key={message.id || message.createdAt}
+                  style={{ '--i': index }}
                 >
                   <div className="texts">
                     <p className="message-text">
@@ -376,11 +377,13 @@ const Chat = () => {
                 </div>
               )}
             </div>
-            {isEditing && (
-              <button className="cancel-btn" onClick={cancelEdit}>
-                ✕
-              </button>
-            )}
+            <button
+              className={`cancel-btn ${isEditing ? "" : "hidden"}`}
+              onClick={cancelEdit}
+              tabIndex={isEditing ? 0 : -1}
+            >
+              ✕
+            </button>
             <input
               type="text"
               placeholder={

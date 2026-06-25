@@ -40,7 +40,7 @@ const Detail = () => {
         <div className="detail-header">
           <button className="close-btn" onClick={toggleDetail}>×</button>
         </div>
-        <div className="user" key={user?.id}>
+        <div className="user">
           {avatar && (
             <div className="avatar-letter" style={{ background: avatar.color }}>
               {avatar.letter}

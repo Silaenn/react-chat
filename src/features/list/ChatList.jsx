@@ -145,20 +145,23 @@ const ChatList = () => {
             onChange={(e) => setInput(e.target.value)}
           />
         </div>
-        {addMode ? (
-          <Close className="add" onClick={() => setAddMode((prev) => !prev)} />
-        ) : (
-          <PersonAdd className="add" onClick={() => setAddMode((prev) => !prev)} />
-        )}
+        <div className="add" onClick={() => setAddMode((prev) => !prev)}>
+          <div className="add-icon-wrap" style={{ opacity: addMode ? 0 : 1 }}>
+            <PersonAdd />
+          </div>
+          <div className="add-icon-wrap" style={{ opacity: addMode ? 1 : 0 }}>
+            <Close />
+          </div>
+        </div>
       </div>
       <div className="items">
         {incomingRequests.length > 0 && (
           <div className="section-label">Request Masuk</div>
         )}
-        {incomingRequests.map((chat) => {
+        {incomingRequests.map((chat, index) => {
           const { letter, color } = getAvatar(chat.user.username);
           return (
-            <div className="item request-item" key={chat.chatId}>
+            <div className="item request-item" key={chat.chatId} style={{ '--i': index }}>
               <div className="avatar-letter" style={{ background: color }}>
                 {letter}
               </div>
@@ -186,13 +189,14 @@ const ChatList = () => {
           );
         })}
 
-        {outgoingPending.map((chat) => {
+        {outgoingPending.map((chat, index) => {
           const { letter, color } = getAvatar(chat.user.username);
           return (
             <div
               className="item pending-item"
               key={chat.chatId}
               onClick={() => handleSelect(chat)}
+              style={{ '--i': index }}
             >
               <div className="avatar-letter" style={{ background: color }}>
                 {letter}
@@ -207,13 +211,14 @@ const ChatList = () => {
           );
         })}
 
-        {activeChats.map((chat) => {
+        {activeChats.map((chat, index) => {
           const { letter, color } = getAvatar(chat.user.username);
           return (
             <div
               className={`item ${!chat?.isSeen ? "unread" : ""}`}
               key={chat.chatId}
               onClick={() => handleSelect(chat)}
+              style={{ '--i': index }}
             >
               <div className="avatar-letter" style={{ background: color }}>
                 {letter}
