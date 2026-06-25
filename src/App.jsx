@@ -90,7 +90,7 @@ const App = () => {
         ) : (
           <div className="welcome">
             <div className="welcome-icon"><img src="/logo.webp" alt="Chat App" width="120" height="120" /></div>
-            <h2>Welcome</h2>
+            <h2>Welcome to Chat App</h2>
             <p>Select a conversation from the sidebar to start chatting</p>
           </div>
         )}
