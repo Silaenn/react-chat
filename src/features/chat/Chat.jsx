@@ -25,6 +25,7 @@ const Chat = () => {
   const [editingMessage, setEditingMessage] = useState(null);
   const [isOnline, setIsOnline] = useState(false);
   const [lastSeen, setLastSeen] = useState(null);
+  const centerRef = useRef(null);
 
   const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, chatStatus, toggleDetail, setShowList } =
     useChatStore();
@@ -248,6 +249,17 @@ const Chat = () => {
     }
   };
 
+  const shouldDropUp = (index) => {
+    if (!centerRef.current) return false;
+    const items = centerRef.current.querySelectorAll('.message');
+    const el = items[index];
+    if (!el) return false;
+    const containerBottom = centerRef.current.getBoundingClientRect().bottom;
+    const elBottom = el.getBoundingClientRect().bottom;
+    // Jika jarak dari bottom element ke bottom container < 120px, drop up
+    return (containerBottom - elBottom) < 80;
+  };
+
   const avatar = user ? getAvatar(user.username) : null;
 
   const isPending = chatStatus === "pending";
@@ -314,14 +326,13 @@ const Chat = () => {
         </div>
       ) : (
         <>
-          <div className="center" onClick={() => setOpenMenuId(null)}>
+          <div className="center" ref={centerRef} onClick={() => setOpenMenuId(null)}>
             {chat?.messages?.length > 0 ? (
               chat.messages.map((message, index) => {
                 const isOwn = message.senderId === currentUser?.id;
-                const isLast = index === chat.messages.length - 1;
                 return (
                   <div
-                    className={`message ${isOwn ? "own" : ""} ${openMenuId === message.id ? "menu-open" : ""} ${isLast ? "menu-up" : ""}`}
+                    className={`message ${isOwn ? "own" : ""} ${openMenuId === message.id ? "menu-open" : ""} ${shouldDropUp(index) ? "menu-up" : ""}`}
                     key={message.id || message.createdAt}
                     style={{ '--i': index }}
                   >
