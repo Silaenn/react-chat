@@ -245,7 +245,11 @@ const ChatList = () => {
                       </span>
                     </div>
                     {chat.lastMessage ? (
-                      <p className="last-msg">{chat.lastMessage}</p>
+                      <p className={`last-msg ${chat.lastMessage === "This message was deleted" ? "deleted" : ""}`}>
+                        {chat.lastMessage === "This message was deleted"
+                          ? "This message was deleted"
+                          : chat.lastMessage}
+                      </p>
                     ) : (
                       <p className="empty-msg">No messages yet</p>
                     )}

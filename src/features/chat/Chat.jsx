@@ -178,16 +178,103 @@ const Chat = () => {
     }
   };
 
-  const handleDelete = async (messageId) => {
-    if (!window.confirm("Delete message?")) return;
+  const handleDeleteForEveryone = async (messageId) => {
+    if (!window.confirm("Delete for everyone?")) return;
 
     try {
       const chatRef = doc(db, "chats", chatId);
       const chatSnap = await getDoc(chatRef);
-      const messages = chatSnap.data().messages.filter(
-        (m) => m.id !== messageId
-      );
+      const messages = chatSnap.data().messages.map((m) => {
+        if (m.id === messageId) {
+          return { ...m, deleted: true, text: "", edited: false };
+        }
+        return m;
+      });
       await updateDoc(chatRef, { messages });
+
+      const sorted = [...messages].sort(
+        (a, b) => getMsgTime(b.createdAt) - getMsgTime(a.createdAt)
+      );
+      let newLastMsg = "";
+      for (const msg of sorted) {
+        if (msg.id === messageId) {
+          newLastMsg = "This message was deleted";
+          break;
+        }
+        if (!msg.deleted && !(msg.deletedFor || []).includes(currentUser.id)) {
+          newLastMsg = msg.text;
+          break;
+        }
+      }
+
+      const userIDs = [currentUser.id, user.id];
+      for (const id of userIDs) {
+        const userChatsRef = doc(db, "userchats", id);
+        const userChatsSnapshot = await getDoc(userChatsRef);
+        if (userChatsSnapshot.exists()) {
+          const userChatsData = userChatsSnapshot.data();
+          const chatIndex = userChatsData.chats.findIndex(
+            (c) => c.chatId === chatId
+          );
+          if (chatIndex !== -1) {
+            userChatsData.chats[chatIndex].lastMessage = newLastMsg;
+            userChatsData.chats[chatIndex].updatedAt = Date.now();
+            await updateDoc(userChatsRef, {
+              chats: userChatsData.chats,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      toast.error("Failed to delete message");
+    }
+
+    setOpenMenuId(null);
+  };
+
+  const handleDeleteForMe = async (messageId) => {
+    if (!window.confirm("Delete for me?")) return;
+
+    try {
+      const chatRef = doc(db, "chats", chatId);
+      const chatSnap = await getDoc(chatRef);
+      const messages = chatSnap.data().messages.map((m) => {
+        if (m.id === messageId) {
+          return {
+            ...m,
+            deletedFor: [...(m.deletedFor || []), currentUser.id],
+          };
+        }
+        return m;
+      });
+      await updateDoc(chatRef, { messages });
+
+      const lastVisible = messages
+        .filter(
+          (m) =>
+            m.id !== messageId &&
+            !m.deleted &&
+            !(m.deletedFor || []).includes(currentUser.id)
+        )
+        .sort((a, b) => getMsgTime(b.createdAt) - getMsgTime(a.createdAt))[0];
+
+      const userChatsRef = doc(db, "userchats", currentUser.id);
+      const userChatsSnapshot = await getDoc(userChatsRef);
+      if (userChatsSnapshot.exists()) {
+        const userChatsData = userChatsSnapshot.data();
+        const chatIndex = userChatsData.chats.findIndex(
+          (c) => c.chatId === chatId
+        );
+        if (chatIndex !== -1) {
+          userChatsData.chats[chatIndex].lastMessage = lastVisible
+            ? lastVisible.text
+            : "";
+          userChatsData.chats[chatIndex].updatedAt = Date.now();
+          await updateDoc(userChatsRef, {
+            chats: userChatsData.chats,
+          });
+        }
+      }
     } catch (error) {
       toast.error("Failed to delete message");
     }
@@ -339,7 +426,11 @@ const Chat = () => {
         <>
           <div className="center" ref={centerRef} onClick={() => setOpenMenuId(null)}>
             {chat?.messages?.length > 0 ? (
-              chat.messages.map((message, index) => {
+              chat.messages
+                .filter(
+                  (m) => !(m.deletedFor || []).includes(currentUser?.id)
+                )
+                .map((message, index) => {
                 const isOwn = message.senderId === currentUser?.id;
                 return (
                   <div
@@ -348,9 +439,9 @@ const Chat = () => {
                     style={{ '--i': index }}
                   >
                     <div className="texts">
-                      <p className="message-text">
-                        {message.text}
-                        {message.edited && (
+                      <p className={`message-text ${message.deleted ? "deleted" : ""}`}>
+                        {message.deleted ? "This message was deleted" : message.text}
+                        {!message.deleted && message.edited && (
                           <span className="edited-label"> (edited)</span>
                         )}
                       </p>
@@ -367,7 +458,7 @@ const Chat = () => {
                         )}
                       </div>
                     </div>
-                    {isOwn && message.id && canModify(message.createdAt) && (
+                    {isOwn && message.id && !message.deleted && (
                       <div
                         className="message-menu"
                         onClick={(e) => e.stopPropagation()}
@@ -385,21 +476,32 @@ const Chat = () => {
                         </button>
                         {openMenuId === message.id && (
                           <div className="menu-dropdown">
+                            {canModify(message.createdAt) && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  startEdit(message);
+                                }}
+                              >
+                                Edit
+                              </button>
+                            )}
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                startEdit(message);
+                                handleDeleteForMe(message.id);
                               }}
                             >
-                              Edit
+                              Delete for me
                             </button>
                             <button
+                              className="danger"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleDelete(message.id);
+                                handleDeleteForEveryone(message.id);
                               }}
                             >
-                              Delete
+                              Delete for everyone
                             </button>
                           </div>
                         )}
