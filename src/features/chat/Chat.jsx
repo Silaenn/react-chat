@@ -197,11 +197,12 @@ const Chat = () => {
       );
       let newLastMsg = "";
       for (const msg of sorted) {
+        if ((msg.deletedFor || []).includes(currentUser.id)) continue;
         if (msg.id === messageId) {
           newLastMsg = "This message was deleted";
           break;
         }
-        if (!msg.deleted && !(msg.deletedFor || []).includes(currentUser.id)) {
+        if (!msg.deleted) {
           newLastMsg = msg.text;
           break;
         }
@@ -249,14 +250,21 @@ const Chat = () => {
       });
       await updateDoc(chatRef, { messages });
 
-      const lastVisible = messages
+      const sorted = [...messages]
         .filter(
           (m) =>
             m.id !== messageId &&
-            !m.deleted &&
             !(m.deletedFor || []).includes(currentUser.id)
         )
-        .sort((a, b) => getMsgTime(b.createdAt) - getMsgTime(a.createdAt))[0];
+        .sort((a, b) => getMsgTime(b.createdAt) - getMsgTime(a.createdAt));
+
+      const lastVisible = sorted[0];
+      let newLastMsg = "";
+      if (lastVisible) {
+        newLastMsg = lastVisible.deleted
+          ? "This message was deleted"
+          : lastVisible.text;
+      }
 
       const userChatsRef = doc(db, "userchats", currentUser.id);
       const userChatsSnapshot = await getDoc(userChatsRef);
@@ -266,9 +274,7 @@ const Chat = () => {
           (c) => c.chatId === chatId
         );
         if (chatIndex !== -1) {
-          userChatsData.chats[chatIndex].lastMessage = lastVisible
-            ? lastVisible.text
-            : "";
+          userChatsData.chats[chatIndex].lastMessage = newLastMsg;
           userChatsData.chats[chatIndex].updatedAt = Date.now();
           await updateDoc(userChatsRef, {
             chats: userChatsData.chats,
@@ -458,7 +464,7 @@ const Chat = () => {
                         )}
                       </div>
                     </div>
-                    {isOwn && message.id && !message.deleted && (
+                    {isOwn && message.id && !message.deletedFor?.includes(currentUser.id) && (
                       <div
                         className="message-menu"
                         onClick={(e) => e.stopPropagation()}
@@ -476,7 +482,7 @@ const Chat = () => {
                         </button>
                         {openMenuId === message.id && (
                           <div className="menu-dropdown">
-                            {canModify(message.createdAt) && (
+                            {!message.deleted && canModify(message.createdAt) && (
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -494,15 +500,17 @@ const Chat = () => {
                             >
                               Delete for me
                             </button>
-                            <button
-                              className="danger"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteForEveryone(message.id);
-                              }}
-                            >
-                              Delete for everyone
-                            </button>
+                            {!message.deleted && (
+                              <button
+                                className="danger"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteForEveryone(message.id);
+                                }}
+                              >
+                                Delete for everyone
+                              </button>
+                            )}
                           </div>
                         )}
                       </div>
