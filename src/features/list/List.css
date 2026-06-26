@@ -10,6 +10,7 @@
   border-right: 1px solid var(--glass-border);
   position: relative;
   z-index: var(--z-base);
+  overflow: hidden;
 }
 
 .logout-bar {

@@ -150,11 +150,8 @@ const ChatList = () => {
           />
         </div>
         <div className="add" onClick={() => setAddMode((prev) => !prev)}>
-          <div className="add-icon-wrap" style={{ opacity: addMode ? 0 : 1 }}>
-            <PersonAdd />
-          </div>
-          <div className="add-icon-wrap" style={{ opacity: addMode ? 1 : 0 }}>
-            <Close />
+          <div className="add-icon-wrap">
+            {addMode ? <Close /> : <PersonAdd />}
           </div>
         </div>
       </div>
@@ -248,7 +245,7 @@ const ChatList = () => {
                       </span>
                     </div>
                     {chat.lastMessage ? (
-                      <p>{chat.lastMessage}</p>
+                      <p className="last-msg">{chat.lastMessage}</p>
                     ) : (
                       <p className="empty-msg">No messages yet</p>
                     )}

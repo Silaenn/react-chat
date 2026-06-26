@@ -13,6 +13,7 @@
 
     .searchBar {
       flex: 1;
+      min-width: 0;
       background: var(--bg-subtle);
       border: 1px solid var(--glass-border);
       display: flex;
@@ -20,6 +21,7 @@
       gap: var(--space);
       border-radius: var(--radius-md);
       padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
+      overflow: hidden;
       transition: border-color var(--transition-base), box-shadow var(--transition-base);
 
       &:focus-within {
@@ -33,6 +35,7 @@
         outline: none;
         color: var(--text-primary);
         flex: 1;
+        min-width: 0;
         font-size: var(--text-body);
         font-family: var(--font-body);
         font-weight: 400;
@@ -67,7 +70,9 @@
       border-radius: var(--radius-md);
       cursor: pointer;
       flex-shrink: 0;
-      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: var(--text-muted);
       transition:
         background-color var(--transition-base),
@@ -90,12 +95,9 @@
       }
 
       .add-icon-wrap {
-        position: absolute;
-        inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: opacity var(--transition-base);
         pointer-events: none;
       }
     }
@@ -146,13 +148,13 @@
         }
       }
 
-      .texts {
-          display: flex;
-          flex-direction: column;
-          gap: calc(var(--space) * 0.5);
-        min-width: 0;
-        flex: 1;
-        overflow: hidden;
+        .texts {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space) * 0.5);
+          min-width: 0;
+          flex: 1;
+          overflow: hidden;
 
         .row span {
           font-family: var(--font-heading);
@@ -176,10 +178,17 @@
           text-overflow: ellipsis;
         }
 
+        .last-msg {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
         .empty-msg {
           font-size: var(--text-sm);
           color: var(--text-secondary);
           font-style: italic;
+          max-width: 100%;
         }
       }
     }
