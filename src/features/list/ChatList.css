@@ -113,6 +113,7 @@
       align-items: center;
       gap: calc(var(--space) * 1.5);
       padding: var(--space) calc(var(--space) * 2);
+      min-height: 56px;
       cursor: pointer;
       position: relative;
       transition: background-color var(--transition-base);
@@ -231,7 +232,7 @@
 
     .accept-btn,
     .decline-btn {
-      padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
+      padding: calc(var(--space) * 1.25) calc(var(--space) * 2);
       min-height: 44px;
       border: none;
       border-radius: var(--radius-sm);

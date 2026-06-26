@@ -18,7 +18,7 @@
     top: 0;
     right: 0;
     bottom: 0;
-    width: 300px;
+    width: 320px;
     max-width: 85vw;
     background:
       radial-gradient(ellipse at 30% 0%, rgba(255,255,255,0.50) 0%, transparent 60%),
@@ -86,7 +86,7 @@
   }
 
   .user {
-    padding: calc(var(--space) * 1) calc(var(--space) * 2.5) calc(var(--space) * 2.5);
+    padding: calc(var(--space) * 2) calc(var(--space) * 2.5) calc(var(--space) * 2.5);
     display: flex;
     flex-direction: column;
     align-items: center;

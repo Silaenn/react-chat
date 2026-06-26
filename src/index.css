@@ -212,7 +212,7 @@ body::after {
 
     .welcome-icon {
       line-height: 1;
-      margin-bottom: -30px;
+      margin-bottom: calc(var(--space) * -4);
       position: relative;
       display: flex;
       align-items: center;
@@ -332,7 +332,7 @@ body::after {
 
 @media (max-width: 1100px) {
   :root {
-    --space: 7px;
+    --space: 8px;
   }
 
   .blob-1 {
@@ -353,7 +353,7 @@ body::after {
 
 @media (max-width: 768px) {
   :root {
-    --space: 6px;
+    --space: 8px;
     --blur-strong: blur(12px);
     --glass-blur-heavy: blur(16px);
     --glass-blur: blur(12px);
@@ -395,7 +395,7 @@ body::after {
 
 @media (max-width: 480px) {
   :root {
-    --space: 5px;
+    --space: 4px;
   }
 
   .container .list {
