@@ -5,7 +5,13 @@ import "./Notification.css";
 const Notification = () => {
   return (
     <div className="notification">
-      <ToastContainer position="bottom-right" />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        closeOnClick
+        pauseOnHover={false}
+        toastClassName="custom-toast"
+      />
     </div>
   );
 };
