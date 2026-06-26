@@ -43,7 +43,7 @@
 
         &::placeholder {
           color: var(--text-muted);
-          opacity: 0.5;
+          opacity: 0.65;
           font-style: italic;
         }
 
@@ -288,11 +288,11 @@
 }
 
 .pending-item {
-  opacity: 0.55;
+  opacity: 0.75;
   transition: opacity var(--transition-base);
 
   &:hover {
-    opacity: 0.75;
+    opacity: 0.85;
   }
 }
 
@@ -306,7 +306,7 @@
   font-family: var(--font-heading);
   font-weight: 400;
   font-size: 16px;
-  color: #FFFFFF;
+  color: var(--text-on-accent);
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.20);
   background: var(--accent);
   box-shadow:

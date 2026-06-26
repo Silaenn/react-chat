@@ -4,29 +4,31 @@
   --glass-bg: rgba(255, 255, 255, 0.80);
   --glass-bg-hover: rgba(255, 255, 255, 0.90);
   --glass-bg-active: rgba(255, 255, 255, 0.95);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-border-strong: rgba(0, 0, 0, 0.12);
+  --glass-border: rgba(0, 0, 0, 0.10);
+  --glass-border-strong: rgba(0, 0, 0, 0.14);
   --glass-blur: blur(20px);
   --glass-blur-heavy: blur(32px);
   --glass-blur-light: blur(12px);
   --glass-bg-strong: rgba(255, 255, 255, 0.85);
 
   --scrim: rgba(0, 0, 0, 0.35);
+  --scrim-strong: rgba(0, 0, 0, 0.65);
 
   --glass-sent: rgba(37, 99, 235, 0.10);
   --glass-sent-border: rgba(37, 99, 235, 0.25);
-  --glass-received: rgba(0, 0, 0, 0.04);
-  --glass-received-border: rgba(0, 0, 0, 0.08);
+  --glass-received: rgba(0, 0, 0, 0.06);
+  --glass-received-border: rgba(0, 0, 0, 0.10);
 
   --accent: #2563EB;
   --accent-hover: #3B82F6;
+  --accent-deep: #1d4ed8;
   --accent-glow: rgba(37, 99, 235, 0.20);
   --accent-disabled: rgba(37, 99, 235, 0.28);
 
   --text-primary: #0F172A;
   --text-secondary: #475569;
   --text-muted: #64748B;
-  --text-accent: #2563EB;
+  --text-on-accent: #FFFFFF;
 
   --success: #059669;
   --success-glow: rgba(5, 150, 105, 0.20);
@@ -171,7 +173,7 @@ body::after {
   height: 400px;
   bottom: -80px;
   left: 30%;
-  background: radial-gradient(circle, rgba(5, 150, 105, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
   filter: blur(90px);
 }
 

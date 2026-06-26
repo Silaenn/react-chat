@@ -266,7 +266,7 @@
         .message-text.deleted {
           font-style: italic;
           color: var(--text-muted);
-          opacity: 0.7;
+          opacity: 0.85;
         }
 
         .msg-meta {
@@ -508,7 +508,7 @@
 
       &::placeholder {
         color: var(--text-muted);
-        opacity: 0.5;
+        opacity: 0.65;
         font-style: italic;
       }
 
@@ -565,8 +565,8 @@
     }
 
     .sendButton {
-      background: linear-gradient(135deg, var(--accent), #1d4ed8);
-      color: #FFFFFF;
+      background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+      color: var(--text-on-accent);
       padding: calc(var(--space) * 1.25) calc(var(--space) * 3);
       border: none;
       border-radius: var(--radius-md);
@@ -607,7 +607,7 @@
         background-color: var(--accent-disabled);
         transform: none;
         box-shadow: none;
-        opacity: 0.6;
+        opacity: 0.7;
       }
     }
   }
@@ -669,7 +669,7 @@
   font-family: var(--font-heading);
   font-weight: 400;
   font-size: 18px;
-  color: #FFFFFF;
+  color: var(--text-on-accent);
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.20);
   background: var(--accent);
   box-shadow:

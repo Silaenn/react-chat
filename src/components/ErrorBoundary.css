@@ -38,8 +38,8 @@
   padding: 12px 24px;
   border: none;
   border-radius: var(--radius-md, 14px);
-  background: linear-gradient(135deg, var(--accent, #2563EB), #1d4ed8);
-  color: #FFF;
+  background: linear-gradient(135deg, var(--accent, #2563EB), var(--accent-deep, #1d4ed8));
+  color: var(--text-on-accent, #FFFFFF);
   font-size: 13px;
   font-weight: 700;
   font-family: var(--font-body, 'DM Sans', sans-serif);
