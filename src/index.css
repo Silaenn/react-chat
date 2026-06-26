@@ -401,8 +401,29 @@ body::after {
   .container .list {
     width: 100%;
   }
-}
 
+  .container .welcome {
+    padding: calc(var(--space) * 3);
+  }
+
+  .container .welcome .welcome-icon img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .container .welcome .welcome-icon::before {
+    width: 110px;
+    height: 110px;
+  }
+
+  .container .welcome h2 {
+    font-size: var(--text-heading-md);
+  }
+
+  .container .welcome p {
+    font-size: var(--text-sm);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

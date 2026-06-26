@@ -12,7 +12,7 @@ import { useChatStore } from "./lib/chatStore";
 
 const App = () => {
   const { currentUser, isLoading, fetchUserInfo } = useUserStore();
-  const { chatId, resetChat } = useChatStore();
+  const { chatId, resetChat, welcomeDismissed, dismissWelcome } = useChatStore();
   const userRef = useRef(null);
 
   const setOnline = (online) => {
@@ -63,6 +63,20 @@ const App = () => {
       updateDoc(ref, { online: false, lastSeen: serverTimestamp() });
     };
   }, [currentUser?.id]);
+
+  useEffect(() => {
+    if (chatId || welcomeDismissed) return;
+    const mql = window.matchMedia('(max-width: 768px)');
+    if (mql.matches) {
+      const timer = setTimeout(() => dismissWelcome(), 4000);
+      return () => clearTimeout(timer);
+    }
+    const handleChange = (e) => {
+      if (e.matches) dismissWelcome();
+    };
+    mql.addEventListener('change', handleChange);
+    return () => mql.removeEventListener('change', handleChange);
+  }, [chatId, welcomeDismissed, dismissWelcome]);
 
   if (isLoading)
     return (

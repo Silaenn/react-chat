@@ -24,7 +24,7 @@ const ChatList = () => {
   const [input, setInput] = useState("");
 
   const { currentUser } = useUserStore();
-  const { changeChat, setShowList } = useChatStore();
+  const { changeChat, chatId, setShowList } = useChatStore();
 
   useEffect(() => {
     const unsub = onSnapshot(

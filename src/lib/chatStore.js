@@ -54,10 +54,12 @@ export const useChatStore = create((set) => ({
     }));
   },
   resetChat: () =>
-    set({ chatId: null, showDetail: false, chatStatus: null }),
+    set({ chatId: null, showList: false, showDetail: false, chatStatus: null, welcomeDismissed: false }),
   showDetail: false,
   toggleDetail: () => set((state) => ({ showDetail: !state.showDetail })),
   showList: true,
   toggleList: () => set((state) => ({ showList: !state.showList })),
   setShowList: (val) => set({ showList: val }),
+  welcomeDismissed: false,
+  dismissWelcome: () => set({ welcomeDismissed: true, showList: true }),
 }));
