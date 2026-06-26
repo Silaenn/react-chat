@@ -126,6 +126,7 @@ const AddUser = ({ onClose }) => {
       setAdded(true);
       setUser(null);
       setUsername("");
+      onClose();
     } catch (error) {
       toast.error("Failed to add user");
     }
