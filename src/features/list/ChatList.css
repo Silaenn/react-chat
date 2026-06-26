@@ -105,6 +105,8 @@
 
   .items {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
 
@@ -349,6 +351,7 @@
 
 .chatList .items .empty-state {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: calc(var(--space, 8px) * 6) calc(var(--space, 8px) * 3);
@@ -398,6 +401,11 @@
 
   .addUser {
     padding: calc(var(--space) * 1.5);
+  }
+
+  .chatList .items .empty-state {
+    flex: 1;
+    padding: calc(var(--space) * 3);
   }
 }
 
