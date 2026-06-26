@@ -15,6 +15,7 @@ import { useUserStore } from "../../lib/userStore";
 import { getAvatar } from "../../lib/avatar";
 import Info from "@mui/icons-material/Info";
 import EmojiEmotions from "@mui/icons-material/EmojiEmotions";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 import { toast } from "react-toastify";
 
 const Chat = () => {
@@ -397,7 +398,7 @@ const Chat = () => {
       <div className="top">
         <div className="top-left">
           <button className="back-btn" onClick={() => setShowList(true)}>
-            ←
+            <ArrowBack />
           </button>
         </div>
         <div className="top-center">
