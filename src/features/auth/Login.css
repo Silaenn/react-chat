@@ -248,24 +248,24 @@
   }
 
   .header .subtitle {
-    font-size: var(--text-body);
+    font-size: var(--text-base);
   }
 
   .field input[type="text"],
   .field input[type="email"],
   .field input[type="password"] {
-    font-size: var(--text-body);
+    font-size: var(--text-base);
     padding: calc(var(--space) * 1.5) calc(var(--space) * 1.75);
   }
 
   .submit-btn {
-    font-size: var(--text-body);
+    font-size: var(--text-base);
     padding: calc(var(--space) * 1.5) calc(var(--space) * 2);
     min-height: 44px;
   }
 
   .tabs .tab {
-    font-size: var(--text-body);
+    font-size: var(--text-base);
     padding: var(--space) calc(var(--space) * 1.5);
   }
 

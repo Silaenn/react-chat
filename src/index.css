@@ -52,7 +52,7 @@
   --font-heading: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', sans-serif;
 
-  --text-xs: 11px;
+  --text-xs: 12px;
   --text-sm: 12px;
   --text-body: 13px;
   --text-base: 14px;
@@ -60,7 +60,6 @@
   --text-heading-md: 17px;
   --text-heading-lg: 20px;
   --text-display: 28px;
-  --text-body-line-height: 1.6;
   --lh-tight: 1;
   --lh-snug: 1.5;
   --lh-relaxed: 1.55;
@@ -117,7 +116,7 @@ body {
   color: var(--text-primary);
   overflow: hidden;
   font-family: var(--font-body);
-  line-height: var(--text-body-line-height);
+  line-height: var(--lh-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   cursor: default;
@@ -239,19 +238,18 @@ body::after {
     h2 {
       font-family: var(--font-heading);
       font-weight: 400;
-      font-size: 20px;
+      font-size: var(--text-heading-lg);
       color: var(--text-primary);
       margin: 0 0 2px 0;
-      letter-spacing: 0.01em;
-      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+      letter-spacing: var(--ls-heading);
     }
 
     p {
       font-size: var(--text-base);
       color: var(--text-secondary);
       margin: 0;
-      letter-spacing: 0.02em;
-      line-height: var(--text-body-line-height);
+      letter-spacing: var(--ls-body);
+      line-height: var(--lh-body);
       overflow-wrap: break-word;
       word-wrap: break-word;
     }

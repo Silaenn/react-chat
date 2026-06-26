@@ -715,7 +715,7 @@
   }
 
   .chat .bottom input {
-    font-size: var(--text-body);
+    font-size: var(--text-base);
     padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
   }
 
@@ -735,7 +735,7 @@
   }
 
   .chat .center .message .texts p {
-    font-size: var(--text-body);
+    font-size: var(--text-base);
     padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
   }
 }

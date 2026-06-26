@@ -159,10 +159,9 @@
         .row span {
           font-family: var(--font-heading);
           font-weight: 400;
-          font-size: var(--text-base);
+          font-size: var(--text-heading-sm);
           letter-spacing: var(--ls-body);
           color: var(--text-primary);
-          text-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -393,7 +392,7 @@
   }
 
   .userInfo .user h2 {
-    font-size: var(--text-body);
+    font-size: var(--text-heading-sm);
   }
 
   .addUser {
@@ -407,11 +406,11 @@
   }
 
   .chatList .item .texts .row span {
-    font-size: var(--text-body);
+    font-size: var(--text-heading-sm);
   }
 
   .chatList .item .texts > p,
   .chatList .item .texts .empty-msg {
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
   }
 }
