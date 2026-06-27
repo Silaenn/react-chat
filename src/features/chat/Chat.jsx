@@ -113,7 +113,7 @@ const Chat = () => {
     setText("");
 
     try {
-      const isBlocked = isCurrentUserBlocked;
+      const isBlocked = isCurrentUserBlocked || isReceiverBlocked;
       const message = {
         id: crypto.randomUUID(),
         senderId: currentUser.id,
@@ -549,19 +549,14 @@ const Chat = () => {
           <div className={`bottom ${isEditing ? "editing" : ""}`}>
             <div className="emoji" ref={emojiRef}>
               <EmojiEmotions
-                className={`emoji-icon ${isReceiverBlocked ? "disabled" : ""}`}
-                onClick={() => {
-                  if (isReceiverBlocked) return;
-                  setOpenEmoji((prev) => !prev);
-                }}
+                className="emoji-icon"
+                onClick={() => setOpenEmoji((prev) => !prev)}
               />
-              {!isReceiverBlocked && (
-                <div className="picker">
-                  <Suspense fallback={null}>
-                    <EmojiPicker open={openEmoji} onEmojiClick={handleEmoji} />
-                  </Suspense>
-                </div>
-              )}
+              <div className="picker">
+                <Suspense fallback={null}>
+                  <EmojiPicker open={openEmoji} onEmojiClick={handleEmoji} />
+                </Suspense>
+              </div>
             </div>
             {isEditing && (
               <button className="cancel-btn" onClick={cancelEdit}>
@@ -570,23 +565,16 @@ const Chat = () => {
             )}
             <textarea
               ref={inputRef}
-              placeholder={
-                isReceiverBlocked
-                  ? "You blocked this contact"
-                  : isCurrentUserBlocked
-                    ? "Type a message..."
-                    : "Type a message..."
-              }
+              placeholder="Type a message..."
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={handleKeyDown}
-              disabled={isReceiverBlocked}
               rows={1}
             />
             <button
               className="sendButton"
               onClick={handleSend}
-              disabled={isReceiverBlocked || text === ""}
+              disabled={text === ""}
             >
               {isEditing ? "Save" : "Send"}
             </button>

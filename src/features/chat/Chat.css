@@ -466,23 +466,15 @@
   }
 
   .blocked-banner {
-    padding: calc(var(--space) * 1.25) calc(var(--space) * 3);
+    padding: calc(var(--space) * 0.75) calc(var(--space) * 3);
     display: flex;
     justify-content: center;
-    cursor: pointer;
-    transition: background var(--transition-base);
     user-select: none;
 
-    &:hover {
-      background: rgba(220, 38, 38, 0.06);
-    }
-
-    &:active {
-      background: rgba(220, 38, 38, 0.10);
-    }
-
     p {
-      display: inline;
+      display: inline-flex;
+      align-items: center;
+      gap: calc(var(--space) * 0.5);
       padding: calc(var(--space) * 0.5) calc(var(--space) * 1.5);
       background: rgba(220, 38, 38, 0.06);
       border-radius: var(--radius-sm);
@@ -491,6 +483,16 @@
       font-weight: 500;
       letter-spacing: var(--ls-body);
       line-height: var(--lh-body);
+      cursor: pointer;
+      transition: background var(--transition-base);
+
+      &:hover {
+        background: rgba(220, 38, 38, 0.12);
+      }
+
+      &:active {
+        background: rgba(220, 38, 38, 0.18);
+      }
     }
   }
 
