@@ -191,8 +191,14 @@
   to { opacity: 1; }
 }
 
-.addUser-result {
+.addUser-results {
   margin-top: calc(var(--space) * 2);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space) * 0.5);
+}
+
+.addUser-result {
   display: flex;
   align-items: center;
   gap: calc(var(--space) * 1.5);

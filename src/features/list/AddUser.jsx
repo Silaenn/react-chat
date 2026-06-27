@@ -4,6 +4,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
   query,
   serverTimestamp,
   setDoc,
@@ -12,86 +13,116 @@ import {
 } from "firebase/firestore";
 import "./AddUser.css";
 import { db } from "../../lib/firebase";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useUserStore } from "../../lib/userStore";
 import { getAvatar } from "../../lib/avatar";
 import { toast } from "react-toastify";
 
 const AddUser = ({ onClose }) => {
-  const [user, setUser] = useState(null);
-  const [notFound, setNotFound] = useState(false);
+  const [users, setUsers] = useState([]);
   const [searching, setSearching] = useState(false);
-  const [added, setAdded] = useState(false);
-  const [alreadyAdded, setAlreadyAdded] = useState(false);
+  const [addedIds, setAddedIds] = useState(new Set());
+  const [existingIds, setExistingIds] = useState(new Set());
   const [username, setUsername] = useState("");
+  const [showResults, setShowResults] = useState(false);
+  const searchQuery = useRef("");
+  const debounceRef = useRef(null);
   const { currentUser } = useUserStore();
   const userchatsRef = collection(db, "userchats");
 
-  const handleSearch = async () => {
-    const name = username.trim();
-    if (!name) return;
+  useEffect(() => {
+    const loadExisting = async () => {
+      try {
+        const snap = await getDoc(doc(userchatsRef, currentUser.id));
+        const chats = snap.data()?.chats || [];
+        setExistingIds(new Set(chats.map((c) => c.receiverId)));
+      } catch { /* ignore */ }
+    };
+    loadExisting();
+  }, [currentUser.id, userchatsRef]);
 
-    setUser(null);
-    setNotFound(false);
-    setAdded(false);
-    setAlreadyAdded(false);
-    setSearching(true);
+  const searchFirestore = async () => {
+    const name = searchQuery.current.trim();
+    if (!name) {
+      setUsers([]);
+      setSearching(false);
+      return;
+    }
 
     try {
       const userRef = collection(db, "users");
-      const usernameLower = name.toLowerCase();
+      const prefix = name.toLowerCase();
 
-      const q = query(userRef, where("username", "==", name));
-      let snap = await getDocs(q);
+      const q = query(
+        userRef,
+        where("username_lower", ">=", prefix),
+        where("username_lower", "<", prefix + "\uf8ff"),
+        limit(10)
+      );
 
-      if (snap.empty) {
-        const qLower = query(userRef, where("username_lower", "==", usernameLower));
-        snap = await getDocs(qLower);
+      const snap = await getDocs(q);
+      const results = [];
+
+      for (const docSnap of snap.docs) {
+        const data = docSnap.data();
+        if (data.id === currentUser.id) continue;
+        results.push(data);
       }
 
-      if (snap.empty) {
-        setNotFound(true);
-      } else {
-        const found = snap.docs[0].data();
-        if (found.id === currentUser.id) {
-          setNotFound(true);
-        } else {
-          const currentUserChats = await getDoc(doc(userchatsRef, currentUser.id));
-          const existingChats = currentUserChats.data()?.chats || [];
-          const exists = existingChats.some((c) => c.receiverId === found.id);
-          setAlreadyAdded(exists);
-          setUser(found);
-        }
-      }
+      setUsers(results);
     } catch (error) {
-      toast.error("Failed to search for user");
-      setNotFound(true);
+      toast.error("Failed to search");
+      setUsers([]);
     } finally {
       setSearching(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const val = e.target.value;
+    searchQuery.current = val;
+    setUsername(val);
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    if (!val.trim()) {
+      setShowResults(false);
+      setUsers([]);
+      setSearching(false);
+    } else {
+      setShowResults(true);
+      setSearching(true);
+      debounceRef.current = setTimeout(searchFirestore, 300);
     }
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      handleSearch();
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      const name = username.trim();
+      if (!name) return;
+      setShowResults(true);
+      setSearching(true);
+      searchFirestore();
     }
   };
 
-  const handleAdd = async () => {
-    if (!user || alreadyAdded) return;
+  const handleSearchClick = () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    const name = username.trim();
+    if (!name) return;
+    setShowResults(true);
+    setSearching(true);
+    searchFirestore();
+  };
+
+  const handleAdd = async (user) => {
+    if (addedIds.has(user.id) || existingIds.has(user.id)) return;
+
     const chatRef = collection(db, "chats");
     try {
-      const currentUserChats = await getDoc(doc(userchatsRef, currentUser.id));
-      const existingChats = currentUserChats.data()?.chats || [];
-      const exists = existingChats.some((c) => c.receiverId === user.id);
-
-      if (exists) {
-        setAlreadyAdded(true);
-        return;
-      }
-
       const newChatRef = doc(chatRef);
 
       await setDoc(newChatRef, {
@@ -123,16 +154,11 @@ const AddUser = ({ onClose }) => {
         }),
       });
 
-      setAdded(true);
-      setUser(null);
-      setUsername("");
-      onClose();
+      setAddedIds((prev) => new Set([...prev, user.id]));
     } catch (error) {
       toast.error("Failed to add user");
     }
   };
-
-  const result = user ? getAvatar(user.username) : null;
 
   return createPortal(
     <div className="addUser-overlay" onClick={onClose}>
@@ -147,30 +173,39 @@ const AddUser = ({ onClose }) => {
             type="text"
             placeholder="Enter username..."
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={handleInputChange}
             onKeyDown={handleKeyDown}
           />
-          <button onClick={handleSearch}>Search</button>
+          <button onClick={handleSearchClick}>Search</button>
         </div>
-        {!username && !searching && !notFound && !added && !user && (
+        {!showResults && !username && (
           <p className="status empty-hint">Type a username above to find users</p>
         )}
         {searching && <p className="status">Searching...</p>}
-        {notFound && <p className="status not-found">User not found</p>}
-        {added && <p className="status success">User added!</p>}
-        {user && result && (
-          <div className="addUser-result">
-            <div className="avatar-letter" style={{ background: result.color }}>
-              {result.letter}
-            </div>
-            <span className="result-name">{user.username}</span>
-            <button
-              className={`add-btn ${alreadyAdded ? "added" : ""}`}
-              onClick={handleAdd}
-              disabled={alreadyAdded}
-            >
-              {alreadyAdded ? "Added" : "Add"}
-            </button>
+        {showResults && !searching && users.length === 0 && (
+          <p className="status not-found">No users found</p>
+        )}
+        {users.length > 0 && (
+          <div className="addUser-results">
+            {users.map((u) => {
+              const avatar = getAvatar(u.username);
+              const isAdded = addedIds.has(u.id) || existingIds.has(u.id);
+              return (
+                <div className="addUser-result" key={u.id}>
+                  <div className="avatar-letter" style={{ background: avatar.color }}>
+                    {avatar.letter}
+                  </div>
+                  <span className="result-name">{u.username}</span>
+                  <button
+                    className={`add-btn ${isAdded ? "added" : ""}`}
+                    onClick={() => handleAdd(u)}
+                    disabled={isAdded}
+                  >
+                    {isAdded ? "Added" : "Add"}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
