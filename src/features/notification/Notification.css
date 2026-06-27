@@ -1,18 +1,11 @@
-.notification {
-  position: fixed;
-  z-index: var(--z-notification);
-  pointer-events: none;
-}
-
 .custom-toast {
-  width: fit-content !important;
   min-width: 0;
   max-width: 420px;
-  white-space: nowrap;
   padding: 12px 20px;
   font-size: var(--text-base);
   font-family: var(--font-body);
   border-radius: var(--radius-md);
+  word-break: break-word;
   box-shadow:
     0 4px 20px rgba(0, 0, 0, 0.12),
     0 1px 4px rgba(0, 0, 0, 0.08);
@@ -21,4 +14,14 @@
 .Toastify__toast-body {
   margin: 0;
   padding: 0;
+}
+
+.Toastify__toast-container {
+  pointer-events: none;
+  width: auto !important;
+  min-width: 280px;
+}
+
+.Toastify__toast {
+  pointer-events: auto;
 }
