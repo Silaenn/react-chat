@@ -18,9 +18,9 @@ const App = () => {
   const setOnline = (online) => {
     if (!userRef.current) return;
     if (online) {
-      updateDoc(userRef.current, { online: true });
+      updateDoc(userRef.current, { online: true }).catch(() => {});
     } else {
-      updateDoc(userRef.current, { online: false, lastSeen: serverTimestamp() });
+      updateDoc(userRef.current, { online: false, lastSeen: serverTimestamp() }).catch(() => {});
     }
   };
 
@@ -49,7 +49,9 @@ const App = () => {
     };
 
     const handleBeforeUnload = () => {
-      updateDoc(ref, { online: false, lastSeen: serverTimestamp() });
+      updateDoc(ref, { online: false, lastSeen: serverTimestamp() }).catch(
+        (err) => console.error("Failed to set offline on unload:", err)
+      );
     };
 
     setOnline(true);
@@ -60,7 +62,7 @@ const App = () => {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      updateDoc(ref, { online: false, lastSeen: serverTimestamp() });
+      updateDoc(ref, { online: false, lastSeen: serverTimestamp() }).catch(() => {});
     };
   }, [currentUser?.id]);
 

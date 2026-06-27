@@ -24,6 +24,16 @@
       font-size: var(--text-heading-sm);
       letter-spacing: var(--ls-heading);
       color: var(--text-primary);
-    }
+}
+
+@media (max-width: 768px) {
+  .userInfo {
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 1.5) calc(var(--space) * 1.25);
+  }
+
+  .userInfo .user h2 {
+    font-size: var(--text-heading-sm);
+  }
+}
   }
 }

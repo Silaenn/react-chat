@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, lazy, Suspense } from "react";
+import { useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
 import "./Chat.css";
 
 const EmojiPicker = lazy(() => import("emoji-picker-react"));
@@ -7,6 +7,7 @@ import {
   doc,
   getDoc,
   onSnapshot,
+  runTransaction,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../lib/firebase";
@@ -28,6 +29,8 @@ const Chat = () => {
   const [lastSeen, setLastSeen] = useState(null);
   const centerRef = useRef(null);
   const inputRef = useRef(null);
+  const sendingRef = useRef(false);
+  const menuPositionsRef = useRef({});
 
   const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, chatStatus, requestedBy, toggleDetail, setShowList } =
     useChatStore();
@@ -49,22 +52,6 @@ const Chat = () => {
     return elapsed < 15 * 60 * 1000;
   };
 
-  const formatLastSeen = (ts) => {
-    if (!ts) return;
-    const diff = Date.now() - getMsgTime(ts);
-    const minutes = Math.floor(diff / 60000);
-
-    if (minutes < 1) return "just now";
-    if (minutes < 60) return `${minutes} min ago`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-    const days = Math.floor(hours / 24);
-    if (days < 7) return `${days} day${days > 1 ? "s" : ""} ago`;
-    return ts?.toDate
-      ? ts.toDate().toLocaleDateString("en-US")
-      : new Date(ts).toLocaleDateString("en-US");
-  };
-
   useEffect(() => {
     if (!chat?.messages || !chatId) return;
 
@@ -76,14 +63,16 @@ const Chat = () => {
     const markAsRead = async () => {
       try {
         const chatRef = doc(db, "chats", chatId);
-        const chatSnap = await getDoc(chatRef);
-        const messages = chatSnap.data().messages.map((m) => {
-          if (m.senderId !== currentUser.id && !m.readAt) {
-            return { ...m, readAt: new Date() };
-          }
-          return m;
+        await runTransaction(db, async (transaction) => {
+          const snap = await transaction.get(chatRef);
+          const messages = snap.data().messages.map((m) => {
+            if (m.senderId !== currentUser.id && !m.readAt) {
+              return { ...m, readAt: new Date() };
+            }
+            return m;
+          });
+          transaction.update(chatRef, { messages });
         });
-        await updateDoc(chatRef, { messages });
       } catch (error) {
         toast.error("Failed to mark message as read");
       }
@@ -98,7 +87,9 @@ const Chat = () => {
   };
 
   const handleSend = async () => {
-    if (text === "") return;
+    if (text === "" || sendingRef.current) return;
+    sendingRef.current = true;
+    setOpenEmoji(false);
 
     if (inputRef.current) {
       inputRef.current.style.height = "auto";
@@ -106,11 +97,11 @@ const Chat = () => {
 
     if (editingMessage) {
       await handleEdit();
+      sendingRef.current = false;
       return;
     }
 
     const msgText = text;
-    setText("");
 
     try {
       const isBlocked = isCurrentUserBlocked || isReceiverBlocked;
@@ -128,6 +119,7 @@ const Chat = () => {
       await updateDoc(doc(db, "chats", chatId), {
         messages: arrayUnion(message),
       });
+      setText("");
 
       const notifIds = isBlocked ? [currentUser.id] : [currentUser.id, user.id];
 
@@ -176,6 +168,8 @@ const Chat = () => {
     } catch (error) {
       toast.error("Failed to send message.");
     }
+
+    sendingRef.current = false;
   };
 
   const handleEdit = async () => {
@@ -186,19 +180,22 @@ const Chat = () => {
 
     try {
       const chatRef = doc(db, "chats", chatId);
-      const chatSnap = await getDoc(chatRef);
-      const messages = [...chatSnap.data().messages];
-      const idx = messages.findIndex((m) => m.id === msgId);
+      await runTransaction(db, async (transaction) => {
+        const snap = await transaction.get(chatRef);
+        const messages = [...snap.data().messages];
+        const idx = messages.findIndex((m) => m.id === msgId);
 
-      if (idx !== -1 && canModify(messages[idx].createdAt)) {
-        messages[idx] = {
-          ...messages[idx],
-          text: msgText,
-          edited: true,
-          editedAt: new Date(),
-        };
-        await updateDoc(chatRef, { messages });
-      }
+        if (idx !== -1 && canModify(messages[idx].createdAt)) {
+          const { pending, blocked, ...rest } = messages[idx];
+          messages[idx] = {
+            ...rest,
+            text: msgText,
+            edited: true,
+            editedAt: new Date(),
+          };
+          transaction.update(chatRef, { messages });
+        }
+      });
     } catch (error) {
       toast.error("Failed to edit message");
     }
@@ -209,30 +206,34 @@ const Chat = () => {
 
     try {
       const chatRef = doc(db, "chats", chatId);
-      const chatSnap = await getDoc(chatRef);
-      const messages = chatSnap.data().messages.map((m) => {
-        if (m.id === messageId) {
-          return { ...m, deleted: true, text: "", edited: false };
-        }
-        return m;
-      });
-      await updateDoc(chatRef, { messages });
-
-      const sorted = [...messages].sort(
-        (a, b) => getMsgTime(b.createdAt) - getMsgTime(a.createdAt)
-      );
       let newLastMsg = "";
-      for (const msg of sorted) {
-        if ((msg.deletedFor || []).includes(currentUser.id)) continue;
-        if (msg.id === messageId) {
-          newLastMsg = "This message was deleted";
-          break;
+
+      await runTransaction(db, async (transaction) => {
+        const snap = await transaction.get(chatRef);
+        const messages = snap.data().messages.map((m) => {
+          if (m.id === messageId) {
+            const { pending, blocked, ...rest } = m;
+            return { ...rest, deleted: true, text: "", edited: false };
+          }
+          return m;
+        });
+        transaction.update(chatRef, { messages });
+
+        const sorted = [...messages].sort(
+          (a, b) => getMsgTime(b.createdAt) - getMsgTime(a.createdAt)
+        );
+        for (const msg of sorted) {
+          if ((msg.deletedFor || []).includes(currentUser.id)) continue;
+          if (msg.id === messageId) {
+            newLastMsg = "This message was deleted";
+            break;
+          }
+          if (!msg.deleted) {
+            newLastMsg = msg.text;
+            break;
+          }
         }
-        if (!msg.deleted) {
-          newLastMsg = msg.text;
-          break;
-        }
-      }
+      });
 
       const userIDs = [currentUser.id, user.id];
       for (const id of userIDs) {
@@ -264,33 +265,36 @@ const Chat = () => {
 
     try {
       const chatRef = doc(db, "chats", chatId);
-      const chatSnap = await getDoc(chatRef);
-      const messages = chatSnap.data().messages.map((m) => {
-        if (m.id === messageId) {
-          return {
-            ...m,
-            deletedFor: [...(m.deletedFor || []), currentUser.id],
-          };
-        }
-        return m;
-      });
-      await updateDoc(chatRef, { messages });
-
-      const sorted = [...messages]
-        .filter(
-          (m) =>
-            m.id !== messageId &&
-            !(m.deletedFor || []).includes(currentUser.id)
-        )
-        .sort((a, b) => getMsgTime(b.createdAt) - getMsgTime(a.createdAt));
-
-      const lastVisible = sorted[0];
       let newLastMsg = "";
-      if (lastVisible) {
-        newLastMsg = lastVisible.deleted
-          ? "This message was deleted"
-          : lastVisible.text;
-      }
+
+      await runTransaction(db, async (transaction) => {
+        const snap = await transaction.get(chatRef);
+        const messages = snap.data().messages.map((m) => {
+          if (m.id === messageId) {
+            return {
+              ...m,
+              deletedFor: [...(m.deletedFor || []), currentUser.id],
+            };
+          }
+          return m;
+        });
+        transaction.update(chatRef, { messages });
+
+        const sorted = [...messages]
+          .filter(
+            (m) =>
+              m.id !== messageId &&
+              !(m.deletedFor || []).includes(currentUser.id)
+          )
+          .sort((a, b) => getMsgTime(b.createdAt) - getMsgTime(a.createdAt));
+
+        const lastVisible = sorted[0];
+        if (lastVisible) {
+          newLastMsg = lastVisible.deleted
+            ? "This message was deleted"
+            : lastVisible.text;
+        }
+      });
 
       const userChatsRef = doc(db, "userchats", currentUser.id);
       const userChatsSnapshot = await getDoc(userChatsRef);
@@ -333,6 +337,11 @@ const Chat = () => {
   }, [chat?.messages?.length]);
 
   useEffect(() => {
+    setEditingMessage(null);
+  }, [chatId]);
+
+  useEffect(() => {
+    if (!chatId) return;
     const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
       setChat(res.data());
     });
@@ -372,16 +381,21 @@ const Chat = () => {
     }
   };
 
-  const shouldDropUp = (index) => {
-    if (!centerRef.current) return false;
+  const getDropUpState = () => {
+    if (!centerRef.current) return {};
     const items = centerRef.current.querySelectorAll('.message');
-    const el = items[index];
-    if (!el) return false;
     const containerBottom = centerRef.current.getBoundingClientRect().bottom;
-    const elBottom = el.getBoundingClientRect().bottom;
-    // Jika jarak dari bottom element ke bottom container < 120px, drop up
-    return (containerBottom - elBottom) < 80;
+    const state = {};
+    items.forEach((el, i) => {
+      const elBottom = el.getBoundingClientRect().bottom;
+      state[i] = (containerBottom - elBottom) < 120;
+    });
+    return state;
   };
+
+  useMemo(() => {
+    menuPositionsRef.current = getDropUpState();
+  }, [chat?.messages?.length]);
 
   const handleTextChange = (e) => {
     setText(e.target.value);
@@ -396,6 +410,21 @@ const Chat = () => {
   const isPendingForMe = isPending && requestedBy !== currentUser?.id;
   const isSenderPending = isPending && requestedBy === currentUser?.id;
   const isEditing = !!editingMessage;
+
+  const formatLastSeen = (ts) => {
+    if (!ts) return "Offline";
+    const diff = Date.now() - getMsgTime(ts);
+    const minutes = Math.floor(diff / 60000);
+
+    if (minutes < 1) return "just now";
+    if (minutes < 60) return `${minutes} min ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days} day${days > 1 ? "s" : ""} ago`;
+    const d = ts?.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString("id-ID", { day: "numeric", month: "short" });
+  };
 
   if (!chat) {
     return (
@@ -478,7 +507,7 @@ const Chat = () => {
                 const isOwn = message.senderId === currentUser?.id;
                 return (
                   <div
-                    className={`message ${isOwn ? "own" : ""} ${openMenuId === message.id ? "menu-open" : ""} ${shouldDropUp(index) ? "menu-up" : ""}`}
+                    className={`message ${isOwn ? "own" : ""} ${openMenuId === message.id ? "menu-open" : ""} ${menuPositionsRef.current[index] ? "menu-up" : ""}`}
                     key={message.id || message.createdAt}
                     style={{ '--i': index }}
                   >
@@ -594,7 +623,7 @@ const Chat = () => {
               ref={inputRef}
               placeholder="Type a message..."
               value={text}
-              onChange={(e) => setText(e.target.value)}
+              onChange={handleTextChange}
               onKeyDown={handleKeyDown}
               rows={1}
             />

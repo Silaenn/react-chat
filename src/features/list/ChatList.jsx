@@ -3,10 +3,10 @@ import "./ChatList.css";
 import AddUser from "./AddUser";
 import { useUserStore } from "../../lib/userStore";
 import {
-  deleteDoc,
   doc,
   getDoc,
   onSnapshot,
+  runTransaction,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../lib/firebase";
@@ -22,6 +22,7 @@ const ChatList = () => {
   const [chatsLoading, setChatsLoading] = useState(true);
   const [addMode, setAddMode] = useState(false);
   const [input, setInput] = useState("");
+  const [actionLoading, setActionLoading] = useState(null);
 
   const { currentUser } = useUserStore();
   const { changeChat, chatId, setShowList } = useChatStore();
@@ -30,12 +31,20 @@ const ChatList = () => {
     const unsub = onSnapshot(
       doc(db, "userchats", currentUser.id),
       async (res) => {
-        const items = res.data().chats || [];
+        const data = res.data();
+        if (!data) {
+          setChatsLoading(false);
+          return;
+        }
+        const items = data.chats || [];
 
         const promises = items.map(async (item) => {
           const userDocRef = doc(db, "users", item.receiverId);
           const userDocSnap = await getDoc(userDocRef);
           const user = userDocSnap.data();
+          if (!user) {
+            return { ...item, user: { username: "Unknown User", blocked: [] } };
+          }
           return { ...item, user };
         });
 
@@ -80,12 +89,14 @@ const ChatList = () => {
   };
 
   const handleAccept = async (chat) => {
+    setActionLoading(chat.chatId);
     const userIds = [currentUser.id, chat.user.id];
     try {
       for (const id of userIds) {
         const ref = doc(db, "userchats", id);
         const snap = await getDoc(ref);
         const data = snap.data();
+        if (!data) continue;
         const updated = data.chats.map((c) => {
           if (c.chatId === chat.chatId) {
             const updated = { ...c, status: "active" };
@@ -98,30 +109,36 @@ const ChatList = () => {
       }
 
       const chatRef = doc(db, "chats", chat.chatId);
-      const chatSnap = await getDoc(chatRef);
-      const messages = chatSnap.data().messages.map((m) => {
-        if (m.pending) {
-          const { pending, ...rest } = m;
-          return rest;
-        }
-        return m;
+      await runTransaction(db, async (transaction) => {
+        const snap = await transaction.get(chatRef);
+        const messages = (snap.data()?.messages || []).map((m) => {
+          if (m.pending) {
+            const { pending, ...rest } = m;
+            return rest;
+          }
+          return m;
+        });
+        transaction.update(chatRef, { messages });
       });
-      await updateDoc(chatRef, { messages });
     } catch (error) {
       toast.error("Failed to accept request");
     }
+    setActionLoading(null);
   };
 
   const handleDecline = async (chat) => {
+    setActionLoading(chat.chatId);
     try {
       const ref = doc(db, "userchats", currentUser.id);
       const snap = await getDoc(ref);
       const data = snap.data();
+      if (!data) return;
       const updated = data.chats.filter((c) => c.chatId !== chat.chatId);
       await updateDoc(ref, { chats: updated });
     } catch (error) {
       toast.error("Failed to decline request");
     }
+    setActionLoading(null);
   };
 
   const activeChats = chats.filter(
@@ -133,6 +150,7 @@ const ChatList = () => {
   const incomingRequests = chats.filter(
     (c) =>
       c.status === "pending" &&
+      c.requestedBy &&
       c.requestedBy !== currentUser.id &&
       c.user.username.toLowerCase().includes(input.toLowerCase())
   );
@@ -173,6 +191,7 @@ const ChatList = () => {
             )}
             {incomingRequests.map((chat, index) => {
               const { letter, color } = getAvatar(chat.user.username);
+              const isLoading = actionLoading === chat.chatId;
               return (
                 <div className="item request-item" key={chat.chatId} style={{ '--i': index }}>
                   <div className="avatar-letter" style={{ background: color }}>
@@ -188,14 +207,16 @@ const ChatList = () => {
                     <button
                       className="accept-btn"
                       onClick={() => handleAccept(chat)}
+                      disabled={isLoading}
                     >
-                      Accept
+                      {isLoading ? "..." : "Accept"}
                     </button>
                     <button
                       className="decline-btn"
                       onClick={() => handleDecline(chat)}
+                      disabled={isLoading}
                     >
-                      Decline
+                      {isLoading ? "..." : "Decline"}
                     </button>
                   </div>
                 </div>

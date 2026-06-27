@@ -9,6 +9,7 @@ import {
   serverTimestamp,
   setDoc,
   updateDoc,
+  writeBatch,
   where,
 } from "firebase/firestore";
 import "./AddUser.css";
@@ -28,6 +29,7 @@ const AddUser = ({ onClose }) => {
   const [showResults, setShowResults] = useState(false);
   const searchQuery = useRef("");
   const debounceRef = useRef(null);
+  const addingRef = useRef(false);
   const { currentUser } = useUserStore();
   const userchatsRef = collection(db, "userchats");
 
@@ -37,7 +39,9 @@ const AddUser = ({ onClose }) => {
         const snap = await getDoc(doc(userchatsRef, currentUser.id));
         const chats = snap.data()?.chats || [];
         setExistingIds(new Set(chats.map((c) => c.receiverId)));
-      } catch { /* ignore */ }
+      } catch (err) {
+        console.error("Failed to load existing chats:", err);
+      }
     };
     loadExisting();
   }, [currentUser.id, userchatsRef]);
@@ -101,8 +105,7 @@ const AddUser = ({ onClose }) => {
     if (e.key === "Enter") {
       e.preventDefault();
       if (debounceRef.current) clearTimeout(debounceRef.current);
-      const name = username.trim();
-      if (!name) return;
+      if (!searchQuery.current.trim()) return;
       setShowResults(true);
       setSearching(true);
       searchFirestore();
@@ -111,53 +114,59 @@ const AddUser = ({ onClose }) => {
 
   const handleSearchClick = () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    const name = username.trim();
-    if (!name) return;
+    if (!searchQuery.current.trim()) return;
     setShowResults(true);
     setSearching(true);
     searchFirestore();
   };
 
   const handleAdd = async (user) => {
+    if (addingRef.current) return;
     if (addedIds.has(user.id) || existingIds.has(user.id)) return;
+    addingRef.current = true;
 
-    const chatRef = collection(db, "chats");
     try {
-      const newChatRef = doc(chatRef);
+      const newChatRef = doc(collection(db, "chats"));
 
-      await setDoc(newChatRef, {
+      const batch = writeBatch(db);
+
+      batch.set(newChatRef, {
         createdAt: serverTimestamp(),
         messages: [],
       });
 
-      const pendingEntry = {
-        chatId: newChatRef.id,
-        lastMessage: "",
-        receiverId: "",
-        updatedAt: Date.now(),
-        isSeen: false,
-        status: "pending",
-        requestedBy: currentUser.id,
-      };
-
-      await updateDoc(doc(userchatsRef, user.id), {
+      batch.update(doc(userchatsRef, user.id), {
         chats: arrayUnion({
-          ...pendingEntry,
+          chatId: newChatRef.id,
+          lastMessage: "",
+          updatedAt: Date.now(),
+          isSeen: false,
+          status: "pending",
+          requestedBy: currentUser.id,
           receiverId: currentUser.id,
         }),
       });
 
-      await updateDoc(doc(userchatsRef, currentUser.id), {
+      batch.update(doc(userchatsRef, currentUser.id), {
         chats: arrayUnion({
-          ...pendingEntry,
+          chatId: newChatRef.id,
+          lastMessage: "",
+          updatedAt: Date.now(),
+          isSeen: false,
+          status: "pending",
+          requestedBy: currentUser.id,
           receiverId: user.id,
         }),
       });
+
+      await batch.commit();
 
       setAddedIds((prev) => new Set([...prev, user.id]));
     } catch (error) {
       toast.error("Failed to add user");
     }
+
+    addingRef.current = false;
   };
 
   return createPortal(
@@ -199,7 +208,7 @@ const AddUser = ({ onClose }) => {
                   <button
                     className={`add-btn ${isAdded ? "added" : ""}`}
                     onClick={() => handleAdd(u)}
-                    disabled={isAdded}
+                    disabled={isAdded || addingRef.current}
                   >
                     {isAdded ? "Added" : "Add"}
                   </button>

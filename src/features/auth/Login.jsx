@@ -29,6 +29,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
     const formData = new FormData(e.target);
     const { email, password } = Object.fromEntries(formData);
@@ -43,26 +44,32 @@ const Login = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
     const formData = new FormData(e.target);
     const { username, email, password } = Object.fromEntries(formData);
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
-      await setDoc(doc(db, "users", res.user.uid), {
-        username,
-        username_lower: username.toLowerCase(),
-        avatar: null,
-        email,
-        id: res.user.uid,
-        blocked: [],
-        online: false,
-        lastSeen: null,
-      });
-      await setDoc(doc(db, "userchats", res.user.uid), {
-        chats: [],
-      });
-      toast.success("Account created! Please log in.");
-      setMode("login");
+      try {
+        await setDoc(doc(db, "users", res.user.uid), {
+          username,
+          username_lower: username.toLowerCase(),
+          avatar: null,
+          email,
+          id: res.user.uid,
+          blocked: [],
+          online: false,
+          lastSeen: null,
+        });
+        await setDoc(doc(db, "userchats", res.user.uid), {
+          chats: [],
+        });
+      } catch (firestoreError) {
+        await res.user.delete();
+        toast.error("Failed to create account. Please try again.");
+        setLoading(false);
+        return;
+      }
     } catch (error) {
       toast.error(getFirebaseErrorMessage(error.code));
     } finally {

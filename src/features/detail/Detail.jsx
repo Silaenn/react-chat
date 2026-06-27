@@ -15,7 +15,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import { toast } from "react-toastify";
 
 const Detail = () => {
-  const { changeBlock, user, isCurrentUserBlocked, isReceiverBlocked, showDetail, toggleDetail } =
+  const { changeBlock, changeChat, chatId, user, isCurrentUserBlocked, isReceiverBlocked, showDetail, toggleDetail } =
     useChatStore();
   const { currentUser, fetchUserInfo } = useUserStore();
 
@@ -32,7 +32,8 @@ const Detail = () => {
     if (hours < 24) return `last seen ${hours} hour${hours > 1 ? "s" : ""} ago`;
     const days = Math.floor(hours / 24);
     if (days < 7) return `last seen ${days} day${days > 1 ? "s" : ""} ago`;
-    return `last seen ${ts?.toDate ? ts.toDate().toLocaleDateString("en-US") : new Date(ts).toLocaleDateString("en-US")}`;
+    const d = ts?.toDate ? ts.toDate() : new Date(ts);
+    return `last seen ${d.toLocaleDateString("id-ID", { day: "numeric", month: "short" })}`;
   };
 
   useEffect(() => {
@@ -53,8 +54,9 @@ const Detail = () => {
       await updateDoc(userRef, {
         blocked: isReceiverBlocked ? arrayRemove(user.id) : arrayUnion(user.id),
       });
-      changeBlock();
-      fetchUserInfo(currentUser.id);
+      changeBlock(!isReceiverBlocked);
+      await fetchUserInfo(currentUser.id);
+      changeChat(chatId, user, "active");
     } catch (error) {
       toast.error("Failed to block user");
     }
@@ -76,8 +78,8 @@ const Detail = () => {
             </div>
           )}
           <h2>{user?.username}</h2>
-          <p className={isCurrentUserBlocked ? "offline" : detailOnline ? "online" : "offline"}>
-            {isCurrentUserBlocked ? "Offline" : detailOnline ? "Online" : formatDetailLastSeen(detailLastSeen)}
+          <p className={isCurrentUserBlocked || isReceiverBlocked ? "offline" : detailOnline ? "online" : "offline"}>
+            {isCurrentUserBlocked ? "Offline" : isReceiverBlocked ? "Offline" : detailOnline ? "Online" : formatDetailLastSeen(detailLastSeen)}
           </p>
         </div>
         <div className="info">

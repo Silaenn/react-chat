@@ -387,16 +387,8 @@
     padding: var(--space) calc(var(--space) * 1.5) var(--space);
   }
 
-.section-label {
+  .section-label {
     padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5) calc(var(--space) * 0.5);
-  }
-
-  .userInfo {
-    padding: calc(var(--space) * 1.5) calc(var(--space) * 1.5) calc(var(--space) * 1.25);
-  }
-
-  .userInfo .user h2 {
-    font-size: var(--text-heading-sm);
   }
 
   .addUser {
