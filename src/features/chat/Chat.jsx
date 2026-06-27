@@ -127,9 +127,9 @@ const Chat = () => {
         messages: arrayUnion(message),
       });
 
-      const userIDs = [currentUser.id, user.id];
+      const notifIds = isBlocked ? [currentUser.id] : [currentUser.id, user.id];
 
-      for (const id of userIDs) {
+      for (const id of notifIds) {
         const userChatsRef = doc(db, "userchats", id);
         const userChatsSnapshot = await getDoc(userChatsRef);
 
@@ -140,7 +140,9 @@ const Chat = () => {
           );
 
           if (chatIndex !== -1) {
-            userChatsData.chats[chatIndex].lastMessage = msgText;
+            if (!isBlocked || id === currentUser.id) {
+              userChatsData.chats[chatIndex].lastMessage = msgText;
+            }
             userChatsData.chats[chatIndex].isSeen =
               id === currentUser.id ? true : false;
             userChatsData.chats[chatIndex].updatedAt = Date.now();

@@ -15,7 +15,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import { toast } from "react-toastify";
 
 const Detail = () => {
-  const { changeBlock, user, isReceiverBlocked, showDetail, toggleDetail } =
+  const { changeBlock, user, isCurrentUserBlocked, isReceiverBlocked, showDetail, toggleDetail } =
     useChatStore();
   const { currentUser, fetchUserInfo } = useUserStore();
 
@@ -76,8 +76,8 @@ const Detail = () => {
             </div>
           )}
           <h2>{user?.username}</h2>
-          <p className={detailOnline ? "online" : "offline"}>
-            {detailOnline ? "Online" : formatDetailLastSeen(detailLastSeen)}
+          <p className={isCurrentUserBlocked ? "offline" : detailOnline ? "online" : "offline"}>
+            {isCurrentUserBlocked ? "Offline" : detailOnline ? "Online" : formatDetailLastSeen(detailLastSeen)}
           </p>
         </div>
         <div className="info">
