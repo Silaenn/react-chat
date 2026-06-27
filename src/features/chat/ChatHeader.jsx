@@ -3,17 +3,29 @@ import ArrowBack from "@mui/icons-material/ArrowBack";
 import { getAvatar } from "@/lib/avatar";
 import { formatLastSeen } from "@/lib/time";
 
-const ChatHeader = ({ user, isOnline, lastSeen, isCurrentUserBlocked, chatStatus, requestedBy, currentUserId, toggleDetail, setShowList }) => {
+const ChatHeader = ({ user, status, currentUserId, onToggleDetail, onBack }) => {
+  const { isOnline, lastSeen, isCurrentUserBlocked, chatStatus, requestedBy } = status;
   const avatar = user ? getAvatar(user.username) : null;
 
   const isPending = chatStatus === "pending";
   const isPendingForMe = isPending && requestedBy !== currentUserId;
   const isSenderPending = isPending && requestedBy === currentUserId;
 
+  const statusText = (() => {
+    if (isCurrentUserBlocked) return "Offline";
+    if (isPendingForMe) return "Wants to chat";
+    if (isSenderPending) return "Waiting for response...";
+    if (isOnline) return "Online";
+    if (lastSeen) return `Last seen ${formatLastSeen(lastSeen)}`;
+    return "Offline";
+  })();
+
+  const statusClass = isCurrentUserBlocked ? "offline" : isOnline ? "online" : "offline";
+
   return (
     <div className="top">
       <div className="top-left">
-        <button className="back-btn" onClick={() => setShowList(true)}>
+        <button className="back-btn" onClick={onBack}>
           <ArrowBack />
         </button>
       </div>
@@ -25,24 +37,14 @@ const ChatHeader = ({ user, isOnline, lastSeen, isCurrentUserBlocked, chatStatus
         )}
         <div className="texts">
           <span>{user?.username}</span>
-          <p className={`status-text ${isCurrentUserBlocked ? "offline" : isOnline ? "online" : "offline"}`}>
-            <span className={`status-dot ${isCurrentUserBlocked ? "offline" : isOnline ? "online" : "offline"}`} />
-            {isCurrentUserBlocked
-              ? "Offline"
-              : isPendingForMe
-                ? "Wants to chat"
-                : isSenderPending
-                  ? "Waiting for response..."
-                  : isOnline
-                    ? "Online"
-                    : lastSeen
-                      ? `Last seen ${formatLastSeen(lastSeen)}`
-                      : "Offline"}
+          <p className={`status-text ${statusClass}`}>
+            <span className={`status-dot ${statusClass}`} />
+            {statusText}
           </p>
         </div>
       </div>
       <div className="top-right">
-        <Info className="chat-icon" onClick={toggleDetail} />
+        <Info className="chat-icon" onClick={onToggleDetail} />
       </div>
     </div>
   );

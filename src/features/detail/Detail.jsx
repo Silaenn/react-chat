@@ -1,53 +1,19 @@
-import { useEffect, useState } from "react";
-import {
-  arrayRemove,
-  arrayUnion,
-  doc,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore";
-import { useChatStore } from "@/lib/chatStore";
-import { db } from "@/lib/firebase";
 import "./Detail.css";
+import { useChatStore } from "@/lib/chatStore";
 import { useUserStore } from "@/lib/userStore";
 import { getAvatar } from "@/lib/avatar";
 import { formatDetailLastSeen } from "@/lib/time";
+import { useDetailUserStatus } from "./useDetailUserStatus";
+import { useBlockUser } from "./useBlockUser";
 import ExpandLess from "@mui/icons-material/ExpandLess";
-import { toast } from "react-toastify";
 
 const Detail = () => {
   const { changeBlock, changeChat, chatId, user, isCurrentUserBlocked, isReceiverBlocked, showDetail, toggleDetail } =
     useChatStore();
   const { currentUser, fetchUserInfo } = useUserStore();
 
-  const [detailOnline, setDetailOnline] = useState(false);
-  const [detailLastSeen, setDetailLastSeen] = useState(null);
-
-  useEffect(() => {
-    if (!user?.id) return;
-    const unSub = onSnapshot(doc(db, "users", user.id), (res) => {
-      const data = res.data();
-      setDetailOnline(data?.online ?? false);
-      setDetailLastSeen(data?.lastSeen ?? null);
-    });
-    return () => unSub();
-  }, [user?.id]);
-
-  const handleBlock = async () => {
-    if (!user) return;
-    const userRef = doc(db, "users", currentUser.id);
-
-    try {
-      await updateDoc(userRef, {
-        blocked: isReceiverBlocked ? arrayRemove(user.id) : arrayUnion(user.id),
-      });
-      changeBlock(!isReceiverBlocked);
-      await fetchUserInfo(currentUser.id);
-      changeChat(chatId, user, "active");
-    } catch (error) {
-      toast.error("Failed to block user");
-    }
-  };
+  const { isOnline: detailOnline, lastSeen: detailLastSeen } = useDetailUserStatus(user?.id);
+  const handleBlock = useBlockUser(currentUser, chatId, user, isReceiverBlocked, changeBlock, fetchUserInfo, changeChat);
 
   const avatar = user ? getAvatar(user.username) : null;
 

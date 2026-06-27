@@ -1,29 +1,22 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Chat from "@/features/chat/Chat";
 import Detail from "@/features/detail/Detail";
 import List from "@/features/list/List";
 import Login from "@/features/auth/Login";
 import Notification from "@/components/Notification";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "@/lib/firebase";
-import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { auth } from "@/lib/firebase";
 import { useUserStore } from "@/lib/userStore";
 import { useChatStore } from "@/lib/chatStore";
-import { WELCOME_DISMISS_MS } from "@/lib/constants";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useWelcomeDismiss } from "@/hooks/useWelcomeDismiss";
 
 const App = () => {
   const { currentUser, isLoading, fetchUserInfo } = useUserStore();
   const { chatId, resetChat, welcomeDismissed, dismissWelcome } = useChatStore();
-  const userRef = useRef(null);
 
-  const setOnline = (online) => {
-    if (!userRef.current) return;
-    if (online) {
-      updateDoc(userRef.current, { online: true }).catch(() => {});
-    } else {
-      updateDoc(userRef.current, { online: false, lastSeen: serverTimestamp() }).catch(() => {});
-    }
-  };
+  useOnlineStatus(currentUser?.id);
+  useWelcomeDismiss(chatId, welcomeDismissed, dismissWelcome);
 
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
@@ -35,51 +28,6 @@ const App = () => {
       unSub();
     };
   }, [fetchUserInfo, resetChat]);
-
-  useEffect(() => {
-    if (!currentUser?.id) {
-      userRef.current = null;
-      return;
-    }
-
-    const ref = doc(db, "users", currentUser.id);
-    userRef.current = ref;
-
-    const handleVisibility = () => {
-      setOnline(!document.hidden);
-    };
-
-    const handleBeforeUnload = () => {
-      updateDoc(ref, { online: false, lastSeen: serverTimestamp() }).catch(
-        (err) => console.error("Failed to set offline on unload:", err)
-      );
-    };
-
-    setOnline(true);
-
-    document.addEventListener("visibilitychange", handleVisibility);
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibility);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      updateDoc(ref, { online: false, lastSeen: serverTimestamp() }).catch(() => {});
-    };
-  }, [currentUser?.id]);
-
-  useEffect(() => {
-    if (chatId || welcomeDismissed) return;
-    const mql = window.matchMedia('(max-width: 768px)');
-    if (mql.matches) {
-      const timer = setTimeout(() => dismissWelcome(), WELCOME_DISMISS_MS);
-      return () => clearTimeout(timer);
-    }
-    const handleChange = (e) => {
-      if (e.matches) dismissWelcome();
-    };
-    mql.addEventListener('change', handleChange);
-    return () => mql.removeEventListener('change', handleChange);
-  }, [chatId, welcomeDismissed, dismissWelcome]);
 
   if (isLoading)
     return (

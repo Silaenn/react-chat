@@ -14,7 +14,7 @@ const getDropUpState = (containerRef) => {
   return state;
 };
 
-const MessageList = ({ chat, currentUser, onDeleteForEveryone, onDeleteForMe, onStartEdit, onToggleMenu, openMenuId, currentUserId }) => {
+const MessageList = ({ chat, currentUser, actions, openMenuId, currentUserId }) => {
   const endRef = useRef(null);
   const centerRef = useRef(null);
   const [menuPositions, setMenuPositions] = useState({});
@@ -41,7 +41,7 @@ const MessageList = ({ chat, currentUser, onDeleteForEveryone, onDeleteForMe, on
   const messages = chat?.messages || [];
 
   return (
-    <div className="center" ref={centerRef} onClick={() => onToggleMenu(null)}>
+    <div className="center" ref={centerRef} onClick={() => actions.onToggleMenu(null)}>
       {messages.length > 0 ? (
         messages
           .filter((m) => !(m.deletedFor || []).includes(currentUser?.id))
@@ -55,11 +55,8 @@ const MessageList = ({ chat, currentUser, onDeleteForEveryone, onDeleteForMe, on
                 message={message}
                 isOwn={isOwn}
                 canEditMessage={canModify(message.createdAt)}
-                onDeleteForEveryone={onDeleteForEveryone}
-                onDeleteForMe={onDeleteForMe}
-                onStartEdit={onStartEdit}
+                actions={actions}
                 isMenuOpen={openMenuId === message.id}
-                onToggleMenu={onToggleMenu}
                 menuUp={menuPositions[index]}
                 currentUserId={currentUserId}
               />

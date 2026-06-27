@@ -1,6 +1,8 @@
 import { formatTime } from "@/lib/time";
 
-const MessageItem = ({ message, isOwn, canEditMessage, onDeleteForEveryone, onDeleteForMe, onStartEdit, isMenuOpen, onToggleMenu, menuUp, currentUserId }) => {
+const MessageItem = ({ message, isOwn, canEditMessage, actions, isMenuOpen, menuUp, currentUserId }) => {
+  const { onDeleteForEveryone, onDeleteForMe, onStartEdit, onToggleMenu } = actions;
+
   return (
     <div
       className={`message ${isOwn ? "own" : ""} ${isMenuOpen ? "menu-open" : ""} ${menuUp ? "menu-up" : ""}`}
@@ -18,19 +20,14 @@ const MessageItem = ({ message, isOwn, canEditMessage, onDeleteForEveryone, onDe
             {formatTime(message.createdAt)}
           </span>
           {isOwn && (
-            <span
-              className={`msg-status ${message.readAt ? "read" : "sent"}`}
-            >
+            <span className={`msg-status ${message.readAt ? "read" : "sent"}`}>
               {message.readAt ? "✓✓" : "✓"}
             </span>
           )}
         </div>
       </div>
       {isOwn && message.id && !(message.deletedFor || []).includes(currentUserId) && (
-        <div
-          className="message-menu"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="message-menu" onClick={(e) => e.stopPropagation()}>
           <button
             className="menu-trigger"
             onClick={(e) => {
@@ -43,31 +40,15 @@ const MessageItem = ({ message, isOwn, canEditMessage, onDeleteForEveryone, onDe
           {isMenuOpen && (
             <div className="menu-dropdown">
               {!message.deleted && canEditMessage && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onStartEdit(message);
-                  }}
-                >
+                <button onClick={(e) => { e.stopPropagation(); onStartEdit(message); }}>
                   Edit
                 </button>
               )}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDeleteForMe(message.id);
-                }}
-              >
+              <button onClick={(e) => { e.stopPropagation(); onDeleteForMe(message.id); }}>
                 Delete for me
               </button>
               {!message.deleted && (
-                <button
-                  className="danger"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDeleteForEveryone(message.id);
-                  }}
-                >
+                <button className="danger" onClick={(e) => { e.stopPropagation(); onDeleteForEveryone(message.id); }}>
                   Delete for everyone
                 </button>
               )}

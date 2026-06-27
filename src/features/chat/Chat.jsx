@@ -26,14 +26,6 @@ const Chat = () => {
   const isPending = chatStatus === "pending";
   const isPendingForMe = isPending && requestedBy !== currentUser?.id;
 
-  const handleSendWrapper = (text, onClear) => {
-    handleSend(text, onClear);
-  };
-
-  const handleEditWrapper = (msgId, msgText) => {
-    handleEdit(msgId, msgText);
-  };
-
   const handleStartEdit = (msg) => {
     setEditingMessage({ id: msg.id, text: msg.text });
     setOpenMenuId(null);
@@ -45,6 +37,13 @@ const Chat = () => {
 
   const handleToggleMenu = (id) => {
     setOpenMenuId(openMenuId === id ? null : id);
+  };
+
+  const messageActions = {
+    onDeleteForEveryone: handleDeleteForEveryone,
+    onDeleteForMe: handleDeleteForMe,
+    onStartEdit: handleStartEdit,
+    onToggleMenu: handleToggleMenu,
   };
 
   if (!chat) {
@@ -74,14 +73,10 @@ const Chat = () => {
     <div className="chat">
       <ChatHeader
         user={user}
-        isOnline={isOnline}
-        lastSeen={lastSeen}
-        isCurrentUserBlocked={isCurrentUserBlocked}
-        chatStatus={chatStatus}
-        requestedBy={requestedBy}
+        status={{ isOnline, lastSeen, isCurrentUserBlocked, chatStatus, requestedBy }}
         currentUserId={currentUser?.id}
-        toggleDetail={toggleDetail}
-        setShowList={setShowList}
+        onToggleDetail={toggleDetail}
+        onBack={() => setShowList(true)}
       />
 
       {isPendingForMe ? (
@@ -93,16 +88,13 @@ const Chat = () => {
           <MessageList
             chat={chat}
             currentUser={currentUser}
-            onDeleteForEveryone={handleDeleteForEveryone}
-            onDeleteForMe={handleDeleteForMe}
-            onStartEdit={handleStartEdit}
-            onToggleMenu={handleToggleMenu}
+            actions={messageActions}
             openMenuId={openMenuId}
             currentUserId={currentUser?.id}
           />
           <MessageInput
-            onSend={handleSendWrapper}
-            onEdit={handleEditWrapper}
+            onSend={handleSend}
+            onEdit={handleEdit}
             editingMessage={editingMessage}
             onCancelEdit={handleCancelEdit}
             isReceiverBlocked={isReceiverBlocked}
