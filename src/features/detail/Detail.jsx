@@ -15,7 +15,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import { toast } from "react-toastify";
 
 const Detail = () => {
-  const { changeBlock, user, isCurrentUserBlocked, isReceiverBlocked, showDetail, toggleDetail } =
+  const { changeBlock, user, isReceiverBlocked, showDetail, toggleDetail } =
     useChatStore();
   const { currentUser, fetchUserInfo } = useUserStore();
 
@@ -95,11 +95,7 @@ const Detail = () => {
           </div>
 
           <button onClick={handleBlock}>
-            {isCurrentUserBlocked
-              ? "You are Blocked!"
-              : isReceiverBlocked
-              ? "User blocked"
-              : "Block User"}
+            {isReceiverBlocked ? "Unblock User" : "Block User"}
           </button>
         </div>
       </div>

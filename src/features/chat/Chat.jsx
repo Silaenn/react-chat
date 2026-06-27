@@ -99,6 +99,7 @@ const Chat = () => {
 
   const handleSend = async () => {
     if (text === "") return;
+
     if (inputRef.current) {
       inputRef.current.style.height = "auto";
     }
@@ -112,12 +113,14 @@ const Chat = () => {
     setText("");
 
     try {
+      const isBlocked = isCurrentUserBlocked;
       const message = {
         id: crypto.randomUUID(),
         senderId: currentUser.id,
         text: msgText,
         createdAt: new Date(),
         readAt: null,
+        ...(isBlocked && { blocked: true }),
       };
 
       await updateDoc(doc(db, "chats", chatId), {
@@ -409,16 +412,18 @@ const Chat = () => {
           )}
           <div className="texts">
             <span>{user?.username}</span>
-            <p className={`status-text ${isOnline ? "online" : "offline"}`}>
-              <span className={`status-dot ${isOnline ? "online" : "offline"}`} />
-              {isPending
-                ? "Waiting for response..."
-                : isOnline
-                  ? "Online"
-                  : lastSeen
-                    ? `Last seen ${formatLastSeen(lastSeen)}`
-                    : "Offline"}
-            </p>
+              <p className={`status-text ${isCurrentUserBlocked ? "offline" : isOnline ? "online" : "offline"}`}>
+                <span className={`status-dot ${isCurrentUserBlocked ? "offline" : isOnline ? "online" : "offline"}`} />
+                {isCurrentUserBlocked
+                  ? "Offline"
+                  : isPending
+                    ? "Waiting for response..."
+                    : isOnline
+                      ? "Online"
+                      : lastSeen
+                        ? `Last seen ${formatLastSeen(lastSeen)}`
+                        : "Offline"}
+              </p>
           </div>
         </div>
         <div className="top-right">
@@ -436,6 +441,9 @@ const Chat = () => {
               chat.messages
                 .filter(
                   (m) => !(m.deletedFor || []).includes(currentUser?.id)
+                )
+                .filter(
+                  (m) => !(m.blocked && m.senderId !== currentUser?.id)
                 )
                 .map((message, index) => {
                 const isOwn = message.senderId === currentUser?.id;
@@ -531,16 +539,21 @@ const Chat = () => {
             )}
             <div ref={endRef}></div>
           </div>
+          {isReceiverBlocked && (
+            <div className="blocked-banner" onClick={toggleDetail}>
+              <p>You blocked this contact. Tap to unblock.</p>
+            </div>
+          )}
           <div className={`bottom ${isEditing ? "editing" : ""}`}>
             <div className="emoji" ref={emojiRef}>
               <EmojiEmotions
-                className={`emoji-icon ${isCurrentUserBlocked || isReceiverBlocked ? "disabled" : ""}`}
+                className={`emoji-icon ${isReceiverBlocked ? "disabled" : ""}`}
                 onClick={() => {
-                  if (isCurrentUserBlocked || isReceiverBlocked) return;
+                  if (isReceiverBlocked) return;
                   setOpenEmoji((prev) => !prev);
                 }}
               />
-              {!(isCurrentUserBlocked || isReceiverBlocked) && (
+              {!isReceiverBlocked && (
                 <div className="picker">
                   <Suspense fallback={null}>
                     <EmojiPicker open={openEmoji} onEmojiClick={handleEmoji} />
@@ -556,20 +569,22 @@ const Chat = () => {
             <textarea
               ref={inputRef}
               placeholder={
-                isCurrentUserBlocked || isReceiverBlocked
-                ? "You cannot send a message"
-                : "Type a message..."
+                isReceiverBlocked
+                  ? "You blocked this contact"
+                  : isCurrentUserBlocked
+                    ? "Type a message..."
+                    : "Type a message..."
               }
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={handleKeyDown}
-              disabled={isCurrentUserBlocked || isReceiverBlocked}
+              disabled={isReceiverBlocked}
               rows={1}
             />
             <button
               className="sendButton"
               onClick={handleSend}
-              disabled={isCurrentUserBlocked || isReceiverBlocked || text === ""}
+              disabled={isReceiverBlocked || text === ""}
             >
               {isEditing ? "Save" : "Send"}
             </button>

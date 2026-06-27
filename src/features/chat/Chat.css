@@ -465,6 +465,35 @@
     }
   }
 
+  .blocked-banner {
+    padding: calc(var(--space) * 1.25) calc(var(--space) * 3);
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    transition: background var(--transition-base);
+    user-select: none;
+
+    &:hover {
+      background: rgba(220, 38, 38, 0.06);
+    }
+
+    &:active {
+      background: rgba(220, 38, 38, 0.10);
+    }
+
+    p {
+      display: inline;
+      padding: calc(var(--space) * 0.5) calc(var(--space) * 1.5);
+      background: rgba(220, 38, 38, 0.06);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      color: var(--danger);
+      font-weight: 500;
+      letter-spacing: var(--ls-body);
+      line-height: var(--lh-body);
+    }
+  }
+
   .bottom {
     padding: calc(var(--space) * 1.5) calc(var(--space) * 3);
     display: flex;

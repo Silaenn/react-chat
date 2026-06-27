@@ -238,11 +238,7 @@ const ChatList = () => {
                   </div>
                   <div className="texts">
                     <div className="row">
-                      <span>
-                        {chat.user.blocked.includes(currentUser.id)
-                          ? "User"
-                          : chat.user.username}
-                      </span>
+                      <span>{chat.user.username}</span>
                     </div>
                     {chat.lastMessage ? (
                       <p className={`last-msg ${chat.lastMessage === "This message was deleted" ? "deleted" : ""}`}>
