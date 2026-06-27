@@ -12,6 +12,8 @@ import { canModify } from "@/lib/time";
 
 export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocked, isReceiverBlocked, chatStatus, requestedBy) => {
   const sendingRef = useRef(false);
+  const editingRef = useRef(false);
+  const deletingRef = useRef(null);
 
   const handleSend = async (text, onClear) => {
     if (text === "" || sendingRef.current) return;
@@ -50,23 +52,19 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
           );
 
           if (chatIndex !== -1) {
-            if (!isBlocked || id === currentUser.id) {
-              userChatsData.chats[chatIndex].lastMessage = msgText;
-            }
-            userChatsData.chats[chatIndex].isSeen =
-              id === currentUser.id ? true : false;
-            userChatsData.chats[chatIndex].updatedAt = Date.now();
-
-            if (id !== currentUser.id && isPendingChat) {
-              userChatsData.chats[chatIndex].status = "pending";
-              userChatsData.chats[chatIndex].requestedBy = currentUser.id;
-            }
-
-            await updateDoc(userChatsRef, {
-              chats: userChatsData.chats,
+            const updatedChats = userChatsData.chats.map((c, i) => {
+              if (i !== chatIndex) return c;
+              return {
+                ...c,
+                lastMessage: !isBlocked || id === currentUser.id ? msgText : c.lastMessage,
+                isSeen: id === currentUser.id,
+                updatedAt: Date.now(),
+                ...(id !== currentUser.id && isPendingChat ? { status: "pending", requestedBy: currentUser.id } : {}),
+              };
             });
+            await updateDoc(userChatsRef, { chats: updatedChats });
           } else if (id !== currentUser.id && isPendingChat) {
-            userChatsData.chats.push({
+            const newChats = [...userChatsData.chats, {
               chatId,
               receiverId: currentUser.id,
               lastMessage: msgText,
@@ -74,10 +72,8 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
               isSeen: false,
               status: "pending",
               requestedBy: currentUser.id,
-            });
-            await updateDoc(userChatsRef, {
-              chats: userChatsData.chats,
-            });
+            }];
+            await updateDoc(userChatsRef, { chats: newChats });
           }
         }
       }
@@ -89,6 +85,9 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
   };
 
   const handleEdit = async (msgId, msgText) => {
+    if (editingRef.current) return;
+    editingRef.current = true;
+
     try {
       const chatRef = doc(db, "chats", chatId);
       await runTransaction(db, async (transaction) => {
@@ -111,10 +110,18 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
     } catch (error) {
       toast.error("Failed to edit message");
     }
+
+    editingRef.current = false;
   };
 
   const handleDeleteForEveryone = async (messageId) => {
-    if (!window.confirm("Delete for everyone?")) return;
+    if (deletingRef.current === messageId) return;
+    deletingRef.current = messageId;
+
+    if (!window.confirm("Delete for everyone?")) {
+      deletingRef.current = null;
+      return;
+    }
 
     try {
       const chatRef = doc(db, "chats", chatId);
@@ -158,21 +165,29 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
             (c) => c.chatId === chatId
           );
           if (chatIndex !== -1) {
-            userChatsData.chats[chatIndex].lastMessage = newLastMsg;
-            userChatsData.chats[chatIndex].updatedAt = Date.now();
-            await updateDoc(userChatsRef, {
-              chats: userChatsData.chats,
+            const updatedChats = userChatsData.chats.map((c, i) => {
+              if (i !== chatIndex) return c;
+              return { ...c, lastMessage: newLastMsg, updatedAt: Date.now() };
             });
+            await updateDoc(userChatsRef, { chats: updatedChats });
           }
         }
       }
     } catch (error) {
       toast.error("Failed to delete message");
     }
+
+    deletingRef.current = null;
   };
 
   const handleDeleteForMe = async (messageId) => {
-    if (!window.confirm("Delete for me?")) return;
+    if (deletingRef.current === messageId) return;
+    deletingRef.current = messageId;
+
+    if (!window.confirm("Delete for me?")) {
+      deletingRef.current = null;
+      return;
+    }
 
     try {
       const chatRef = doc(db, "chats", chatId);
@@ -215,16 +230,18 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
           (c) => c.chatId === chatId
         );
         if (chatIndex !== -1) {
-          userChatsData.chats[chatIndex].lastMessage = newLastMsg;
-          userChatsData.chats[chatIndex].updatedAt = Date.now();
-          await updateDoc(userChatsRef, {
-            chats: userChatsData.chats,
+          const updatedChats = userChatsData.chats.map((c, i) => {
+            if (i !== chatIndex) return c;
+            return { ...c, lastMessage: newLastMsg, updatedAt: Date.now() };
           });
+          await updateDoc(userChatsRef, { chats: updatedChats });
         }
       }
     } catch (error) {
       toast.error("Failed to delete message");
     }
+
+    deletingRef.current = null;
   };
 
   return { handleSend, handleEdit, handleDeleteForEveryone, handleDeleteForMe, sendingRef };

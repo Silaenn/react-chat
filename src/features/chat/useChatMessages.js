@@ -7,11 +7,8 @@ export const useChatMessages = (chatId, currentUserId) => {
   const [chat, setChat] = useState(null);
 
   useEffect(() => {
-    setChat(null);
-  }, [chatId]);
-
-  useEffect(() => {
     if (!chatId) return;
+    setChat(null);
     const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
       setChat(res.data());
     });

@@ -60,16 +60,18 @@ export const useChatList = (currentUser) => {
       (item) => item.chatId === chat.chatId
     );
 
-    if (chatIndex !== -1) userChats[chatIndex].isSeen = true;
+    const updatedUserChats = userChats.map((item, i) =>
+      i === chatIndex ? { ...item, isSeen: true } : item
+    );
 
     const userChatsRef = doc(db, "userchats", currentUser.id);
 
     try {
       await updateDoc(userChatsRef, {
-        chats: userChats,
+        chats: updatedUserChats,
       });
       const status = chat.status === "pending" ? "pending" : "active";
-      changeChat(chat.chatId, chat.user, status, chat.requestedBy);
+      changeChat(chat.chatId, chat.user, currentUser, status, chat.requestedBy);
       setShowList(false);
     } catch (error) {
       toast.error("Failed to select conversation");

@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { useUserStore } from "./userStore";
 
 export const useChatStore = create((set) => ({
   chatId: null,
@@ -8,9 +7,7 @@ export const useChatStore = create((set) => ({
   isReceiverBlocked: false,
   chatStatus: null,
   requestedBy: null,
-  changeChat: (chatId, user, chatStatus = "active", requestedBy = null) => {
-    const currentUser = useUserStore.getState().currentUser;
-
+  changeChat: (chatId, user, currentUser, chatStatus = "active", requestedBy = null) => {
     if (!currentUser || !user) {
       return set({
         chatId: null,
@@ -56,16 +53,10 @@ export const useChatStore = create((set) => ({
       isCurrentUserBlocked: false,
       isReceiverBlocked: false,
       showList: true,
-      showDetail: false,
       chatStatus: null,
-      welcomeDismissed: false,
       requestedBy: null,
     }),
-  showDetail: false,
-  toggleDetail: () => set((state) => ({ showDetail: !state.showDetail })),
   showList: true,
   toggleList: () => set((state) => ({ showList: !state.showList })),
   setShowList: (val) => set({ showList: val }),
-  welcomeDismissed: false,
-  dismissWelcome: () => set({ welcomeDismissed: true, showList: true }),
 }));

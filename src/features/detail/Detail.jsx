@@ -7,8 +7,8 @@ import { useDetailUserStatus } from "./useDetailUserStatus";
 import { useBlockUser } from "./useBlockUser";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 
-const Detail = () => {
-  const { changeBlock, changeChat, chatId, user, isCurrentUserBlocked, isReceiverBlocked, showDetail, toggleDetail } =
+const Detail = ({ showDetail, onToggleDetail }) => {
+  const { changeBlock, changeChat, chatId, user, isCurrentUserBlocked, isReceiverBlocked } =
     useChatStore();
   const { currentUser, fetchUserInfo } = useUserStore();
 
@@ -19,10 +19,10 @@ const Detail = () => {
 
   return (
     <div className={`detail ${showDetail ? "open" : ""}`}>
-      <div className="detail-scrim" onClick={toggleDetail} />
+      <div className="detail-scrim" onClick={onToggleDetail} />
       <div className="detail-panel">
         <div className="detail-header">
-          <button className="close-btn" onClick={toggleDetail}>×</button>
+          <button className="close-btn" onClick={onToggleDetail}>×</button>
         </div>
         <div className="user">
           {avatar && (

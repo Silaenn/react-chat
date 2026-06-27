@@ -13,7 +13,7 @@ export const useBlockUser = (currentUser, chatId, user, isReceiverBlocked, chang
       });
       changeBlock(!isReceiverBlocked);
       await fetchUserInfo(currentUser.id);
-      changeChat(chatId, user, "active");
+      changeChat(chatId, user, currentUser, "active");
     } catch (error) {
       toast.error("Failed to block user");
     }

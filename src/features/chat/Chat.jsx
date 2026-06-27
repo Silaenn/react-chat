@@ -9,11 +9,11 @@ import ChatHeader from "./ChatHeader";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 
-const Chat = () => {
+const Chat = ({ onToggleDetail }) => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [editingMessage, setEditingMessage] = useState(null);
 
-  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, chatStatus, requestedBy, toggleDetail, setShowList } =
+  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, chatStatus, requestedBy, setShowList } =
     useChatStore();
   const { currentUser } = useUserStore();
 
@@ -75,7 +75,7 @@ const Chat = () => {
         user={user}
         status={{ isOnline, lastSeen, isCurrentUserBlocked, chatStatus, requestedBy }}
         currentUserId={currentUser?.id}
-        onToggleDetail={toggleDetail}
+        onToggleDetail={onToggleDetail}
         onBack={() => setShowList(true)}
       />
 
@@ -98,7 +98,7 @@ const Chat = () => {
             editingMessage={editingMessage}
             onCancelEdit={handleCancelEdit}
             isReceiverBlocked={isReceiverBlocked}
-            onToggleDetail={toggleDetail}
+            onToggleDetail={onToggleDetail}
           />
         </>
       )}
