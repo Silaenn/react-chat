@@ -1,0 +1,83 @@
+import { useEffect, useRef, useMemo } from "react";
+import MessageItem from "./MessageItem";
+import { canModify } from "@/lib/time";
+
+const getDropUpState = (containerRef) => {
+  if (!containerRef.current) return {};
+  const items = containerRef.current.querySelectorAll('.message');
+  const containerBottom = containerRef.current.getBoundingClientRect().bottom;
+  const state = {};
+  items.forEach((el, i) => {
+    const elBottom = el.getBoundingClientRect().bottom;
+    state[i] = (containerBottom - elBottom) < 120;
+  });
+  return state;
+};
+
+const MessageList = ({ chat, currentUser, onDeleteForEveryone, onDeleteForMe, onStartEdit, onToggleMenu, openMenuId, currentUserId }) => {
+  const endRef = useRef(null);
+  const centerRef = useRef(null);
+  const menuPositionsRef = useRef({});
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat?.messages?.length]);
+
+  useMemo(() => {
+    menuPositionsRef.current = getDropUpState(centerRef);
+  }, [chat?.messages?.length]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!chat) {
+    return (
+      <div className="center">
+        <div className="loading-chat">
+          <div className="loading-spinner" />
+          <span>Loading messages...</span>
+        </div>
+      </div>
+    );
+  }
+
+  const messages = chat?.messages || [];
+
+  return (
+    <div className="center" ref={centerRef} onClick={() => onToggleMenu(null)}>
+      {messages.length > 0 ? (
+        messages
+          .filter((m) => !(m.deletedFor || []).includes(currentUser?.id))
+          .filter((m) => !(m.blocked && m.senderId !== currentUser?.id))
+          .filter((m) => !(m.pending && m.senderId !== currentUser?.id))
+          .map((message, index) => {
+            const isOwn = message.senderId === currentUser?.id;
+            return (
+              <MessageItem
+                key={message.id || message.createdAt}
+                message={message}
+                isOwn={isOwn}
+                canEditMessage={canModify(message.createdAt)}
+                onDeleteForEveryone={onDeleteForEveryone}
+                onDeleteForMe={onDeleteForMe}
+                onStartEdit={onStartEdit}
+                isMenuOpen={openMenuId === message.id}
+                onToggleMenu={onToggleMenu}
+                menuUp={menuPositionsRef.current[index]}
+                currentUserId={currentUserId}
+              />
+            );
+          })
+      ) : (
+        <div className="empty-center">
+          <div className="empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <p className="empty-msg">No messages yet. Send your first message!</p>
+        </div>
+      )}
+      <div ref={endRef}></div>
+    </div>
+  );
+};
+
+export default MessageList;

@@ -1,6 +1,6 @@
-import { useUserStore } from "../../lib/userStore";
+import { useUserStore } from "@/lib/userStore";
 import "./UserInfo.css";
-import { getAvatar } from "../../lib/avatar";
+import { getAvatar } from "@/lib/avatar";
 
 const UserInfo = () => {
   const { currentUser } = useUserStore();

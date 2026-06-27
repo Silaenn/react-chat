@@ -1,9 +1,9 @@
 import ChatList from "./ChatList";
 import "./List.css";
 import UserInfo from "./UserInfo";
-import { useChatStore } from "../../lib/chatStore";
-import { useUserStore } from "../../lib/userStore";
-import { auth, db } from "../../lib/firebase";
+import { useChatStore } from "@/lib/chatStore";
+import { useUserStore } from "@/lib/userStore";
+import { auth, db } from "@/lib/firebase";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import LogoutIcon from "@mui/icons-material/Logout";
 

@@ -1,13 +1,4 @@
-const colors = [
-  '#2563EB',
-  '#059669',
-  '#D97706',
-  '#DC2626',
-  '#7C3AED',
-  '#EC4899',
-  '#0891B2',
-  '#EA580C',
-];
+import { AVATAR_COLORS } from "./constants";
 
 export const getAvatar = (name) => {
   const letter = (name || '?')[0].toUpperCase();
@@ -17,6 +8,6 @@ export const getAvatar = (name) => {
   }
   return {
     letter,
-    color: colors[Math.abs(hash) % colors.length],
+    color: AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length],
   };
 };

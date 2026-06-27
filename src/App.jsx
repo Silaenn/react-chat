@@ -1,14 +1,15 @@
 import { useEffect, useRef } from "react";
-import Chat from "./features/chat/Chat";
-import Detail from "./features/detail/Detail";
-import List from "./features/list/List";
-import Login from "./features/auth/Login";
-import Notification from "./features/notification/Notification";
+import Chat from "@/features/chat/Chat";
+import Detail from "@/features/detail/Detail";
+import List from "@/features/list/List";
+import Login from "@/features/auth/Login";
+import Notification from "@/components/Notification";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "./lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { useUserStore } from "./lib/userStore";
-import { useChatStore } from "./lib/chatStore";
+import { useUserStore } from "@/lib/userStore";
+import { useChatStore } from "@/lib/chatStore";
+import { WELCOME_DISMISS_MS } from "@/lib/constants";
 
 const App = () => {
   const { currentUser, isLoading, fetchUserInfo } = useUserStore();
@@ -70,7 +71,7 @@ const App = () => {
     if (chatId || welcomeDismissed) return;
     const mql = window.matchMedia('(max-width: 768px)');
     if (mql.matches) {
-      const timer = setTimeout(() => dismissWelcome(), 4000);
+      const timer = setTimeout(() => dismissWelcome(), WELCOME_DISMISS_MS);
       return () => clearTimeout(timer);
     }
     const handleChange = (e) => {

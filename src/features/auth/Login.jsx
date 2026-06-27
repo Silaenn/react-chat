@@ -1,81 +1,10 @@
 import { useState } from "react";
 import "./Login.css";
-import { toast } from "react-toastify";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { auth, db } from "../../lib/firebase";
-import { doc, setDoc } from "firebase/firestore";
-
-const getFirebaseErrorMessage = (code) => {
-  const map = {
-    "auth/user-not-found": "No account found with this email address.",
-    "auth/wrong-password": "Incorrect password. Please try again.",
-    "auth/invalid-credential": "Invalid email or password.",
-    "auth/invalid-email": "Please enter a valid email address.",
-    "auth/email-already-in-use": "An account with this email already exists.",
-    "auth/weak-password": "Password must be at least 6 characters.",
-    "auth/too-many-requests": "Too many attempts. Please try again later.",
-    "auth/user-disabled": "This account has been disabled.",
-    "auth/network-request-failed": "Network error. Please check your connection.",
-  };
-  return map[code] || "Something went wrong. Please try again.";
-};
+import { useAuth } from "./useAuth";
 
 const Login = () => {
   const [mode, setMode] = useState("login");
-  const [loading, setLoading] = useState(false);
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (loading) return;
-    setLoading(true);
-    const formData = new FormData(e.target);
-    const { email, password } = Object.fromEntries(formData);
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      toast.error(getFirebaseErrorMessage(error.code));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    if (loading) return;
-    setLoading(true);
-    const formData = new FormData(e.target);
-    const { username, email, password } = Object.fromEntries(formData);
-    try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-      try {
-        await setDoc(doc(db, "users", res.user.uid), {
-          username,
-          username_lower: username.toLowerCase(),
-          avatar: null,
-          email,
-          id: res.user.uid,
-          blocked: [],
-          online: false,
-          lastSeen: null,
-        });
-        await setDoc(doc(db, "userchats", res.user.uid), {
-          chats: [],
-        });
-      } catch (firestoreError) {
-        await res.user.delete();
-        toast.error("Failed to create account. Please try again.");
-        setLoading(false);
-        return;
-      }
-    } catch (error) {
-      toast.error(getFirebaseErrorMessage(error.code));
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { loading, handleLogin, handleRegister } = useAuth();
 
   return (
     <div className="login">
