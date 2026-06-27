@@ -72,7 +72,7 @@ const ChatList = () => {
         chats: userChats,
       });
       const status = chat.status === "pending" ? "pending" : "active";
-      changeChat(chat.chatId, chat.user, status);
+      changeChat(chat.chatId, chat.user, status, chat.requestedBy);
       setShowList(false);
     } catch (error) {
       toast.error("Failed to select conversation");
@@ -96,29 +96,36 @@ const ChatList = () => {
         });
         await updateDoc(ref, { chats: updated });
       }
+
+      const chatRef = doc(db, "chats", chat.chatId);
+      const chatSnap = await getDoc(chatRef);
+      const messages = chatSnap.data().messages.map((m) => {
+        if (m.pending) {
+          const { pending, ...rest } = m;
+          return rest;
+        }
+        return m;
+      });
+      await updateDoc(chatRef, { messages });
     } catch (error) {
       toast.error("Failed to accept request");
     }
   };
 
   const handleDecline = async (chat) => {
-    const userIds = [currentUser.id, chat.user.id];
     try {
-      for (const id of userIds) {
-        const ref = doc(db, "userchats", id);
-        const snap = await getDoc(ref);
-        const data = snap.data();
-        const updated = data.chats.filter((c) => c.chatId !== chat.chatId);
-        await updateDoc(ref, { chats: updated });
-      }
-      await deleteDoc(doc(db, "chats", chat.chatId));
+      const ref = doc(db, "userchats", currentUser.id);
+      const snap = await getDoc(ref);
+      const data = snap.data();
+      const updated = data.chats.filter((c) => c.chatId !== chat.chatId);
+      await updateDoc(ref, { chats: updated });
     } catch (error) {
       toast.error("Failed to decline request");
     }
   };
 
   const activeChats = chats.filter(
-    (c) => !c.status || c.status === "active"
+    (c) => !c.status || c.status === "active" || (c.status === "pending" && c.requestedBy === currentUser.id)
   ).filter((c) =>
     c.user.username.toLowerCase().includes(input.toLowerCase())
   );
@@ -127,13 +134,6 @@ const ChatList = () => {
     (c) =>
       c.status === "pending" &&
       c.requestedBy !== currentUser.id &&
-      c.user.username.toLowerCase().includes(input.toLowerCase())
-  );
-
-  const outgoingPending = chats.filter(
-    (c) =>
-      c.status === "pending" &&
-      c.requestedBy === currentUser.id &&
       c.user.username.toLowerCase().includes(input.toLowerCase())
   );
 
@@ -202,33 +202,12 @@ const ChatList = () => {
               );
             })}
 
-            {outgoingPending.map((chat, index) => {
-              const { letter, color } = getAvatar(chat.user.username);
-              return (
-                <div
-                  className="item pending-item"
-                  key={chat.chatId}
-                  onClick={() => handleSelect(chat)}
-                  style={{ '--i': index }}
-                >
-                  <div className="avatar-letter" style={{ background: color }}>
-                    {letter}
-                  </div>
-                  <div className="texts">
-                    <div className="row">
-                      <span>{chat.user.username}</span>
-                    </div>
-                    <p className="empty-msg">Waiting to be accepted...</p>
-                  </div>
-                </div>
-              );
-            })}
-
             {activeChats.map((chat, index) => {
               const { letter, color } = getAvatar(chat.user.username);
+              const isSenderPending = chat.status === "pending" && chat.requestedBy === currentUser.id;
               return (
                 <div
-                  className={`item ${!chat?.isSeen ? "unread" : ""}`}
+                  className={`item ${isSenderPending ? "pending-item" : ""} ${!chat?.isSeen ? "unread" : ""}`}
                   key={chat.chatId}
                   onClick={() => handleSelect(chat)}
                   style={{ '--i': index }}
@@ -240,7 +219,9 @@ const ChatList = () => {
                     <div className="row">
                       <span>{chat.user.username}</span>
                     </div>
-                    {chat.lastMessage ? (
+                    {isSenderPending ? (
+                      <p className="empty-msg">Waiting to be accepted...</p>
+                    ) : chat.lastMessage ? (
                       <p className={`last-msg ${chat.lastMessage === "This message was deleted" ? "deleted" : ""}`}>
                         {chat.lastMessage === "This message was deleted"
                           ? "This message was deleted"
@@ -254,13 +235,13 @@ const ChatList = () => {
               );
             })}
 
-            {activeChats.length === 0 && incomingRequests.length === 0 && outgoingPending.length === 0 && input && (
+            {activeChats.length === 0 && incomingRequests.length === 0 && input && (
               <div className="empty-state">
                 <p>No users found matching your search.</p>
               </div>
             )}
 
-            {activeChats.length === 0 && incomingRequests.length === 0 && outgoingPending.length === 0 && !input && (
+            {activeChats.length === 0 && incomingRequests.length === 0 && !input && (
               <div className="empty-state">
                 <p>No conversations yet. Search for users to start.</p>
               </div>

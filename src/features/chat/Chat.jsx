@@ -29,7 +29,7 @@ const Chat = () => {
   const centerRef = useRef(null);
   const inputRef = useRef(null);
 
-  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, chatStatus, toggleDetail, setShowList } =
+  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, chatStatus, requestedBy, toggleDetail, setShowList } =
     useChatStore();
   const { currentUser } = useUserStore();
 
@@ -114,6 +114,7 @@ const Chat = () => {
 
     try {
       const isBlocked = isCurrentUserBlocked || isReceiverBlocked;
+      const isPendingChat = chatStatus === "pending" && requestedBy === currentUser.id;
       const message = {
         id: crypto.randomUUID(),
         senderId: currentUser.id,
@@ -121,6 +122,7 @@ const Chat = () => {
         createdAt: new Date(),
         readAt: null,
         ...(isBlocked && { blocked: true }),
+        ...(isPendingChat && { pending: true }),
       };
 
       await updateDoc(doc(db, "chats", chatId), {
@@ -147,6 +149,24 @@ const Chat = () => {
               id === currentUser.id ? true : false;
             userChatsData.chats[chatIndex].updatedAt = Date.now();
 
+            if (id !== currentUser.id && isPendingChat) {
+              userChatsData.chats[chatIndex].status = "pending";
+              userChatsData.chats[chatIndex].requestedBy = currentUser.id;
+            }
+
+            await updateDoc(userChatsRef, {
+              chats: userChatsData.chats,
+            });
+          } else if (id !== currentUser.id && isPendingChat) {
+            userChatsData.chats.push({
+              chatId,
+              receiverId: currentUser.id,
+              lastMessage: msgText,
+              updatedAt: Date.now(),
+              isSeen: false,
+              status: "pending",
+              requestedBy: currentUser.id,
+            });
             await updateDoc(userChatsRef, {
               chats: userChatsData.chats,
             });
@@ -373,6 +393,8 @@ const Chat = () => {
   const avatar = user ? getAvatar(user.username) : null;
 
   const isPending = chatStatus === "pending";
+  const isPendingForMe = isPending && requestedBy !== currentUser?.id;
+  const isSenderPending = isPending && requestedBy === currentUser?.id;
   const isEditing = !!editingMessage;
 
   if (!chat) {
@@ -418,13 +440,15 @@ const Chat = () => {
                 <span className={`status-dot ${isCurrentUserBlocked ? "offline" : isOnline ? "online" : "offline"}`} />
                 {isCurrentUserBlocked
                   ? "Offline"
-                  : isPending
-                    ? "Waiting for response..."
-                    : isOnline
-                      ? "Online"
-                      : lastSeen
-                        ? `Last seen ${formatLastSeen(lastSeen)}`
-                        : "Offline"}
+                  : isPendingForMe
+                    ? "Wants to chat"
+                    : isSenderPending
+                      ? "Waiting for response..."
+                      : isOnline
+                        ? "Online"
+                        : lastSeen
+                          ? `Last seen ${formatLastSeen(lastSeen)}`
+                          : "Offline"}
               </p>
           </div>
         </div>
@@ -432,9 +456,9 @@ const Chat = () => {
           <Info className="chat-icon" onClick={toggleDetail} />
         </div>
       </div>
-      {isPending ? (
+      {isPendingForMe ? (
         <div className="pending-banner">
-          <p>Chat request sent. Waiting for the user to accept your invitation.</p>
+          <p>This user wants to chat with you. Accept the request to start messaging.</p>
         </div>
       ) : (
         <>
@@ -446,6 +470,9 @@ const Chat = () => {
                 )
                 .filter(
                   (m) => !(m.blocked && m.senderId !== currentUser?.id)
+                )
+                .filter(
+                  (m) => !(m.pending && m.senderId !== currentUser?.id)
                 )
                 .map((message, index) => {
                 const isOwn = message.senderId === currentUser?.id;

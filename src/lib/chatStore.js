@@ -7,7 +7,8 @@ export const useChatStore = create((set) => ({
   isCurrentUserBlocked: false,
   isReceiverBlocked: false,
   chatStatus: null,
-  changeChat: (chatId, user, chatStatus = "active") => {
+  requestedBy: null,
+  changeChat: (chatId, user, chatStatus = "active", requestedBy = null) => {
     const currentUser = useUserStore.getState().currentUser;
 
     if (chatStatus === "pending") {
@@ -17,6 +18,7 @@ export const useChatStore = create((set) => ({
         isCurrentUserBlocked: false,
         isReceiverBlocked: false,
         chatStatus,
+        requestedBy,
       });
     }
 
@@ -27,6 +29,7 @@ export const useChatStore = create((set) => ({
         isCurrentUserBlocked: true,
         isReceiverBlocked: false,
         chatStatus: null,
+        requestedBy: null,
       });
     } else if (currentUser.blocked.includes(user.id)) {
       return set({
@@ -35,6 +38,7 @@ export const useChatStore = create((set) => ({
         isCurrentUserBlocked: false,
         isReceiverBlocked: true,
         chatStatus: null,
+        requestedBy: null,
       });
     } else {
       return set({
@@ -43,6 +47,7 @@ export const useChatStore = create((set) => ({
         isCurrentUserBlocked: false,
         isReceiverBlocked: false,
         chatStatus,
+        requestedBy,
       });
     }
   },
@@ -54,7 +59,7 @@ export const useChatStore = create((set) => ({
     }));
   },
   resetChat: () =>
-    set({ chatId: null, showList: false, showDetail: false, chatStatus: null, welcomeDismissed: false }),
+    set({ chatId: null, showList: false, showDetail: false, chatStatus: null, welcomeDismissed: false, requestedBy: null }),
   showDetail: false,
   toggleDetail: () => set((state) => ({ showDetail: !state.showDetail })),
   showList: true,
