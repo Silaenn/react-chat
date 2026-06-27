@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useLayoutEffect, useState } from "react";
 import MessageItem from "./MessageItem";
 import { canModify } from "@/lib/time";
 
@@ -17,15 +17,15 @@ const getDropUpState = (containerRef) => {
 const MessageList = ({ chat, currentUser, onDeleteForEveryone, onDeleteForMe, onStartEdit, onToggleMenu, openMenuId, currentUserId }) => {
   const endRef = useRef(null);
   const centerRef = useRef(null);
-  const menuPositionsRef = useRef({});
+  const [menuPositions, setMenuPositions] = useState({});
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat?.messages?.length]);
 
-  useMemo(() => {
-    menuPositionsRef.current = getDropUpState(centerRef);
-  }, [chat?.messages?.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => {
+    setMenuPositions(getDropUpState(centerRef));
+  }, [chat?.messages?.length]);
 
   if (!chat) {
     return (
@@ -60,7 +60,7 @@ const MessageList = ({ chat, currentUser, onDeleteForEveryone, onDeleteForMe, on
                 onStartEdit={onStartEdit}
                 isMenuOpen={openMenuId === message.id}
                 onToggleMenu={onToggleMenu}
-                menuUp={menuPositionsRef.current[index]}
+                menuUp={menuPositions[index]}
                 currentUserId={currentUserId}
               />
             );
