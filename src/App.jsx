@@ -52,32 +52,31 @@ const App = () => {
         <span>Loading...</span>
       </div>
     );
-  if (!currentUser)
-    return (
-      <>
-        <Login />
-        <Notification />
-      </>
-    );
   return (
-    <div className="container">
-      <List />
-      <div className="main">
-        {chatId ? (
-          <>
-            <Chat onToggleDetail={toggleDetail} />
-            <Detail showDetail={showDetail} onToggleDetail={toggleDetail} />
-          </>
-        ) : (
-          <div className="welcome">
-            <div className="welcome-icon"><img src="/logo.webp" alt="Chat App" width="120" height="120" /></div>
-            <h2>Welcome to Chat App</h2>
-            <p>Select a conversation from the sidebar to start chatting</p>
+    <>
+      {!currentUser ? (
+        <Login />
+      ) : (
+        <div className="container">
+          <List />
+          <div className="main">
+            {chatId ? (
+              <>
+                <Chat onToggleDetail={toggleDetail} />
+                <Detail showDetail={showDetail} onToggleDetail={toggleDetail} />
+              </>
+            ) : (
+              <div className="welcome">
+                <div className="welcome-icon"><img src="/logo.webp" alt="Chat App" width="120" height="120" /></div>
+                <h2>Welcome to Chat App</h2>
+                <p>Select a conversation from the sidebar to start chatting</p>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <Notification />
-    </div>
+    </>
   );
 };
 

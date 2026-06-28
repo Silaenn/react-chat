@@ -142,7 +142,7 @@
         svg {
           width: 24px;
           height: 24px;
-          padding: 3px;
+          padding: calc(var(--space) * 0.5);
           background: var(--bg-subtle);
           border-radius: 50%;
           cursor: pointer;

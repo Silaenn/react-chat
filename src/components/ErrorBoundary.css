@@ -35,7 +35,7 @@
 }
 
 .error-boundary .card button {
-  padding: 12px 24px;
+  padding: calc(var(--space) * 1.5) calc(var(--space) * 3);
   border: none;
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, var(--accent), var(--accent-deep));
