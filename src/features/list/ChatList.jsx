@@ -7,7 +7,6 @@ import AddUser from "./AddUser";
 import { useUserStore } from "@/lib/userStore";
 import Search from "@mui/icons-material/Search";
 import PersonAdd from "@mui/icons-material/PersonAdd";
-import Close from "@mui/icons-material/Close";
 
 const ChatList = () => {
   const [addMode, setAddMode] = useState(false);
@@ -44,7 +43,7 @@ const ChatList = () => {
         </div>
         <div className="add" onClick={() => setAddMode((prev) => !prev)}>
           <div className="add-icon-wrap">
-            {addMode ? <Close /> : <PersonAdd />}
+            <PersonAdd />
           </div>
         </div>
       </div>
