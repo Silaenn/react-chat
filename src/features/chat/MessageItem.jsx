@@ -49,7 +49,7 @@ const MessageItem = ({ message, isOwn, canEditMessage, actions, isMenuOpen, menu
                 Delete for me
               </button>
               {!message.deleted && (
-                <button className="danger" onClick={(e) => { e.stopPropagation(); onDeleteForEveryone(message.id); }}>
+                <button className="danger" onClick={(e) => { e.stopPropagation(); onDeleteForEveryone(message.id); onToggleMenu(message.id); }}>
                   Delete for everyone
                 </button>
               )}
