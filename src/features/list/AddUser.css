@@ -282,13 +282,13 @@
   .addUser-modal {
     width: calc(100vw - 32px);
     max-width: 400px;
-    padding: calc(var(--space) * 3);
+    padding: calc(var(--space) * 5);
     border-radius: var(--radius-md);
   }
 
   .addUser-form {
     flex-direction: column;
-    gap: var(--space);
+    gap: calc(var(--space) * 3);
 
     button {
       width: 100%;
@@ -297,7 +297,7 @@
 
   .addUser-result {
     flex-wrap: wrap;
-    gap: var(--space);
+    gap: calc(var(--space) * 3);
     justify-content: center;
     text-align: center;
 
