@@ -581,9 +581,8 @@
         left: 0;
         z-index: var(--z-dropdown);
         border-radius: var(--radius-md);
-        overflow: hidden;
-      box-shadow:
-        0 -8px 32px rgba(0, 0, 0, 0.12),
+        box-shadow:
+          0 -8px 32px rgba(0, 0, 0, 0.12),
           0 0 0 1px var(--glass-border);
         backdrop-filter: var(--blur-medium);
         -webkit-backdrop-filter: var(--blur-medium);
@@ -733,15 +732,10 @@
   }
 
   .chat .bottom .emoji .picker {
-    left: auto;
-    right: 0;
-    max-width: calc(100vw - 16px);
+    width: min(350px, calc(100vw - 32px));
+    max-height: 50dvh;
+    overflow-y: auto;
   }
-
-  .chat .bottom .emoji .picker > * {
-    width: 100% !important;
-  }
-
   .chat .bottom input {
     font-size: var(--text-base);
     padding: calc(var(--space) * 1.5);

@@ -1,4 +1,4 @@
-import { useState, useRef, lazy, Suspense } from "react";
+import { useState, useRef, lazy, Suspense, useEffect } from "react";
 import EmojiEmotions from "@mui/icons-material/EmojiEmotions";
 
 const EmojiPicker = lazy(() => import("emoji-picker-react"));
@@ -53,6 +53,16 @@ const MessageInput = ({ onSend, onEdit, editingMessage, onCancelEdit, isReceiver
     onCancelEdit();
   };
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (emojiRef.current && !emojiRef.current.contains(e.target)) {
+        setOpenEmoji(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleEmojiClick = (e) => {
     handleEmoji(e);
   };
@@ -70,11 +80,13 @@ const MessageInput = ({ onSend, onEdit, editingMessage, onCancelEdit, isReceiver
             className="emoji-icon"
             onClick={() => setOpenEmoji((prev) => !prev)}
           />
-          <div className="picker" onClick={(e) => e.stopPropagation()}>
-            <Suspense fallback={null}>
-              {openEmoji && <EmojiPicker onEmojiClick={handleEmojiClick} />}
-            </Suspense>
-          </div>
+          {openEmoji && (
+            <div className="picker" onClick={(e) => e.stopPropagation()}>
+              <Suspense fallback={null}>
+                <EmojiPicker onEmojiClick={handleEmojiClick} />
+              </Suspense>
+            </div>
+          )}
         </div>
         {editingMessage && (
           <button className="cancel-btn" onClick={handleCancelEdit}>
