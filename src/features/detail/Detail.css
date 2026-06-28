@@ -195,7 +195,7 @@
       }
 
       &:active {
-        background: rgba(220, 38, 38, 0.20);
+        background: var(--bg-danger-hover);
         transform: translateY(1px);
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
       }
@@ -208,7 +208,7 @@
       box-shadow: none;
 
       &:hover {
-        background: rgba(220, 38, 38, 0.08);
+        background: var(--bg-danger-subtle);
         box-shadow: none;
       }
 

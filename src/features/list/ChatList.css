@@ -124,12 +124,12 @@
       animation-delay: calc(var(--i, 0) * 20ms);
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.03);
+        background-color: var(--bg-subtle);
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
       }
 
       &:active {
-        background-color: rgba(0, 0, 0, 0.05);
+        background-color: var(--bg-hover);
         box-shadow: none;
       }
 
@@ -187,7 +187,6 @@
 
           &.deleted {
             font-style: italic;
-            opacity: 0.6;
           }
         }
 
@@ -223,7 +222,7 @@
 
 .request-item {
   cursor: default;
-  background: rgba(37, 99, 235, 0.05);
+  background: var(--bg-accent-subtle);
   border-left: 2px solid var(--accent);
 
   .request-actions {
@@ -262,12 +261,12 @@
       -webkit-backdrop-filter: var(--blur-micro);
 
       &:hover {
-        background: rgba(37, 99, 235, 0.20);
+        background: var(--accent-glow);
         box-shadow: 0 0 8px var(--accent-glow);
       }
 
       &:active {
-        background: rgba(37, 99, 235, 0.30);
+        background: var(--accent-glow);
       }
     }
 
