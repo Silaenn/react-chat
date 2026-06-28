@@ -261,4 +261,18 @@
     height: 56px;
     font-size: 24px;
   }
+
+  .detail .user {
+    padding: calc(var(--space) * 3) calc(var(--space) * 3) calc(var(--space) * 3);
+    gap: calc(var(--space) * 1.5);
+  }
+
+  .detail .info {
+    padding: calc(var(--space) * 2) calc(var(--space) * 2);
+    gap: calc(var(--space) * 1.5);
+  }
+
+  .detail .info .option .title {
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 2);
+  }
 }
