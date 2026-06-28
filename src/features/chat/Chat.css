@@ -536,7 +536,7 @@
 
       &::placeholder {
         color: var(--text-muted);
-        opacity: 0.65;
+        opacity: 0.75;
         font-style: italic;
       }
 
@@ -631,10 +631,11 @@
 
       &:disabled {
         cursor: not-allowed;
-        background-color: var(--accent-disabled);
+        background: var(--accent-disabled);
+        color: var(--text-on-accent);
         transform: none;
         box-shadow: none;
-        opacity: 0.7;
+        opacity: 1;
       }
     }
   }

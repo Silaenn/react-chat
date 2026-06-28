@@ -150,7 +150,7 @@
 
     &::placeholder {
       color: var(--text-muted);
-      opacity: 0.6;
+      opacity: 0.75;
       font-style: italic;
     }
 
@@ -213,10 +213,11 @@
 
   &:disabled {
     cursor: not-allowed;
-    background-color: var(--accent-disabled);
+    background: var(--accent-disabled);
+    color: var(--text-on-accent);
     transform: none;
     box-shadow: none;
-    opacity: 0.6;
+    opacity: 1;
   }
 
   .spinner {

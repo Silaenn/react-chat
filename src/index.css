@@ -23,7 +23,12 @@
   --accent-hover: #3B82F6;
   --accent-deep: #1d4ed8;
   --accent-glow: rgba(37, 99, 235, 0.20);
-  --accent-disabled: rgba(37, 99, 235, 0.28);
+  --accent-disabled: #5286CC;
+
+  --selection-bg: rgba(37, 99, 235, 0.35);
+  --scrollbar-bg: rgba(37, 99, 235, 0.20);
+  --scrollbar-hover: rgba(37, 99, 235, 0.35);
+  --scrollbar-active: rgba(37, 99, 235, 0.50);
 
   --text-primary: #0F172A;
   --text-secondary: #475569;
@@ -114,7 +119,7 @@
 }
 
 ::selection {
-  background: rgba(37, 99, 235, 0.35);
+  background: var(--selection-bg);
   color: var(--text-primary);
 }
 
@@ -317,16 +322,16 @@ body::after {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(37, 99, 235, 0.20);
+  background: var(--scrollbar-bg);
   border-radius: calc(var(--space) * 0.5);
   transition: background var(--transition-base);
 
   &:hover {
-    background: rgba(37, 99, 235, 0.35);
+    background: var(--scrollbar-hover);
   }
 
   &:active {
-    background: rgba(37, 99, 235, 0.50);
+    background: var(--scrollbar-active);
   }
 }
 
@@ -336,7 +341,7 @@ body::after {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(37, 99, 235, 0.20) transparent;
+  scrollbar-color: var(--scrollbar-bg) transparent;
 }
 
 @media (max-width: 1100px) {

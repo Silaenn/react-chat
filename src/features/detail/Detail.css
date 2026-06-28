@@ -203,12 +203,14 @@
 
     > button:disabled,
     > button[disabled] {
-      opacity: 0.5;
       cursor: not-allowed;
+      background: var(--accent-disabled);
+      color: var(--text-on-accent);
       box-shadow: none;
+      opacity: 1;
 
       &:hover {
-        background: var(--bg-danger-subtle);
+        background: var(--accent-disabled);
         box-shadow: none;
       }
 

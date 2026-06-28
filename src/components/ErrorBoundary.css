@@ -15,7 +15,7 @@
     radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.60) 0%, transparent 60%),
     linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,255,255,0.78));
   backdrop-filter: blur(32px);
-  border: 1px solid var(--glass-border, rgba(0,0,0,0.08));
+  border: 1px solid var(--glass-border, rgba(0,0,0,0.10));
   border-radius: var(--radius-xl, 28px);
   box-shadow: 0 8px 32px rgba(0,0,0,0.08);
 }
