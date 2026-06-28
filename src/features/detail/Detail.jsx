@@ -8,12 +8,13 @@ import { useBlockUser } from "./useBlockUser";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 
 const Detail = ({ showDetail, onToggleDetail }) => {
-  const { changeBlock, changeChat, chatId, user, isCurrentUserBlocked, isReceiverBlocked } =
+  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } =
     useChatStore();
-  const { currentUser, fetchUserInfo } = useUserStore();
+  const { currentUser } = useUserStore();
 
   const { isOnline: detailOnline, lastSeen: detailLastSeen } = useDetailUserStatus(user?.id);
-  const handleBlock = useBlockUser(currentUser, chatId, user, isReceiverBlocked, changeBlock, fetchUserInfo, changeChat);
+  const handleBlock = useBlockUser(currentUser, chatId, user, isReceiverBlocked);
+  const handleBlockAndClose = () => { handleBlock(); onToggleDetail(); };
 
   const avatar = user ? getAvatar(user.username) : null;
 
@@ -49,7 +50,7 @@ const Detail = ({ showDetail, onToggleDetail }) => {
             </div>
           </div>
 
-          <button onClick={handleBlock}>
+          <button onClick={handleBlockAndClose}>
             {isReceiverBlocked ? "Unblock User" : "Block User"}
           </button>
         </div>
