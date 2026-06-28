@@ -228,7 +228,7 @@
   justify-content: center;
   font-family: var(--font-heading);
   font-weight: 400;
-  font-size: 30px;
+  font-size: var(--text-avatar-lg);
   color: var(--text-on-accent);
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.20);
   background: var(--accent);
@@ -259,7 +259,7 @@
   .detail .avatar-letter {
     width: 56px;
     height: 56px;
-    font-size: 24px;
+    font-size: calc(var(--text-avatar-lg) - 6px);
   }
 
   .detail .user {

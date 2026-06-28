@@ -21,7 +21,7 @@
     .avatar-letter {
       width: 44px;
       height: 44px;
-      font-size: 18px;
+      font-size: var(--text-avatar-md);
     }
 
     h2 {

@@ -61,6 +61,16 @@
   --text-heading-md: 17px;
   --text-heading-lg: 20px;
   --text-display: 28px;
+
+  --text-h4: var(--text-heading-sm);
+  --text-h3: var(--text-heading-md);
+  --text-h2: var(--text-heading-lg);
+  --text-h1: var(--text-display);
+
+  --text-avatar-sm: 16px;
+  --text-avatar-md: 18px;
+  --text-avatar-lg: 30px;
+
   --lh-tight: 1;
   --lh-snug: 1.5;
   --lh-relaxed: 1.55;
@@ -210,7 +220,7 @@ body::after {
     animation: fade-slide-up 0.4s ease-out;
 
     .welcome-icon {
-      line-height: 1;
+      line-height: var(--lh-tight);
       margin-bottom: calc(var(--space) * -4);
       position: relative;
       display: flex;

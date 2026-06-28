@@ -247,7 +247,7 @@
   }
 
   .header h1 {
-    font-size: 22px;
+    font-size: var(--text-heading-lg);
   }
 
   .header .subtitle {
