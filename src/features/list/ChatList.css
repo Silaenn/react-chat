@@ -36,7 +36,7 @@
         color: var(--text-primary);
         flex: 1;
         min-width: 0;
-        font-size: var(--text-body);
+        font-size: var(--text-base);
         font-family: var(--font-body);
         font-weight: 400;
         letter-spacing: var(--ls-body);
@@ -359,12 +359,12 @@
 }
 
 .chatList .items .empty-state p {
-  font-size: var(--text-base, 14px);
-  color: var(--text-muted, #64748B);
+  font-size: var(--text-base);
+  color: var(--text-muted);
   font-style: italic;
-  letter-spacing: var(--ls-heading, 0.02em);
+  letter-spacing: var(--ls-body);
   max-width: 200px;
-  line-height: var(--lh-relaxed, 1.55);
+  line-height: var(--lh-relaxed);
 }
 
 @keyframes unread-pulse {

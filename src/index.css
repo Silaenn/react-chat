@@ -55,8 +55,7 @@
   --font-body: 'DM Sans', sans-serif;
 
   --text-xs: 12px;
-  --text-sm: 12px;
-  --text-body: 13px;
+  --text-sm: 13px;
   --text-base: 14px;
   --text-heading-sm: 15px;
   --text-heading-md: 17px;
@@ -279,8 +278,8 @@ body::after {
 
 .loading span {
   font-family: var(--font-body);
-  font-size: 18px;
-  letter-spacing: 0.03em;
+  font-size: var(--text-heading-md);
+  letter-spacing: var(--ls-heading);
   color: var(--text-secondary);
 }
 

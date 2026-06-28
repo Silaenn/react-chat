@@ -255,7 +255,7 @@
           font-size: var(--text-xs);
           color: var(--text-muted);
           font-style: italic;
-          letter-spacing: var(--ls-heading);
+          letter-spacing: var(--ls-body);
         }
 
         .message-text.deleted {
@@ -274,7 +274,7 @@
           .msg-time {
             font-size: var(--text-xs);
             color: var(--text-secondary);
-            letter-spacing: var(--ls-heading);
+            letter-spacing: var(--ls-body);
           }
 
           .msg-status {
@@ -415,10 +415,10 @@
   }
 
   .center .empty-center p {
-    font-size: var(--text-base, 14px);
-    color: var(--text-muted, #64748B);
+    font-size: var(--text-base);
+    color: var(--text-muted);
     font-style: italic;
-    letter-spacing: var(--ls-heading, 0.02em);
+    letter-spacing: var(--ls-body);
   }
 
   .bottom.editing {
@@ -676,8 +676,8 @@
 }
 
 .chat .loading-chat span {
-  font-size: 14px;
-  color: var(--text-muted, #64748B);
+  font-size: var(--text-base);
+  color: var(--text-muted);
 }
 
 @keyframes skeleton-pulse {

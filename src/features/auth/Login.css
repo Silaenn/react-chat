@@ -80,7 +80,7 @@
     font-size: var(--text-base);
     font-weight: 500;
     font-family: var(--font-body);
-    letter-spacing: var(--ls-heading);
+    letter-spacing: var(--ls-label);
     cursor: pointer;
     border-radius: var(--radius-full);
     transition:

@@ -61,7 +61,7 @@
       color: var(--text-secondary);
       border-radius: 50%;
       cursor: pointer;
-      font-size: 20px;
+      font-size: var(--text-heading-lg);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -133,8 +133,8 @@
         span {
           font-family: var(--font-body);
           font-weight: 500;
-          font-size: var(--text-body);
-          letter-spacing: var(--ls-heading);
+          font-size: var(--text-base);
+          letter-spacing: var(--ls-label);
           color: var(--text-secondary);
           text-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
         }
@@ -175,7 +175,7 @@
       border: 1px solid var(--danger-glow);
       border-radius: var(--radius-md);
       cursor: pointer;
-      font-size: var(--text-body);
+      font-size: var(--text-base);
       font-weight: 700;
       font-family: var(--font-body);
       letter-spacing: var(--ls-uppercase);

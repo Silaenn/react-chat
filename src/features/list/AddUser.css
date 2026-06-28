@@ -53,7 +53,7 @@
   color: var(--text-secondary);
   border-radius: 50%;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--text-base);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,9 +89,9 @@
 
 .modal-subtitle {
   margin: calc(var(--space) * 0.75) 0 0;
-  font-size: var(--text-body);
+  font-size: var(--text-base);
   color: var(--text-secondary);
-  letter-spacing: var(--ls-heading);
+  letter-spacing: var(--ls-body);
 }
 
 .addUser-form {
@@ -166,7 +166,7 @@
   font-size: var(--text-sm);
   color: var(--text-secondary);
   font-style: italic;
-  letter-spacing: var(--ls-heading);
+  letter-spacing: var(--ls-body);
   animation: status-fade-in 0.2s ease-out;
 
   &.empty-hint {
