@@ -752,6 +752,10 @@
 }
 
 @media (max-width: 480px) {
+  .chat .top .top-center .texts .status-text {
+    gap: var(--space);
+  }
+
   .chat .center .message {
     max-width: 92%;
   }

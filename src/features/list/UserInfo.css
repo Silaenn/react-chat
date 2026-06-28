@@ -18,12 +18,20 @@
     align-items: center;
     gap: calc(var(--space) * 1.5);
 
+    .avatar-letter {
+      width: 44px;
+      height: 44px;
+      font-size: 18px;
+    }
+
     h2 {
       font-family: var(--font-heading);
       font-weight: 400;
       font-size: var(--text-heading-sm);
       letter-spacing: var(--ls-heading);
       color: var(--text-primary);
+    }
+  }
 }
 
 @media (max-width: 768px) {
@@ -33,7 +41,5 @@
 
   .userInfo .user h2 {
     font-size: var(--text-heading-sm);
-  }
-}
   }
 }

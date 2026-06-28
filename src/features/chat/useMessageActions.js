@@ -139,19 +139,19 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
         });
         transaction.update(chatRef, { messages });
 
-        const sorted = [...messages].sort(
-          (a, b) => (a.createdAt?.toMillis ? a.createdAt.toMillis() : new Date(a.createdAt).getTime()) - (b.createdAt?.toMillis ? b.createdAt.toMillis() : new Date(b.createdAt).getTime())
-        );
-        for (const msg of sorted) {
-          if ((msg.deletedFor || []).includes(currentUser.id)) continue;
-          if (msg.id === messageId) {
-            newLastMsg = "This message was deleted";
-            break;
-          }
-          if (!msg.deleted) {
-            newLastMsg = msg.text;
-            break;
-          }
+        const sorted = [...messages]
+          .filter(
+            (m) =>
+              m.id !== messageId &&
+              !(m.deletedFor || []).includes(currentUser.id)
+          )
+          .sort((a, b) => (a.createdAt?.toMillis ? a.createdAt.toMillis() : new Date(a.createdAt).getTime()) - (b.createdAt?.toMillis ? b.createdAt.toMillis() : new Date(b.createdAt).getTime()));
+
+        const lastVisible = sorted[sorted.length - 1];
+        if (lastVisible) {
+          newLastMsg = lastVisible.deleted
+            ? "This message was deleted"
+            : lastVisible.text;
         }
       });
 
