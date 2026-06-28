@@ -88,7 +88,7 @@
 }
 
 .modal-subtitle {
-  margin: calc(var(--space) * 0.75) 0 0;
+  margin: var(--space) 0 0;
   font-size: var(--text-base);
   color: var(--text-secondary);
   letter-spacing: var(--ls-body);
@@ -101,7 +101,7 @@
 
   input {
     flex: 1;
-    padding: calc(var(--space) * 1.75) calc(var(--space) * 2);
+    padding: calc(var(--space) * 2);
     border: 1px solid var(--glass-border);
     outline: none;
     border-radius: var(--radius-md);
@@ -130,7 +130,7 @@
   }
 
   button {
-    padding: calc(var(--space) * 1.25) calc(var(--space) * 2);
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 2);
     border-radius: var(--radius-md);
     background: var(--accent);
     border: none;
@@ -217,7 +217,7 @@
   }
 
   .add-btn {
-    padding: calc(var(--space) * 0.75) calc(var(--space) * 1.5);
+    padding: var(--space) calc(var(--space) * 1.5);
     border-radius: var(--radius-sm);
     background: rgba(37, 99, 235, 0.12);
     color: var(--accent);
@@ -288,7 +288,7 @@
 
   .addUser-form {
     flex-direction: column;
-    gap: calc(var(--space) * 0.75);
+    gap: var(--space);
 
     button {
       width: 100%;

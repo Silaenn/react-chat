@@ -61,7 +61,7 @@
       .texts {
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: calc(var(--space) * 0.5);
 
         span {
           font-family: var(--font-heading);
@@ -204,8 +204,10 @@
       &.own {
         align-self: flex-end;
 
-        .texts {
-          padding-right: 32px;
+        .message-menu {
+          top: -2px;
+          right: 6px;
+          bottom: auto;
         }
 
         .texts p {
@@ -214,9 +216,9 @@
           -webkit-backdrop-filter: var(--glass-blur-light);
           border: 1px solid var(--glass-sent-border);
           border-bottom-right-radius: 4px;
-        box-shadow:
-          0 0 12px var(--accent-glow),
-          0 4px 16px rgba(0, 0, 0, 0.08);
+          box-shadow:
+            0 0 12px var(--accent-glow),
+            0 4px 16px rgba(0, 0, 0, 0.08);
         }
       }
 
@@ -268,7 +270,7 @@
           align-items: center;
           gap: calc(var(--space) * 0.5);
           justify-content: flex-end;
-          margin-top: 2px;
+          margin-top: calc(var(--space) * 0.5);
 
           .msg-time {
             font-size: var(--text-xs);
@@ -342,7 +344,8 @@
           border-radius: var(--radius-md);
           overflow: hidden;
           z-index: var(--z-dropdown);
-          min-width: 140px;
+          min-width: 0;
+          width: max-content;
           box-shadow:
             0 4px 16px rgba(0, 0, 0, 0.10),
             0 0 32px rgba(0, 0, 0, 0.06);
@@ -352,7 +355,7 @@
           button {
             display: block;
             width: 100%;
-            padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
+            padding: calc(var(--space) * 1.5) calc(var(--space) * 2);
             border: none;
             background: transparent;
             color: var(--text-secondary);
@@ -465,7 +468,7 @@
   }
 
   .blocked-banner {
-    padding: calc(var(--space) * 0.75) calc(var(--space) * 3);
+    padding: var(--space) calc(var(--space) * 3);
     display: flex;
     justify-content: center;
     user-select: none;
@@ -592,7 +595,7 @@
     .sendButton {
       background: linear-gradient(135deg, var(--accent), var(--accent-deep));
       color: var(--text-on-accent);
-      padding: calc(var(--space) * 1.25) calc(var(--space) * 3);
+      padding: calc(var(--space) * 1.5) calc(var(--space) * 3);
       border: none;
       border-radius: var(--radius-md);
       cursor: pointer;
@@ -725,8 +728,8 @@
   }
 
   .chat .bottom {
-    padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
-    gap: 6px;
+    padding: calc(var(--space) * 1.5);
+    gap: var(--space);
   }
 
   .chat .bottom .emoji .picker {
@@ -741,16 +744,16 @@
 
   .chat .bottom input {
     font-size: var(--text-base);
-    padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
+    padding: calc(var(--space) * 1.5);
   }
 
   .chat .bottom .sendButton {
-    padding: calc(var(--space) * 1.25) calc(var(--space) * 1.75);
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 2);
     font-size: var(--text-xs);
   }
 
   .chat .top {
-    padding: calc(var(--space) * 1.5) calc(var(--space) * 1.5);
+    padding: calc(var(--space) * 1.5);
   }
 }
 
@@ -761,6 +764,6 @@
 
   .chat .center .message .texts p {
     font-size: var(--text-base);
-    padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5);
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 2);
   }
 }

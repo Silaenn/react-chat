@@ -387,7 +387,7 @@
   }
 
   .section-label {
-    padding: calc(var(--space) * 1.25) calc(var(--space) * 1.5) calc(var(--space) * 0.5);
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 1.5) calc(var(--space) * 0.5);
   }
 
   .addUser {

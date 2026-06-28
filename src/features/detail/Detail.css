@@ -122,7 +122,7 @@
         align-items: center;
         justify-content: space-between;
         cursor: pointer;
-        padding: var(--space) calc(var(--space) * 1.25);
+        padding: var(--space) calc(var(--space) * 1.5);
         border-radius: var(--radius-md);
         transition: background-color var(--transition-base);
 
@@ -169,7 +169,7 @@
     > button {
       width: 100%;
       min-height: 44px;
-      padding: calc(var(--space) * 1.25) calc(var(--space) * 2);
+      padding: calc(var(--space) * 1.5) calc(var(--space) * 2);
       background: var(--danger-glow);
       color: var(--danger);
       border: 1px solid var(--danger-glow);

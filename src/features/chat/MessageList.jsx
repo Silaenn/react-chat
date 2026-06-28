@@ -8,8 +8,13 @@ const getDropUpState = (containerRef) => {
   const containerBottom = containerRef.current.getBoundingClientRect().bottom;
   const state = {};
   items.forEach((el, i) => {
-    const elBottom = el.getBoundingClientRect().bottom;
-    state[i] = (containerBottom - elBottom) < 120;
+    if (el.classList.contains('own')) {
+      const elTop = el.getBoundingClientRect().top;
+      state[i] = (containerBottom - elTop) < 160;
+    } else {
+      const elBottom = el.getBoundingClientRect().bottom;
+      state[i] = (containerBottom - elBottom) < 120;
+    }
   });
   return state;
 };

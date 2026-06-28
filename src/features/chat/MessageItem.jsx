@@ -1,4 +1,5 @@
 import { formatTime } from "@/lib/time";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 
 const MessageItem = ({ message, isOwn, canEditMessage, actions, isMenuOpen, menuUp, currentUserId }) => {
   const { onDeleteForEveryone, onDeleteForMe, onStartEdit, onToggleMenu } = actions;
@@ -35,7 +36,7 @@ const MessageItem = ({ message, isOwn, canEditMessage, actions, isMenuOpen, menu
               onToggleMenu(message.id);
             }}
           >
-            ⋯
+            <KeyboardArrowDown />
           </button>
           {isMenuOpen && (
             <div className="menu-dropdown">
