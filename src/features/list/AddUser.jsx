@@ -1,18 +1,31 @@
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import "./AddUser.css";
 import { useUserSearch } from "./useUserSearch";
 import { getAvatar } from "@/lib/avatar";
 
 const AddUser = ({ onClose }) => {
+  const [closing, setClosing] = useState(false);
+
+  const handleClose = () => {
+    setClosing(true);
+  };
+
+  const handleAnimationEnd = (e) => {
+    if (e.target.classList.contains('addUser-overlay') && closing) {
+      onClose();
+    }
+  };
+
   const {
     users, searching, addedIds, existingIds, username, showResults,
     handleInputChange, handleKeyDown, handleSearchClick, handleAdd,
   } = useUserSearch();
 
   return createPortal(
-    <div className="addUser-overlay" onClick={onClose}>
-      <div className="addUser-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>✕</button>
+    <div className={`addUser-overlay ${closing ? "closing" : ""}`} onClick={handleClose}>
+      <div className={`addUser-modal ${closing ? "closing" : ""}`} onClick={(e) => e.stopPropagation()} onAnimationEnd={handleAnimationEnd}>
+        <button className="modal-close" onClick={handleClose}>✕</button>
         <div className="modal-header">
           <h2 className="modal-title">Add User</h2>
           <p className="modal-subtitle">Search by username to start a new conversation</p>

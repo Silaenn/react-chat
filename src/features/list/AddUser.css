@@ -42,6 +42,30 @@
   }
 }
 
+@keyframes overlay-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes modal-scale-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+}
+
+.addUser-overlay.closing {
+  animation: overlay-fade-out 0.15s ease-out forwards;
+}
+
+.addUser-modal.closing {
+  animation: modal-scale-out 0.2s ease-out forwards;
+}
+
 .modal-close {
   position: absolute;
   top: calc(var(--space) * 1.5);
