@@ -50,13 +50,18 @@ const Chat = ({ onToggleDetail }) => {
     return (
       <div className="chat">
         <div className="top">
-          <div className="top-left" />
+          <div className="top-left">
+            <div className="skeleton-btn" />
+          </div>
           <div className="top-center">
             <div className="skeleton-avatar" />
             <div className="texts">
               <div className="skeleton-text skeleton-name" />
               <div className="skeleton-text skeleton-status" />
             </div>
+          </div>
+          <div className="top-right">
+            <div className="skeleton-icon" />
           </div>
         </div>
         <div className="center">

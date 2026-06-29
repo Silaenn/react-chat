@@ -680,6 +680,23 @@
   height: 10px;
 }
 
+.chat .skeleton-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-hover);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.chat .skeleton-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: var(--bg-hover);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
 .chat .loading-chat {
   flex: 1;
   display: flex;
