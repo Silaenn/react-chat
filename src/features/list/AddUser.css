@@ -324,13 +324,6 @@
   }
 
   .addUser-result {
-    flex-wrap: wrap;
-    gap: calc(var(--space) * 3);
-    justify-content: center;
-    text-align: center;
-
-    .result-name {
-      flex: 0 0 100%;
-    }
+    gap: calc(var(--space) * 1.5);
   }
 }
