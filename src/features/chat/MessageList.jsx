@@ -25,7 +25,8 @@ const MessageList = ({ chat, currentUser, actions, openMenuId, currentUserId }) 
   const [menuPositions, setMenuPositions] = useState({});
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    endRef.current?.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth" });
   }, [chat?.messages?.length]);
 
   useLayoutEffect(() => {

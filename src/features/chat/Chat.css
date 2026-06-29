@@ -193,7 +193,7 @@
       display: flex;
       gap: var(--space);
       position: relative;
-      animation: drop-in 0.2s cubic-bezier(0.2, 0, 0, 1) both;
+      animation: drop-in 0.2s ease-out both;
       animation-delay: calc(var(--i, 0) * 15ms);
 
       @keyframes drop-in {
@@ -205,6 +205,11 @@
           opacity: 1;
           transform: translateY(0);
         }
+      }
+
+      @keyframes drop-in-menu {
+        from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
       }
 
       &.own {
@@ -355,7 +360,7 @@
           box-shadow:
             0 4px 16px rgba(0, 0, 0, 0.10),
             0 0 32px rgba(0, 0, 0, 0.06);
-          animation: drop-in 0.12s ease-out both;
+          animation: drop-in-menu 0.12s ease-out both;
           transform-origin: top right;
 
           button {
@@ -576,10 +581,15 @@
         height: 24px;
         cursor: pointer;
         opacity: 0.45;
-        transition: opacity var(--transition-base);
+        transition: opacity var(--transition-base), transform var(--transition-fast);
 
         &:hover {
           opacity: 0.85;
+        }
+
+        &:active {
+          opacity: 1;
+          transform: scale(0.90);
         }
 
         &.disabled {

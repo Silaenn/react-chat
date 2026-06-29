@@ -122,7 +122,6 @@
       transition: background-color var(--transition-base);
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       animation: item-fade-in 0.25s ease-out both;
-      animation-delay: calc(var(--i, 0) * 20ms);
 
       &:hover {
         background-color: var(--bg-subtle);
@@ -395,7 +394,7 @@
     padding: calc(var(--space) * 1.5);
   }
 
-  .chatList .items .empty-state {
+.chatList .items .empty-state {
     flex: 1;
     padding: calc(var(--space) * 3);
   }

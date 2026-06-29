@@ -231,7 +231,12 @@
   gap: calc(var(--space) * 1.5);
   padding: var(--space) var(--space);
   border-radius: var(--radius-sm);
+  transition: background-color var(--transition-base);
   animation: result-slide-in 0.2s ease-out;
+
+  &:hover {
+    background: var(--bg-subtle);
+  }
 
   .result-name {
     flex: 1;

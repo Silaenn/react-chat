@@ -44,10 +44,16 @@
   font-weight: 700;
   font-family: var(--font-body);
   cursor: pointer;
-  transition: box-shadow 0.2s, transform 0.12s;
+  transition:
+    box-shadow var(--transition-base),
+    transform var(--transition-fast);
   box-shadow: 0 0 16px var(--accent-glow, rgba(37,99,235,0.20));
 }
 
 .error-boundary .card button:hover {
   box-shadow: 0 0 28px var(--accent-glow, rgba(37,99,235,0.20));
+}
+
+.error-boundary .card button:active {
+  transform: translateY(1px);
 }
