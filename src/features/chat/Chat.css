@@ -24,8 +24,8 @@
 
       .back-btn {
         display: none;
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         border: none;
         background: transparent;
         color: var(--text-primary);
@@ -115,12 +115,16 @@
       align-items: center;
       justify-content: flex-end;
       width: 44px;
+      min-width: 44px;
+      min-height: 44px;
 
       .chat-icon {
         width: 20px;
         height: 20px;
         cursor: pointer;
         opacity: 0.45;
+        padding: 12px;
+        box-sizing: content-box;
         transition: opacity var(--transition-base);
 
         &:hover {
@@ -151,6 +155,8 @@
       font-style: italic;
       text-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
       animation: pending-pulse 2s ease-in-out infinite;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
   }
 
@@ -477,7 +483,8 @@
       display: inline-flex;
       align-items: center;
       gap: calc(var(--space) * 0.5);
-      padding: calc(var(--space) * 0.5) calc(var(--space) * 1.5);
+      padding: calc(var(--space) * 1.5) calc(var(--space) * 2);
+      min-height: 44px;
       background: var(--bg-danger-subtle);
       border-radius: var(--radius-sm);
       font-size: var(--text-sm);
@@ -500,6 +507,7 @@
 
   .bottom {
     padding: calc(var(--space) * 1.5) calc(var(--space) * 3);
+    min-height: 72px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -557,6 +565,11 @@
 
     .emoji {
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
 
       > .emoji-icon {
         width: 24px;
@@ -764,5 +777,21 @@
   .chat .center .message .texts p {
     font-size: var(--text-base);
     padding: calc(var(--space) * 1.5) calc(var(--space) * 2);
+  }
+
+  .chat .bottom {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    min-height: unset;
+  }
+}
+
+@media (max-width: 360px) {
+  .chat .top {
+    padding: calc(var(--space) * 1.5);
+  }
+
+  .chat .center {
+    padding: calc(var(--space) * 1);
   }
 }

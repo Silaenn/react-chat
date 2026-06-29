@@ -39,9 +39,16 @@
 @media (max-width: 768px) {
   .userInfo {
     padding: calc(var(--space) * 1.5);
+    min-height: 74px;
   }
 
   .userInfo .user h2 {
     font-size: var(--text-heading-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .userInfo {
+    min-height: 60px;
   }
 }

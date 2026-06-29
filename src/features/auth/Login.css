@@ -40,6 +40,7 @@
   .logo {
     width: 120px;
     height: 120px;
+    max-width: 100%;
     margin-bottom: calc(var(--space) * -4);
     object-fit: contain;
   }
@@ -135,6 +136,7 @@
   input[type="password"] {
     width: 100%;
     padding: calc(var(--space) * 2);
+    min-height: 44px;
     border: 1px solid var(--glass-border);
     outline: none;
     background: var(--bg-subtle);

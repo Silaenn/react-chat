@@ -92,6 +92,8 @@
   font-size: var(--text-base);
   color: var(--text-secondary);
   letter-spacing: var(--ls-body);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .addUser-form {
@@ -131,6 +133,7 @@
 
   button {
     padding: calc(var(--space) * 1.5) calc(var(--space) * 2);
+    min-height: 44px;
     border-radius: var(--radius-md);
     background: var(--accent);
     border: none;
@@ -218,6 +221,7 @@
 
   .add-btn {
     padding: var(--space) calc(var(--space) * 1.5);
+    min-height: 44px;
     border-radius: var(--radius-sm);
     background: rgba(37, 99, 235, 0.12);
     color: var(--accent);
