@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="/logo.webp" alt="Chat Starter" width="96" height="96" />
+  <img src="/logo.png" alt="Chat App" width="96" height="96" />
 </p>
 
-<h1 align="center">Chat Starter</h1>
+<h1 align="center">Chat App</h1>
 
 <p align="center">
   Real-time messaging with Firebase, React, and a glassmorphism interface.
