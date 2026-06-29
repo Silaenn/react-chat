@@ -94,9 +94,8 @@ This project was built as a modern alternative to generic chat starters — prio
 
 |                  Login                  |
 | :-------------------------------------: |
-| `![Login page](/screenshots/login.png)` |
+| <img width="1920" height="964" alt="Chat-App-—-Real-Time-Instant-Messaging" src="https://github.com/user-attachments/assets/7b781102-7844-4c52-9826-856531f15687" />|
 
-> Place your login screenshot at `screenshots/login.png` and rename the file extension if needed.
 
 ---
 
