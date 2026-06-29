@@ -8,6 +8,8 @@ export const useUserStore = create((set) => ({
   currentUser: null,
   isLoading: true,
   error: null,
+  setUserData: (userData) => set({ currentUser: userData, isLoading: false, error: null }),
+
   fetchUserInfo: async (uid) => {
     const epoch = ++fetchEpoch;
 

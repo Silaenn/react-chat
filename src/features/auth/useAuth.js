@@ -6,6 +6,7 @@ import {
 import { auth, db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { getFirebaseErrorMessage } from "@/lib/errors";
+import { useUserStore } from "@/lib/userStore";
 import { toast } from "react-toastify";
 
 export const useAuth = () => {
@@ -47,6 +48,17 @@ export const useAuth = () => {
         });
         await setDoc(doc(db, "userchats", res.user.uid), {
           chats: [],
+        });
+
+        useUserStore.getState().setUserData({
+          id: res.user.uid,
+          username,
+          username_lower: username.toLowerCase(),
+          avatar: null,
+          email,
+          blocked: [],
+          online: false,
+          lastSeen: null,
         });
       } catch (firestoreError) {
         await res.user.delete();
