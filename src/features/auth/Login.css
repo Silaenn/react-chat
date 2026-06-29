@@ -12,7 +12,7 @@
 
 .card {
   width: 460px;
-  padding: calc(var(--space) * 5.5) calc(var(--space) * 5);
+  padding: calc(var(--space) * 1.5) calc(var(--space) * 5) calc(var(--space) * 5.5);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -245,7 +245,7 @@
 @media (max-width: 480px) {
   .card {
     width: calc(100vw - 32px);
-    padding: calc(var(--space) * 6) calc(var(--space) * 4);
+    padding: calc(var(--space) * 1.5) calc(var(--space) * 4) calc(var(--space) * 6);
     border-radius: var(--radius-lg);
   }
 
