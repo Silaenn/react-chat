@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="/logo.png" alt="Chat App" width="96" height="96" />
+  <img src="/public/logo.png" alt="Chat App" width="96" height="96" />
 </p>
 
 <h1 align="center">Chat App</h1>
@@ -36,7 +36,7 @@
 
 ## About
 
-Chat Starter is a real-time messaging application built with React and Firebase. Users can create accounts, search for other users by username, send chat requests, and exchange messages with delivery and read receipts. The UI uses a glassmorphism design language with smooth animations and works across desktop and mobile.
+Chat App is a real-time messaging application built with React and Firebase. Users can create accounts, search for other users by username, send chat requests, and exchange messages with delivery and read receipts. The UI uses a glassmorphism design language with smooth animations and works across desktop and mobile.
 
 This project was built as a modern alternative to generic chat starters — prioritizing clean architecture, offline resilience, accessibility, and production-ready Firebase security rules.
 
@@ -92,8 +92,8 @@ This project was built as a modern alternative to generic chat starters — prio
 
 ## Screenshots
 
-| Login |
-|:---:|
+|                  Login                  |
+| :-------------------------------------: |
 | `![Login page](/screenshots/login.png)` |
 
 > Place your login screenshot at `screenshots/login.png` and rename the file extension if needed.
