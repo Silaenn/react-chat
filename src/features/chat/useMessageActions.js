@@ -8,6 +8,7 @@ import {
 import { db } from "@/lib/firebase";
 import { toast } from "react-toastify";
 import { canModify } from "@/lib/time";
+import { useConfirm } from "@/context/ConfirmContext";
 
 const updateUserChat = async (userId, chatId, updater) => {
   const ref = doc(db, "userchats", userId);
@@ -21,6 +22,7 @@ const updateUserChat = async (userId, chatId, updater) => {
 };
 
 export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocked, isReceiverBlocked, chatStatus, requestedBy) => {
+  const confirm = useConfirm();
   const sendingRef = useRef(false);
   const editingRef = useRef(false);
   const deletingRef = useRef(null);
@@ -121,7 +123,8 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
     if (deletingRef.current === messageId) return;
     deletingRef.current = messageId;
 
-    if (!window.confirm("Delete for everyone?")) {
+    const ok = await confirm("Delete this message for everyone? This action cannot be undone.");
+    if (!ok) {
       deletingRef.current = null;
       return;
     }
@@ -175,7 +178,8 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
     if (deletingRef.current === messageId) return;
     deletingRef.current = messageId;
 
-    if (!window.confirm("Delete for me?")) {
+    const ok = await confirm("This message will be removed from your inbox. Others in the chat will still see it.");
+    if (!ok) {
       deletingRef.current = null;
       return;
     }

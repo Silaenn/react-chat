@@ -1,10 +1,14 @@
 import { auth, db } from "@/lib/firebase";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { useUserStore } from "@/lib/userStore";
+import { useConfirm } from "@/context/ConfirmContext";
 
 export const useLogout = () => {
+  const confirm = useConfirm();
+
   const handleLogout = async () => {
-    if (!window.confirm("Are you sure you want to log out?")) return;
+    const ok = await confirm("Are you sure you want to log out?");
+    if (!ok) return;
 
     const currentUser = useUserStore.getState().currentUser;
     try {

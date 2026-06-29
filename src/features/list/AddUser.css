@@ -60,6 +60,7 @@
 
 .addUser-overlay.closing {
   animation: overlay-fade-out 0.15s ease-out forwards;
+  pointer-events: none;
 }
 
 .addUser-modal.closing {

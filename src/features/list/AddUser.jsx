@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import "./AddUser.css";
 import { useUserSearch } from "./useUserSearch";
@@ -8,6 +8,14 @@ const AddUser = ({ onClose }) => {
   const [closing, setClosing] = useState(false);
   const searchInputRef = useRef(null);
   const triggerRef = useRef(null);
+  const closeTimer = useRef(null);
+
+  const finishClose = useCallback(() => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setClosing(false);
+    triggerRef.current?.focus();
+    onClose();
+  }, [onClose]);
 
   const handleClose = () => {
     setClosing(true);
@@ -15,10 +23,15 @@ const AddUser = ({ onClose }) => {
 
   const handleAnimationEnd = (e) => {
     if (e.target.classList.contains('addUser-overlay') && closing) {
-      triggerRef.current?.focus();
-      onClose();
+      finishClose();
     }
   };
+
+  useEffect(() => {
+    if (!closing) return;
+    closeTimer.current = setTimeout(finishClose, 300);
+    return () => { if (closeTimer.current) clearTimeout(closeTimer.current); };
+  }, [closing, finishClose]);
 
   useEffect(() => {
     const prev = document.activeElement;
@@ -32,8 +45,8 @@ const AddUser = ({ onClose }) => {
   } = useUserSearch();
 
   return createPortal(
-    <div className={`addUser-overlay ${closing ? "closing" : ""}`} onClick={handleClose} role="dialog" aria-modal="true" aria-label="Add user dialog">
-      <div className={`addUser-modal ${closing ? "closing" : ""}`} onClick={(e) => e.stopPropagation()} onAnimationEnd={handleAnimationEnd}>
+    <div className={`addUser-overlay ${closing ? "closing" : ""}`} onClick={handleClose} onAnimationEnd={handleAnimationEnd} role="dialog" aria-modal="true" aria-label="Add user dialog">
+      <div className={`addUser-modal ${closing ? "closing" : ""}`} onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={handleClose} aria-label="Close add user modal" ref={triggerRef}>✕</button>
         <div className="modal-header">
           <h2 className="modal-title">Add User</h2>
