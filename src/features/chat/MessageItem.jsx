@@ -4,6 +4,16 @@ import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 const MessageItem = ({ message, isOwn, canEditMessage, actions, isMenuOpen, menuUp, currentUserId }) => {
   const { onDeleteForEveryone, onDeleteForMe, onStartEdit, onToggleMenu } = actions;
 
+  const handleDeleteForMe = async (id) => {
+    await onDeleteForMe(id);
+    onToggleMenu(null);
+  };
+
+  const handleDeleteForEveryone = async (id) => {
+    await onDeleteForEveryone(id);
+    onToggleMenu(null);
+  };
+
   return (
     <div
       className={`message ${isOwn ? "own" : ""} ${isMenuOpen ? "menu-open" : ""} ${menuUp ? "menu-up" : ""}`}
@@ -47,11 +57,11 @@ const MessageItem = ({ message, isOwn, canEditMessage, actions, isMenuOpen, menu
                   Edit
                 </button>
               )}
-              <button onClick={(e) => { e.stopPropagation(); onDeleteForMe(message.id); }}>
+              <button onClick={(e) => { e.stopPropagation(); handleDeleteForMe(message.id); }}>
                 Delete for me
               </button>
               {!message.deleted && (
-                <button className="danger" onClick={(e) => { e.stopPropagation(); onDeleteForEveryone(message.id); onToggleMenu(message.id); }}>
+                <button className="danger" onClick={(e) => { e.stopPropagation(); handleDeleteForEveryone(message.id); }}>
                   Delete for everyone
                 </button>
               )}
