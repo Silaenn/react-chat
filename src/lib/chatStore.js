@@ -1,5 +1,7 @@
 import { create } from "zustand";
 
+const isMobile = () => typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
+
 export const useChatStore = create((set) => ({
   chatId: null,
   user: null,
@@ -52,11 +54,11 @@ export const useChatStore = create((set) => ({
       user: null,
       isCurrentUserBlocked: false,
       isReceiverBlocked: false,
-      showList: true,
+      showList: !isMobile(),
       chatStatus: null,
       requestedBy: null,
     }),
-  showList: true,
+  showList: !isMobile(),
   toggleList: () => set((state) => ({ showList: !state.showList })),
   setShowList: (val) => set({ showList: val }),
 }));

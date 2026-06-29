@@ -32,8 +32,8 @@ const Detail = ({ showDetail, onToggleDetail }) => {
             </div>
           )}
           <h2>{user?.username}</h2>
-          <p className={isCurrentUserBlocked || isReceiverBlocked ? "offline" : detailOnline ? "online" : "offline"}>
-            {isCurrentUserBlocked ? "Offline" : isReceiverBlocked ? "Offline" : detailOnline ? "Online" : formatDetailLastSeen(detailLastSeen)}
+          <p className={isCurrentUserBlocked ? "offline" : detailOnline ? "online" : "offline"}>
+            {isCurrentUserBlocked ? "Offline" : detailOnline ? "Online" : formatDetailLastSeen(detailLastSeen)}
           </p>
         </div>
         <div className="info">

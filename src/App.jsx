@@ -13,7 +13,7 @@ import { WELCOME_DISMISS_MS } from "@/lib/constants";
 
 const App = () => {
   const { currentUser, isLoading, fetchUserInfo } = useUserStore();
-  const { chatId, resetChat } = useChatStore();
+  const { chatId, resetChat, setShowList } = useChatStore();
   const [welcomeDismissed, setWelcomeDismissed] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const toggleDetail = () => setShowDetail((prev) => !prev);
@@ -24,7 +24,10 @@ const App = () => {
     if (chatId || welcomeDismissed) return;
     const mql = window.matchMedia('(max-width: 768px)');
     if (mql.matches) {
-      const timer = setTimeout(() => setWelcomeDismissed(true), WELCOME_DISMISS_MS);
+      const timer = setTimeout(() => {
+        setWelcomeDismissed(true);
+        setShowList(true);
+      }, WELCOME_DISMISS_MS);
       return () => clearTimeout(timer);
     }
     const handleChange = (e) => {
@@ -32,7 +35,7 @@ const App = () => {
     };
     mql.addEventListener('change', handleChange);
     return () => mql.removeEventListener('change', handleChange);
-  }, [chatId, welcomeDismissed]);
+  }, [chatId, welcomeDismissed, setShowList]);
 
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
