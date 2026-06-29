@@ -8,6 +8,7 @@
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border-right: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
   position: relative;
   z-index: var(--z-base);
   overflow: hidden;

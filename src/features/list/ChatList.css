@@ -125,7 +125,7 @@
 
       &:hover {
         background-color: var(--bg-subtle);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        box-shadow: var(--shadow-sm);
       }
 
       &:active {
@@ -355,6 +355,12 @@
   justify-content: center;
   padding: calc(var(--space, 8px) * 6) calc(var(--space, 8px) * 3);
   text-align: center;
+}
+
+.chatList .items .empty-state .empty-icon {
+  opacity: 0.25;
+  color: var(--text-muted);
+  margin-bottom: var(--space);
 }
 
 .chatList .items .empty-state p {

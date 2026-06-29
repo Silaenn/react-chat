@@ -105,6 +105,9 @@
   --transition-fast: 0.12s cubic-bezier(0, 0, 0.2, 1);
   --transition-base: 0.225s cubic-bezier(0, 0, 0.2, 1);
   --transition-slide: 0.25s cubic-bezier(0.2, 0, 0, 1);
+
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 1px 0 12px rgba(0, 0, 0, 0.06);
 }
 
 * {
@@ -282,6 +285,10 @@ body::after {
   gap: calc(var(--space) * 3);
   height: 100vh;
   width: 100vw;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(37,99,235,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(37,99,235,0.05) 0%, transparent 50%),
+    var(--bg-body);
 }
 
 .loading-spinner {

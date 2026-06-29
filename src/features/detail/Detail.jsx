@@ -6,6 +6,8 @@ import { formatDetailLastSeen } from "@/lib/time";
 import { useDetailUserStatus } from "./useDetailUserStatus";
 import { useBlockUser } from "./useBlockUser";
 import ExpandLess from "@mui/icons-material/ExpandLess";
+import Settings from "@mui/icons-material/Settings";
+import HelpOutline from "@mui/icons-material/HelpOutline";
 
 const Detail = ({ showDetail, onToggleDetail }) => {
   const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } =
@@ -39,14 +41,16 @@ const Detail = ({ showDetail, onToggleDetail }) => {
         <div className="info">
           <div className="option">
             <div className="title">
+              <Settings className="option-icon" />
               <span>Chat Settings</span>
-              <ExpandLess />
+              <ExpandLess className="chevron-icon" />
             </div>
           </div>
           <div className="option">
             <div className="title">
+              <HelpOutline className="option-icon" />
               <span>Privacy & help</span>
-              <ExpandLess />
+              <ExpandLess className="chevron-icon" />
             </div>
           </div>
 

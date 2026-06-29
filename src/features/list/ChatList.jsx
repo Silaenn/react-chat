@@ -84,12 +84,22 @@ const ChatList = () => {
 
             {activeChats.length === 0 && incomingRequests.length === 0 && input && (
               <div className="empty-state">
+                <div className="empty-icon">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                  </svg>
+                </div>
                 <p>No users found matching your search.</p>
               </div>
             )}
 
             {activeChats.length === 0 && incomingRequests.length === 0 && !input && (
               <div className="empty-state">
+                <div className="empty-icon">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                </div>
                 <p>No conversations yet. Search for users to start.</p>
               </div>
             )}
