@@ -63,6 +63,12 @@ const MessageInput = ({ onSend, onEdit, editingMessage, onCancelEdit, isReceiver
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (editingMessage) {
+      setText(editingMessage.text);
+    }
+  }, [editingMessage]);
+
   const handleEmojiClick = (e) => {
     handleEmoji(e);
   };
@@ -79,6 +85,10 @@ const MessageInput = ({ onSend, onEdit, editingMessage, onCancelEdit, isReceiver
           <EmojiEmotions
             className="emoji-icon"
             onClick={() => setOpenEmoji((prev) => !prev)}
+            aria-label={openEmoji ? "Close emoji picker" : "Open emoji picker"}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenEmoji((prev) => !prev); } }}
           />
           {openEmoji && (
             <div className="picker" onClick={(e) => e.stopPropagation()}>

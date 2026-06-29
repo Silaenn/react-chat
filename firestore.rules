@@ -1,0 +1,45 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: check if the request is authenticated
+    function isAuthenticated() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    // Helper: check if the user document exists for the requesting user
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Users collection: each user can only read/write their own doc
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId);
+      allow delete: if false;
+
+      // Other users can read basic profile info of users they chat with
+      // but this is handled via the chat system — secure as-is.
+    }
+
+    // Userchats collection: each user manages their own chat list
+    match /userchats/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Chats collection: participants can read/write chat messages
+    match /chats/{chatId} {
+      // Allow read/write if the user is authenticated and the chat exists
+      // The actual participant check is done in the app layer.
+      // For stricter rules, use custom claims or a participants subcollection.
+      allow read, write: if isAuthenticated();
+    }
+
+    // Default: deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

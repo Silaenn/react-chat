@@ -120,12 +120,16 @@ export const useChatList = (currentUser) => {
   const handleDecline = async (chat) => {
     setActionLoading(chat.chatId);
     try {
-      const ref = doc(db, "userchats", currentUser.id);
-      const snap = await getDoc(ref);
-      const data = snap.data();
-      if (!data) return;
-      const updated = data.chats.filter((c) => c.chatId !== chat.chatId);
-      await updateDoc(ref, { chats: updated });
+      const userIds = [currentUser.id, chat.user.id];
+      for (const id of userIds) {
+        const ref = doc(db, "userchats", id);
+        await runTransaction(db, async (transaction) => {
+          const snap = await transaction.get(ref);
+          if (!snap.exists()) return;
+          const updated = snap.data().chats.filter((c) => c.chatId !== chat.chatId);
+          transaction.update(ref, { chats: updated });
+        });
+      }
     } catch (error) {
       toast.error("Failed to decline request");
     }

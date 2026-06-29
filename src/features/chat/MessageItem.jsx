@@ -21,7 +21,7 @@ const MessageItem = ({ message, isOwn, canEditMessage, actions, isMenuOpen, menu
             {formatTime(message.createdAt)}
           </span>
           {isOwn && (
-            <span className={`msg-status ${message.readAt ? "read" : "sent"}`}>
+            <span className={`msg-status ${message.readAt ? "read" : "sent"}`} aria-label={message.readAt ? "Read" : "Sent"}>
               {message.readAt ? "✓✓" : "✓"}
             </span>
           )}
@@ -35,6 +35,8 @@ const MessageItem = ({ message, isOwn, canEditMessage, actions, isMenuOpen, menu
               e.stopPropagation();
               onToggleMenu(message.id);
             }}
+            aria-label="Message options"
+            aria-expanded={isMenuOpen}
           >
             <KeyboardArrowDown />
           </button>

@@ -2,13 +2,23 @@ import { useRef } from "react";
 import {
   arrayUnion,
   doc,
-  getDoc,
   runTransaction,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { toast } from "react-toastify";
 import { canModify } from "@/lib/time";
+
+const updateUserChat = async (userId, chatId, updater) => {
+  const ref = doc(db, "userchats", userId);
+  await runTransaction(db, async (transaction) => {
+    const snap = await transaction.get(ref);
+    if (!snap.exists()) return;
+    const chats = snap.data().chats || [];
+    const updated = updater(chats);
+    transaction.update(ref, { chats: updated });
+  });
+};
 
 export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocked, isReceiverBlocked, chatStatus, requestedBy) => {
   const sendingRef = useRef(false);
@@ -42,18 +52,11 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
       const notifIds = isBlocked ? [currentUser.id] : [currentUser.id, user.id];
 
       for (const id of notifIds) {
-        const userChatsRef = doc(db, "userchats", id);
-        const userChatsSnapshot = await getDoc(userChatsRef);
-
-        if (userChatsSnapshot.exists()) {
-          const userChatsData = userChatsSnapshot.data();
-          const chatIndex = userChatsData.chats.findIndex(
-            (c) => c.chatId === chatId
-          );
-
-          if (chatIndex !== -1) {
-            const updatedChats = userChatsData.chats.map((c, i) => {
-              if (i !== chatIndex) return c;
+        await updateUserChat(id, chatId, (chats) => {
+          const idx = chats.findIndex((c) => c.chatId === chatId);
+          if (idx !== -1) {
+            return chats.map((c, i) => {
+              if (i !== idx) return c;
               return {
                 ...c,
                 lastMessage: !isBlocked || id === currentUser.id ? msgText : c.lastMessage,
@@ -62,9 +65,9 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
                 ...(id !== currentUser.id && isPendingChat ? { status: "pending", requestedBy: currentUser.id } : {}),
               };
             });
-            await updateDoc(userChatsRef, { chats: updatedChats });
-          } else if (id !== currentUser.id && isPendingChat) {
-            const newChats = [...userChatsData.chats, {
+          }
+          if (id !== currentUser.id && isPendingChat) {
+            return [...chats, {
               chatId,
               receiverId: currentUser.id,
               lastMessage: msgText,
@@ -73,9 +76,9 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
               status: "pending",
               requestedBy: currentUser.id,
             }];
-            await updateDoc(userChatsRef, { chats: newChats });
           }
-        }
+          return chats;
+        });
       }
     } catch (error) {
       toast.error("Failed to send message.");
@@ -131,9 +134,7 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
         const snap = await transaction.get(chatRef);
         const messages = snap.data().messages.map((m) => {
           if (m.id === messageId) {
-            // eslint-disable-next-line no-unused-vars
-            const { pending, blocked, ...rest } = m;
-            return { ...rest, deleted: true, text: "", edited: false };
+            return { ...m, pending: undefined, blocked: undefined, deleted: true, text: "", edited: false };
           }
           return m;
         });
@@ -157,21 +158,11 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
 
       const userIDs = [currentUser.id, user.id];
       for (const id of userIDs) {
-        const userChatsRef = doc(db, "userchats", id);
-        const userChatsSnapshot = await getDoc(userChatsRef);
-        if (userChatsSnapshot.exists()) {
-          const userChatsData = userChatsSnapshot.data();
-          const chatIndex = userChatsData.chats.findIndex(
-            (c) => c.chatId === chatId
-          );
-          if (chatIndex !== -1) {
-            const updatedChats = userChatsData.chats.map((c, i) => {
-              if (i !== chatIndex) return c;
-              return { ...c, lastMessage: newLastMsg, updatedAt: Date.now() };
-            });
-            await updateDoc(userChatsRef, { chats: updatedChats });
-          }
-        }
+        await updateUserChat(id, chatId, (chats) =>
+          chats.map((c) =>
+            c.chatId === chatId ? { ...c, lastMessage: newLastMsg, updatedAt: Date.now() } : c
+          )
+        );
       }
     } catch (error) {
       toast.error("Failed to delete message");
@@ -222,21 +213,11 @@ export const useMessageActions = (chatId, user, currentUser, isCurrentUserBlocke
         }
       });
 
-      const userChatsRef = doc(db, "userchats", currentUser.id);
-      const userChatsSnapshot = await getDoc(userChatsRef);
-      if (userChatsSnapshot.exists()) {
-        const userChatsData = userChatsSnapshot.data();
-        const chatIndex = userChatsData.chats.findIndex(
-          (c) => c.chatId === chatId
-        );
-        if (chatIndex !== -1) {
-          const updatedChats = userChatsData.chats.map((c, i) => {
-            if (i !== chatIndex) return c;
-            return { ...c, lastMessage: newLastMsg, updatedAt: Date.now() };
-          });
-          await updateDoc(userChatsRef, { chats: updatedChats });
-        }
-      }
+      await updateUserChat(currentUser.id, chatId, (chats) =>
+        chats.map((c) =>
+          c.chatId === chatId ? { ...c, lastMessage: newLastMsg, updatedAt: Date.now() } : c
+        )
+      );
     } catch (error) {
       toast.error("Failed to delete message");
     }

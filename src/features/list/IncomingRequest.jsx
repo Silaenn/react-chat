@@ -19,6 +19,7 @@ const IncomingRequest = ({ chat, isLoading, onAccept, onDecline }) => {
           className="accept-btn"
           onClick={() => onAccept(chat)}
           disabled={isLoading}
+          aria-label={`Accept chat request from ${chat.user.username}`}
         >
           {isLoading ? "..." : "Accept"}
         </button>
@@ -26,6 +27,7 @@ const IncomingRequest = ({ chat, isLoading, onAccept, onDecline }) => {
           className="decline-btn"
           onClick={() => onDecline(chat)}
           disabled={isLoading}
+          aria-label={`Decline chat request from ${chat.user.username}`}
         >
           {isLoading ? "..." : "Decline"}
         </button>

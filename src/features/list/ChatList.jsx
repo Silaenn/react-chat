@@ -41,7 +41,7 @@ const ChatList = () => {
             onChange={(e) => setInput(e.target.value)}
           />
         </div>
-        <div className="add" onClick={() => setAddMode((prev) => !prev)}>
+        <div className="add" onClick={() => setAddMode((prev) => !prev)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setAddMode((prev) => !prev); }} aria-label="Add user">
           <div className="add-icon-wrap">
             <PersonAdd />
           </div>

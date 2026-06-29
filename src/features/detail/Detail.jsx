@@ -1,10 +1,11 @@
+import { useEffect, useRef } from "react";
 import "./Detail.css";
 import { useChatStore } from "@/lib/chatStore";
 import { useUserStore } from "@/lib/userStore";
 import { getAvatar } from "@/lib/avatar";
 import { formatDetailLastSeen } from "@/lib/time";
-import { useDetailUserStatus } from "./useDetailUserStatus";
 import { useBlockUser } from "./useBlockUser";
+import { useUserOnlineStatus } from "@/features/chat/useUserOnlineStatus";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import Settings from "@mui/icons-material/Settings";
 import HelpOutline from "@mui/icons-material/HelpOutline";
@@ -13,19 +14,26 @@ const Detail = ({ showDetail, onToggleDetail }) => {
   const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } =
     useChatStore();
   const { currentUser } = useUserStore();
+  const closeBtnRef = useRef(null);
 
-  const { isOnline: detailOnline, lastSeen: detailLastSeen } = useDetailUserStatus(user?.id);
+  const { isOnline: detailOnline, lastSeen: detailLastSeen } = useUserOnlineStatus(user?.id);
   const handleBlock = useBlockUser(currentUser, chatId, user, isReceiverBlocked);
   const handleBlockAndClose = () => { handleBlock(); onToggleDetail(); };
 
   const avatar = user ? getAvatar(user.username) : null;
+
+  useEffect(() => {
+    if (showDetail) {
+      closeBtnRef.current?.focus();
+    }
+  }, [showDetail]);
 
   return (
     <div className={`detail ${showDetail ? "open" : ""}`}>
       <div className="detail-scrim" onClick={onToggleDetail} />
       <div className="detail-panel">
         <div className="detail-header">
-          <button className="close-btn" onClick={onToggleDetail}>×</button>
+          <button className="close-btn" onClick={onToggleDetail} aria-label="Close detail panel" ref={closeBtnRef}>×</button>
         </div>
         <div className="user">
           {avatar && (
@@ -54,7 +62,7 @@ const Detail = ({ showDetail, onToggleDetail }) => {
             </div>
           </div>
 
-          <button onClick={handleBlockAndClose}>
+          <button onClick={handleBlockAndClose} aria-label={isReceiverBlocked ? "Unblock this user" : "Block this user"}>
             {isReceiverBlocked ? "Unblock User" : "Block User"}
           </button>
         </div>

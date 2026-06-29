@@ -25,7 +25,7 @@ const ChatHeader = ({ user, status, currentUserId, onToggleDetail, onBack }) => 
   return (
     <div className="top">
       <div className="top-left">
-        <button className="back-btn" onClick={onBack}>
+        <button className="back-btn" onClick={onBack} aria-label="Back to chat list">
           <ArrowBack />
         </button>
       </div>
@@ -44,7 +44,7 @@ const ChatHeader = ({ user, status, currentUserId, onToggleDetail, onBack }) => 
         </div>
       </div>
       <div className="top-right">
-        <Info className="chat-icon" onClick={onToggleDetail} />
+        <Info className="chat-icon" onClick={onToggleDetail} aria-label="Open detail panel" role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggleDetail(); } }} />
       </div>
     </div>
   );

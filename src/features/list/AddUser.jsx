@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import "./AddUser.css";
 import { useUserSearch } from "./useUserSearch";
@@ -6,6 +6,8 @@ import { getAvatar } from "@/lib/avatar";
 
 const AddUser = ({ onClose }) => {
   const [closing, setClosing] = useState(false);
+  const searchInputRef = useRef(null);
+  const triggerRef = useRef(null);
 
   const handleClose = () => {
     setClosing(true);
@@ -13,9 +15,16 @@ const AddUser = ({ onClose }) => {
 
   const handleAnimationEnd = (e) => {
     if (e.target.classList.contains('addUser-overlay') && closing) {
+      triggerRef.current?.focus();
       onClose();
     }
   };
+
+  useEffect(() => {
+    const prev = document.activeElement;
+    searchInputRef.current?.focus();
+    return () => { prev?.focus(); };
+  }, []);
 
   const {
     users, searching, addedIds, existingIds, username, showResults,
@@ -23,15 +32,16 @@ const AddUser = ({ onClose }) => {
   } = useUserSearch();
 
   return createPortal(
-    <div className={`addUser-overlay ${closing ? "closing" : ""}`} onClick={handleClose}>
+    <div className={`addUser-overlay ${closing ? "closing" : ""}`} onClick={handleClose} role="dialog" aria-modal="true" aria-label="Add user dialog">
       <div className={`addUser-modal ${closing ? "closing" : ""}`} onClick={(e) => e.stopPropagation()} onAnimationEnd={handleAnimationEnd}>
-        <button className="modal-close" onClick={handleClose}>✕</button>
+        <button className="modal-close" onClick={handleClose} aria-label="Close add user modal" ref={triggerRef}>✕</button>
         <div className="modal-header">
           <h2 className="modal-title">Add User</h2>
           <p className="modal-subtitle">Search by username to start a new conversation</p>
         </div>
         <div className="addUser-form">
           <input
+            ref={searchInputRef}
             type="text"
             placeholder="Enter username..."
             value={username}

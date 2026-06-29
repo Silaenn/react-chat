@@ -9,4 +9,17 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'zustand'],
+          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+          icons: ['@mui/icons-material'],
+          ui: ['react-toastify'],
+        },
+      },
+    },
+  },
 })

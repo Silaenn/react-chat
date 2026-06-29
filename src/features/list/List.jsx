@@ -13,7 +13,14 @@ const List = () => {
     <div className={`list ${!showList ? "hide-list" : ""}`}>
       <UserInfo />
       <ChatList />
-      <div className="logout-bar" onClick={handleLogout}>
+      <div
+        className="logout-bar"
+        onClick={handleLogout}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleLogout(); }}
+        aria-label="Log out"
+      >
         <div className="logout-icon-wrap">
           <LogoutIcon className="logout-icon" />
         </div>

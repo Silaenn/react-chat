@@ -296,6 +296,25 @@
   }
 }
 
+.addUser-result .avatar-letter {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: var(--text-avatar-sm);
+  color: var(--text-on-accent);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.20);
+  background: var(--accent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.10);
+  flex-shrink: 0;
+}
+
 @keyframes result-slide-in {
   from { opacity: 0; transform: translateY(-6px); }
   to { opacity: 1; transform: translateY(0); }
