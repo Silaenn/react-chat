@@ -92,11 +92,11 @@ This project was built as a modern alternative to generic chat starters — prio
 
 ## Screenshots
 
-|                Desktop Chat                 |                Mobile View                |               Search Users                |
-| :-----------------------------------------: | :---------------------------------------: | :---------------------------------------: |
-| `![Desktop chat](/screenshots/desktop.png)` | `![Mobile chat](/screenshots/mobile.png)` | `![User search](/screenshots/search.png)` |
+| Login |
+|:---:|
+| `![Login page](/screenshots/login.png)` |
 
-> Screenshots folder not yet added. Place images in `screenshots/` and update the paths above.
+> Place your login screenshot at `screenshots/login.png` and rename the file extension if needed.
 
 ---
 
