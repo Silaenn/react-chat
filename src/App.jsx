@@ -21,7 +21,7 @@ const App = () => {
   useOnlineStatus(currentUser?.id);
 
   useEffect(() => {
-    if (chatId || welcomeDismissed) return;
+    if (!currentUser || chatId || welcomeDismissed) return;
     const mql = window.matchMedia('(max-width: 768px)');
     if (mql.matches) {
       const timer = setTimeout(() => {
@@ -35,7 +35,7 @@ const App = () => {
     };
     mql.addEventListener('change', handleChange);
     return () => mql.removeEventListener('change', handleChange);
-  }, [chatId, welcomeDismissed, setShowList]);
+  }, [chatId, welcomeDismissed, setShowList, currentUser]);
 
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
